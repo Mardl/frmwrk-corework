@@ -1,14 +1,14 @@
 <?php
 
-namespace Core;
+namespace Corework;
 
 /**
  * Class Paginator
  * Paginator
  * Einfache Umsetzung einer Blätterfunktion
  *
- * @category Core
- * @package  Core
+ * @category Corework
+ * @package  Corework
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
 class Paginator

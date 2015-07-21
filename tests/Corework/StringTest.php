@@ -1,16 +1,16 @@
 <?php
 /**
- * Unittest für Core\String
+ * Unittest für Corework\String
  *
  * PHP version 5.3
  *
  * @category Unittest
- * @package  Core
+ * @package  Corework
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
-namespace tests\Core;
+namespace tests\Corework;
 
-use Core\String;
+use Corework\String;
 
 /**
  * String test case.
@@ -19,7 +19,7 @@ use Core\String;
  * von setUp() und tearDown()
  * 
  * @category Unittest
- * @package  Core
+ * @package  Corework
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
 class StringTest extends \PHPUnit_Framework_TestCase

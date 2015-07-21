@@ -1,6 +1,6 @@
 <?php
 
-namespace Core;
+namespace Corework;
 
 use Imagick as ImageMagick;
 
@@ -14,8 +14,8 @@ use Imagick as ImageMagick;
  * aptitude install libmagick9-dev
  * pecl install imagick
  *
- * @category Core
- * @package  Core
+ * @category Corework
+ * @package  Corework
  * @author   Ionel-Alex Caizer <ionel@dreiwerken.de>
  */
 class Image extends ImageMagick

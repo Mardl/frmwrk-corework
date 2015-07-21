@@ -1,12 +1,12 @@
 <?php
 
-namespace Core\Application\Interfaces;
+namespace Corework\Application\Interfaces;
 
 /**
  * Class ModelsInterface
  *
- * @category Core
- * @package  Core\Application\Interfaces
+ * @category Corework
+ * @package  Corework\Application\Interfaces
  * @author   Martin Eisenführer <martin@dreiwerken.de>
  */
 interface ModelsInterface

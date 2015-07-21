@@ -1,12 +1,12 @@
 <?php
 
-namespace Core;
+namespace Corework;
 
 /**
  * Class Model
  *
- * @category Core
- * @package  Core
+ * @category Corework
+ * @package  Corework
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
 class Model
@@ -336,7 +336,7 @@ class Model
 	{
 		$register = \jamwork\common\Registry::getInstance();
 
-		if (empty($userId) && isset($register->login) && $register->login instanceof \Core\Application\Models\User)
+		if (empty($userId) && isset($register->login) && $register->login instanceof \Corework\Application\Models\User)
 		{
 			$this->createduser_id = $register->login->getId();
 		}
@@ -406,7 +406,7 @@ class Model
 	public function setModifieduser_Id($userId = null)
 	{
 		$register = \jamwork\common\Registry::getInstance();
-		if (empty($userId) && isset($register->login) && $register->login instanceof \Core\Application\Models\User)
+		if (empty($userId) && isset($register->login) && $register->login instanceof \Corework\Application\Models\User)
 		{
 			$this->modifieduser_id = $register->login->getId();
 

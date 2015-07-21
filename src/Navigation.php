@@ -1,12 +1,12 @@
 <?php
 
-namespace Core;
+namespace Corework;
 
 /**
  * Class Navigation
  *
- * @category Core
- * @package  Core
+ * @category Corework
+ * @package  Corework
  * @author   Martin Eisenführer <amrtin@dreiwerken.de>
  */
 class Navigation
@@ -118,7 +118,7 @@ class Navigation
 
 					$right = new \App\Models\Right($data);
 
-					$class = '\Core\Application\Manager\Right';
+					$class = '\Corework\Application\Manager\Right';
 					if (class_exists('\App\Manager\Right'))
 					{
 						$class = '\App\Manager\Right';
@@ -225,7 +225,7 @@ class Navigation
 				}
 				else
 				{
-					if (\Core\String::endsWith($file, '.php'))
+					if (\Corework\String::endsWith($file, '.php'))
 					{
 						$this->files[] = $dir . '/' . $file;
 					}
@@ -239,7 +239,7 @@ class Navigation
 	 */
 	private function extract()
 	{
-		$view = new \Core\View();
+		$view = new \Corework\View();
 
 		foreach ($this->files as $controller)
 		{

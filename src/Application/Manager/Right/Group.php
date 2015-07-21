@@ -1,20 +1,20 @@
 <?php
 
-namespace Core\Application\Manager\Right;
+namespace Corework\Application\Manager\Right;
 
 use App\Models\Right as RightModel,
 	App\Models\Right\Group as GroupModel,
 	App\Models\User as UserModel,
 	App\Manager\Right as RightManager,
 	App\Manager\User as UserManager,
-	Core\SystemMessages,
+	Corework\SystemMessages,
 	jamwork\common\Registry;
 
 /**
  * Group
  *
- * @category Core
- * @package  Core\Application\Manager
+ * @category Corework
+ * @package  Corework\Application\Manager
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
 class Group
@@ -23,7 +23,7 @@ class Group
 	/**
 	 * Liefert alle Rechtegruppen
 	 *
-	 * @return \Core\Application\Models\Right\Group[]
+	 * @return \Corework\Application\Models\Right\Group[]
 	 */
 	public static function getAllGroups()
 	{
@@ -54,7 +54,7 @@ class Group
 	 * @param bool    $rights Optional, liefere auch die Rechte
 	 * @param bool    $users  Optional, liefere auch die Mitglieder
 	 *
-	 * @return \Core\Application\Models\Right\Group
+	 * @return \Corework\Application\Models\Right\Group
 	 *
 	 * @throws \ErrorException Wenn die Gruppe nicht gefunden wird
 	 */
@@ -149,7 +149,7 @@ class Group
 	 * @param bool   $rights
 	 * @param bool   $users
 	 *
-	 * @return \Core\Application\Models\Right\Group
+	 * @return \Corework\Application\Models\Right\Group
 	 *
 	 * @throws \ErrorException Wenn die Gruppe nicht gefunden wird
 	 */
@@ -232,11 +232,11 @@ class Group
 	/**
 	 * Erstellt eine Gruppe
 	 *
-	 * @param \Core\Application\Models\Right\Group $group Zu erstellende Gruppe
+	 * @param \Corework\Application\Models\Right\Group $group Zu erstellende Gruppe
 	 *
-	 * @return bool|\Core\Application\Models\Right\Group
+	 * @return bool|\Corework\Application\Models\Right\Group
 	 */
-	public static function createGroup(\Core\Application\Models\Right\Group $group)
+	public static function createGroup(\Corework\Application\Models\Right\Group $group)
 	{
 
 		try

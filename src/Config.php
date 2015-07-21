@@ -1,12 +1,12 @@
 <?php
 
-namespace Core;
+namespace Corework;
 
 /**
  * Class Config
  *
- * @category Core
- * @package  Core
+ * @category Corework
+ * @package  Corework
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
 class Config

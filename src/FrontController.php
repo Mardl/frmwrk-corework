@@ -1,8 +1,8 @@
 <?php
 
-namespace Core;
+namespace Corework;
 
-use Exception, InvalidArgumentException, jamwork\common\Registry, Core\HTMLHelper;
+use Exception, InvalidArgumentException, jamwork\common\Registry, Corework\HTMLHelper;
 
 /**
  * Class FrontController
@@ -11,8 +11,8 @@ use Exception, InvalidArgumentException, jamwork\common\Registry, Core\HTMLHelpe
  * Dispatch url and execute controller and action by defined routes in router.
  * Render view and return result.
  *
- * @category Core
- * @package  Core
+ * @category Corework
+ * @package  Corework
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
 class FrontController
@@ -21,28 +21,28 @@ class FrontController
 	/**
 	 * View
 	 *
-	 * @var   \Core\View
+	 * @var   \Corework\View
 	 */
 	protected $view;
 
 	/**
 	 * Router
 	 *
-	 * @var   \Core\Router
+	 * @var   \Corework\Router
 	 */
 	protected $router;
 
 	/**
 	 * Request
 	 *
-	 * @var   \Core\Request
+	 * @var   \Corework\Request
 	 */
 	protected $request;
 
 	/**
 	 * Response
 	 *
-	 * @var   \Core\Response
+	 * @var   \Corework\Response
 	 */
 	protected $response;
 
@@ -94,7 +94,7 @@ class FrontController
 	/**
 	 * Set router
 	 *
-	 * @param \Core\Router $router
+	 * @param \Corework\Router $router
 	 * @return void
 	 */
 	public function setRouter(Router $router = null)
@@ -212,9 +212,9 @@ class FrontController
 				throw new \Exception('Controller class „' . $controllerFile . '“ not found', 404);
 			}
 
-			if (!is_subclass_of($controllerName, 'Core\\Controller'))
+			if (!is_subclass_of($controllerName, 'Corework\\Controller'))
 			{
-				throw new Exception('Controller „' . $controllerName . '“ must extend Core\\Controller');
+				throw new Exception('Controller „' . $controllerName . '“ must extend Corework\\Controller');
 			}
 		}
 
@@ -225,7 +225,7 @@ class FrontController
 		try
 		{
 			$class->checkPermission();
-		} catch (\Core\Exceptions\AccessException $e)
+		} catch (\Corework\Exceptions\AccessException $e)
 		{
 			SystemMessages::addError($e->getMessage());
 			$permission = false;
@@ -328,7 +328,7 @@ class FrontController
 					}
 					else
 					{
-						$this->view->login = \Core\Application\Manager\User::getUserById(Registry::getInstance()->getSession()->get('user'));
+						$this->view->login = \Corework\Application\Manager\User::getUserById(Registry::getInstance()->getSession()->get('user'));
 					}
 
 					Registry::getInstance()->login = $this->view->login;

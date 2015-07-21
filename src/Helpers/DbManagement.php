@@ -1,12 +1,12 @@
 <?php
 
-namespace Core\Helpers;
+namespace Corework\Helpers;
 
 /**
  * Class DbManagement
  *
- * @category Core
- * @package  Core\Helpers
+ * @category Corework
+ * @package  Corework\Helpers
  * @author   Ionel-Alex Caizer <ionel@dreiwerken.de>
  */
 class DbManagement
@@ -81,7 +81,7 @@ class DbManagement
 	public function __construct()
 	{
 		// Doctrine in den ClassLoader holen
-		$loader = new \Core\Loader('Doctrine', FRAMEWORK_PATH);
+		$loader = new \Corework\Loader('Doctrine', FRAMEWORK_PATH);
 		$loader->register();
 
 		// ORM Configuration
@@ -198,8 +198,8 @@ class DbManagement
 			{
 				if ($st[1] == $cStmt[1])
 				{
-					\Core\SystemMessages::addError("Erst DROP ausführen.");
-					\Core\SystemMessages::addNotice($st[0] . ";");
+					\Corework\SystemMessages::addError("Erst DROP ausführen.");
+					\Corework\SystemMessages::addNotice($st[0] . ";");
 					$check = false;
 				}
 			}
@@ -246,7 +246,7 @@ class DbManagement
 	{
 		if (!$this->success)
 		{
-			\Core\SystemMessages::addError("Kann die ALTER-Statements nicht ausführen da eine vorherige Aktion nicht erfolgreich war.");
+			\Corework\SystemMessages::addError("Kann die ALTER-Statements nicht ausführen da eine vorherige Aktion nicht erfolgreich war.");
 
 			return false;
 		}
@@ -258,8 +258,8 @@ class DbManagement
 			{
 				if ($st[1] == $aStmt[1] && $st[2] == false)
 				{
-					\Core\SystemMessages::addError("Erst CREATE ausführen.");
-					\Core\SystemMessages::addNotice($st[0] . ";");
+					\Corework\SystemMessages::addError("Erst CREATE ausführen.");
+					\Corework\SystemMessages::addNotice($st[0] . ";");
 					$check = false;
 				}
 			}
@@ -296,7 +296,7 @@ class DbManagement
 	{
 		foreach ($this->response as $index => $statement)
 		{
-			if (\Core\String::startsWith($statement, "ALTER TABLE"))
+			if (\Corework\String::startsWith($statement, "ALTER TABLE"))
 			{
 				//Beginne NACH dem "ALTER TABLE"
 				$sub = substr($statement, 12);
@@ -313,7 +313,7 @@ class DbManagement
 			}
 			else
 			{
-				if (\Core\String::startsWith($statement, "CREATE TABLE"))
+				if (\Corework\String::startsWith($statement, "CREATE TABLE"))
 				{
 					//Beginne NACH dem "CREATE TABLE"
 					$sub = substr($statement, 13);
@@ -330,7 +330,7 @@ class DbManagement
 				}
 				else
 				{
-					if (\Core\String::startsWith($statement, "DROP TABLE"))
+					if (\Corework\String::startsWith($statement, "DROP TABLE"))
 					{
 						//Beginne NACH dem "DROP TABLE"
 						$table = substr($statement, 11);
@@ -362,8 +362,8 @@ class DbManagement
 	{
 		if (!$this->success)
 		{
-			\Core\SystemMessages::addError("Kann das Statement nicht ausführen da eine vorherige Aktion nicht erfolgreich war.");
-			\Core\SystemMessages::addNotice($sql);
+			\Corework\SystemMessages::addError("Kann das Statement nicht ausführen da eine vorherige Aktion nicht erfolgreich war.");
+			\Corework\SystemMessages::addNotice($sql);
 
 			return false;
 		}

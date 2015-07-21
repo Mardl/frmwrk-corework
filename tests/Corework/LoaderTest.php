@@ -1,22 +1,22 @@
 <?php
 /**
- * Unittest für Core\Config
+ * Unittest für Corework\Config
  *
  * PHP version 5.3
  *
  * @category Unittest
- * @package  Core
+ * @package  Corework
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
-namespace tests\Core;
+namespace tests\Corework;
 
-use Core\Loader;
+use Corework\Loader;
 
 /**
  * Loader test case.
  * 
  * @category Unittest
- * @package  Core
+ * @package  Corework
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
 class LoaderTest extends \PHPUnit_Framework_TestCase
@@ -64,7 +64,7 @@ class LoaderTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * Tests Loader->__construct()
 	 * 
-	 * @covers Core\Loader::__construct
+	 * @covers Corework\Loader::__construct
 	 * @expectedException \PHPUnit_Framework_Error_Warning
 	 * 
 	 * @return void
@@ -88,7 +88,7 @@ class LoaderTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * Tests Loader->_autoload
 	 * 
-	 * @covers Core\Loader::_autoload
+	 * @covers Corework\Loader::_autoload
 	 *
 	 * @return void
 	 */
@@ -105,7 +105,7 @@ class LoaderTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * Tests Loader->_autoload
 	 *
-	 * @covers Core\Loader::_autoload
+	 * @covers Corework\Loader::_autoload
 	 *
 	 * @return void
 	 */
@@ -122,7 +122,7 @@ class LoaderTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * Tests Loader->_autoload
 	 *
-	 * @covers Core\Loader::_autoload
+	 * @covers Corework\Loader::_autoload
 	 * @expectedException \ErrorException
 	 * 
 	 * @return void

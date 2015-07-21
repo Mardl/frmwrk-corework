@@ -1,14 +1,14 @@
 <?php
 
-namespace Core;
+namespace Corework;
 
-use jamwork\common\Registry, Core\SystemMessages;
+use jamwork\common\Registry, Corework\SystemMessages;
 
 /**
  * Class HTMLHelper
  *
- * @category Core
- * @package  Core
+ * @category Corework
+ * @package  Corework
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
 class HTMLHelper
@@ -77,7 +77,7 @@ class HTMLHelper
 	 *
 	 * @param View $view
 	 */
-	public function __construct(\Core\View $view = null)
+	public function __construct(\Corework\View $view = null)
 	{
 		$this->parentView = $view;
 	}
@@ -171,7 +171,7 @@ class HTMLHelper
 			'rel' => 'stylesheet'
 		);
 
-		if (!\Core\String::startsWith($filename, 'http'))
+		if (!\Corework\String::startsWith($filename, 'http'))
 		{
 			$attributes['href'] = $this->app('css/' . $filename);
 		}
@@ -373,7 +373,7 @@ class HTMLHelper
 	/**
 	 * Render breadcrumbs
 	 *
-	 * @return \Core\View
+	 * @return \Corework\View
 	 */
 	public function viewBreadcrumbs()
 	{
@@ -574,7 +574,7 @@ class HTMLHelper
 				$reflection = new \ReflectionClass($controller);
 			} catch (\Exception $e)
 			{
-				\Core\SystemMessages::addError($e->getMessage());
+				\Corework\SystemMessages::addError($e->getMessage());
 
 				return '';
 			}
@@ -602,7 +602,7 @@ class HTMLHelper
 				}
 				else
 				{
-					$allowed = \Core\Application\Manager\Right::isAllowed($right, Registry::getInstance()->login);
+					$allowed = \Corework\Application\Manager\Right::isAllowed($right, Registry::getInstance()->login);
 				}
 
 				if ($allowed)

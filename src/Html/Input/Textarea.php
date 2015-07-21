@@ -1,15 +1,15 @@
 <?php
 
-namespace Core\Html\Input;
+namespace Corework\Html\Input;
 
 /**
  * Class Textarea
  *
- * @category Core
- * @package  Core\Html\Input
+ * @category Corework
+ * @package  Corework\Html\Input
  * @author   Ionel-Alex Caizer <ionel@dreiwerken.de>
  */
-class Textarea extends \Core\Html\Input
+class Textarea extends \Corework\Html\Input
 {
 
 	private $renderOutput = '{label}<textarea class="{class}" style="{style}" {id} name="{name}" {attr} />{value}</textarea>';

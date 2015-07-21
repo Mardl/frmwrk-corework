@@ -1,19 +1,19 @@
 <?php
-namespace Core\Application\Models;
+namespace Corework\Application\Models;
 
-use Core\Model as BaseModel;
+use Corework\Model as BaseModel;
 
 /**
  * Class Language
  *
- * @category Core
- * @package  Core\Application\Models
+ * @category Corework
+ * @package  Corework\Application\Models
  * @author   Alexander Jonser <alex@dreiwerken.de>
  *
  *
  * @MappedSuperclass
  */
-class Language extends BaseModel implements \Core\Application\Interfaces\ModelsInterface
+class Language extends BaseModel implements \Corework\Application\Interfaces\ModelsInterface
 {
 
 	/**

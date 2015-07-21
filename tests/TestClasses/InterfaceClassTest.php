@@ -1,6 +1,6 @@
 <?php
 /**
- * Testing Class implementing Interface for Unittest of Core\Loader
+ * Testing Class implementing Interface for Unittest of Corework\Loader
  *
  * PHP version 5.3
  *

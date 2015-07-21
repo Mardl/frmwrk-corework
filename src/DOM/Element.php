@@ -1,14 +1,14 @@
 <?php
 
-namespace Core\DOM;
+namespace Corework\DOM;
 
 use DOMElement;
 
 /**
  * Class Element
  *
- * @category Core
- * @package  Core\DOM
+ * @category Corework
+ * @package  Corework\DOM
  * @author   Ionel-Alex Caizer <ionel@dreiwerken.de>
  */
 class Element extends DOMElement

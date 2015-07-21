@@ -1,6 +1,6 @@
 <?php
 
-namespace Core;
+namespace Corework;
 
 use ArrayObject;
 use jamwork\common\Registry;
@@ -8,8 +8,8 @@ use jamwork\common\Registry;
 /**
  * Class Router
  *
- * @category Core
- * @package  Core
+ * @category Corework
+ * @package  Corework
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
 class Router extends ArrayObject
@@ -25,7 +25,7 @@ class Router extends ArrayObject
 	/**
 	 * Current route
 	 *
-	 * @var \Core\Route
+	 * @var \Corework\Route
 	 */
 	protected $currentRoute;
 
@@ -41,7 +41,7 @@ class Router extends ArrayObject
 	 *
 	 * @param string $route Name of route
 	 *
-	 * @return \Core\Route
+	 * @return \Corework\Route
 	 */
 	public function offsetGet($route)
 	{
@@ -58,7 +58,7 @@ class Router extends ArrayObject
 	 *
 	 * @param string $routeName Routenname
 	 *
-	 * @return \Core\Route
+	 * @return \Corework\Route
 	 */
 	public function getRoute($routeName)
 	{
@@ -72,7 +72,7 @@ class Router extends ArrayObject
 	 * @param string $path     Path with placeholders
 	 * @param array  $defaults Default values for route
 	 *
-	 * @return \Core\Route
+	 * @return \Corework\Route
 	 */
 	public function addRoute($key, $path, array $defaults = array())
 	{
@@ -140,7 +140,7 @@ class Router extends ArrayObject
 	 *
 	 * @param string $urlIncomming URL
 	 *
-	 * @return \Core\Route|boolean
+	 * @return \Corework\Route|boolean
 	 */
 	public function searchRoute($urlIncomming)
 	{
@@ -164,12 +164,12 @@ class Router extends ArrayObject
 	 * @param string $urlIncomming URL
 	 * @param bool   $instance     Instanz
 	 *
-	 * @return bool|\Core\Route
+	 * @return bool|\Corework\Route
 	 */
 	public function findRoute($urlIncomming, $instance = false)
 	{
 		$url = $this->cleanBaseUrl($urlIncomming);
-		/** @var $route \Core\Route */
+		/** @var $route \Corework\Route */
 		foreach ($this as $key => $route)
 		{
 			$routeData = $route->matchUrl($url);
@@ -198,7 +198,7 @@ class Router extends ArrayObject
 		$matching = array();
 		foreach ($this as $routeName => $value)
 		{
-			if ($value instanceof \Core\Route && $routeName != 'default')
+			if ($value instanceof \Corework\Route && $routeName != 'default')
 			{
 				$temp = $value->getDefaults();
 				$matching[$routeName] = 0;
@@ -282,7 +282,7 @@ class Router extends ArrayObject
 	/**
 	 * Get current route
 	 *
-	 * @return \Core\Route
+	 * @return \Corework\Route
 	 */
 	public function getCurrentRoute()
 	{

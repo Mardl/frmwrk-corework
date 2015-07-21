@@ -1,31 +1,31 @@
 <?php
 /**
- * Unittest für Core\Config
+ * Unittest für Corework\Config
  *
  * PHP version 5.3
  *
  * @category Unittest
- * @package  Core
+ * @package  Corework
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
-namespace tests\Core;
+namespace tests\Corework;
 
-use Core\Config;
+use Corework\Config;
 
 /**
  * Config test case.
  * 
  * @category Unittest
- * @package  Core
+ * @package  Corework
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
 class ConfigTest extends \PHPUnit_Framework_TestCase
 {
 	
 	/**
-	 * Beinhaltet eine Instanz von Core\Config
+	 * Beinhaltet eine Instanz von Corework\Config
 	 *
-	 * @var Core\Config
+	 * @var Corework\Config
 	 */
 	private $Config;
 	
@@ -169,7 +169,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 	 * besitzt, da diese Konfigurationseinstellung in "unittests.php" definiert wurde 
 	 * und ein Array ist
 	 * 
-	 * @covers Core\Config::__get
+	 * @covers Corework\Config::__get
 	 * 
 	 * @return void
 	 */
@@ -188,7 +188,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 	 * Tests Config->__get()
 	 * Hier wird erwartet, dass der Aufruf NULL zurückliefert
 	 *
-	 * @covers Core\Config::__get
+	 * @covers Corework\Config::__get
 	 * 
 	 * @return void
 	 */
@@ -205,7 +205,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 	 * Tests private _hostEndsWith
 	 * Hier wird erwartet, dass true zurückgeliefert wird
 	 * 
-	 * @covers Core\Config::_hostEndsWith
+	 * @covers Corework\Config::_hostEndsWith
 	 * 
 	 * @return void
 	 */
@@ -215,7 +215,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 		$this->Config->add('general', 'general.php');
 		$this->Config->add('lifemeter.testing.dev', 'unittests.php');
 		$this->Config->load();
-		$reflector = new \ReflectionMethod('Core\Config', '_hostEndsWith');
+		$reflector = new \ReflectionMethod('Corework\Config', '_hostEndsWith');
 		$reflector->setAccessible(true);
 		$this->assertTrue(
 			$reflector->invoke(
@@ -230,7 +230,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 	 * Tests private _hostEndsWith
 	 * Hier wird erwartet, dass false zurückgeliefert wird
 	 *
-	 * @covers Core\Config::_hostEndsWith
+	 * @covers Corework\Config::_hostEndsWith
 	 * 
 	 * @return void
 	 */
@@ -240,7 +240,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 		$this->Config->add('general', 'general.php');
 		$this->Config->add('lifemeter.testing.dev', 'unittests.php');
 		$this->Config->load();
-		$reflector = new \ReflectionMethod('Core\Config', '_hostEndsWith');
+		$reflector = new \ReflectionMethod('Corework\Config', '_hostEndsWith');
 		$reflector->setAccessible(true);
 		$this->assertFalse(
 			$reflector->invoke(

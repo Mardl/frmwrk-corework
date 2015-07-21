@@ -1,12 +1,12 @@
 {
-    "name": "frameworks/core",
+    "name": "frameworks/corework",
     "type": "package",
     "description": "Basis-Framework für Projekte",
-    "homepage": "http://repo.dreiwerken.intern/frameworks/core",
+    "homepage": "http://repo.dreiwerken.intern/frameworks/corework",
     "repositories": [
         {
             "type": "vcs",
-            "url": "git@repo.dreiwerken.intern:frameworks/core.git"
+            "url": "git@repo.dreiwerken.intern:frameworks/corework.git"
         },
         {
             "type": "vcs",

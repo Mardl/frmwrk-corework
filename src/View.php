@@ -1,6 +1,6 @@
 <?php
 
-namespace Core;
+namespace Corework;
 
 use ArrayObject, Exception, jamwork\common\Registry;
 
@@ -12,12 +12,12 @@ use ArrayObject, Exception, jamwork\common\Registry;
  * be rendered in reverse order and can be accessed inside the template with the
  * content variable.
  *
- * Also a search stack has been added for version 2. The first Core Framework always
+ * Also a search stack has been added for version 2. The first Corework Framework always
  * required the full path to the template. With the stack its possible to define
  * places to look for the template in case it hasn't been found with the name provided.
  *
- * @category Core
- * @package  Core
+ * @category Corework
+ * @package  Corework
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
 class View extends ArrayObject
@@ -97,7 +97,7 @@ class View extends ArrayObject
 
 		$this->setRouter(Registry::getInstance()->router);
 
-		$this->html = new \Core\HTMLHelper($this);
+		$this->html = new \Corework\HTMLHelper($this);
 		$this->html->addCssAsset('default');
 
 	}

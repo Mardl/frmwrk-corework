@@ -1,12 +1,12 @@
 <?php
 
-namespace Core\Cache;
+namespace Corework\Cache;
 
 /**
  * Class Apc
  *
- * @category Core
- * @package  Core\Cache
+ * @category Corework
+ * @package  Corework\Cache
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
 class Apc

@@ -1,13 +1,13 @@
 <?php
 
 
-namespace Core\Application\Manager\Directory;
+namespace Corework\Application\Manager\Directory;
 
-use Core\Application\Models\Directory\Files as FilesModel,
-	Core\Application\Manager\Directory\Files as FilesManager,
-	Core\Application\Manager\Directory as DirectoryManager,
+use Corework\Application\Models\Directory\Files as FilesModel,
+	Corework\Application\Manager\Directory\Files as FilesManager,
+	Corework\Application\Manager\Directory as DirectoryManager,
 	jamwork\common\Registry,
-	Core\SystemMessages,
+	Corework\SystemMessages,
 	App\Manager\User as UserManager;
 
 /**
@@ -46,7 +46,7 @@ class Files
 	 *
 	 * @param int $fileId ID der Datei
 	 *
-	 * @return \Core\Application\Models\Directory\Files
+	 * @return \Corework\Application\Models\Directory\Files
 	 *
 	 * @throws \ErrorException Wenn die Datei nicht gefunden wurde
 	 * @throws \InvalidArgumentException Wenn eine leere Filesid übermittelwurde oder keine DirectorysId hinterlegt ist
@@ -95,7 +95,7 @@ class Files
 	 * Liefert ein Array von Files abhängig von der übermittelten Directory Id
 	 *
 	 * @param int $directoryId directoryId
-	 * @return \Core\Application\Models\Directory\Files[]
+	 * @return \Corework\Application\Models\Directory\Files[]
 	 */
 	public static function getFilesByDirectoryId($directoryId)
 	{
@@ -140,7 +140,7 @@ class Files
 	 * @param bool       $addSource
 	 * @param int        $watermark
 	 *
-	 * @return bool|\Core\Application\Models\Directory\Files
+	 * @return bool|\Corework\Application\Models\Directory\Files
 	 *
 	 * @throws \ErrorException
 	 */
@@ -301,7 +301,7 @@ class Files
 
 	/**
 	 * @param string $filename Dateiname
-	 * @return bool|\Core\Application\Models\Directory\Files
+	 * @return bool|\Corework\Application\Models\Directory\Files
 	 * @throws \InvalidArgumentException
 	 */
 	public static function fileExistsByName($filename)
@@ -386,9 +386,9 @@ class Files
 	/**
 	 * Fügt einen neuen Eintrag in der Datei Tabelle ein
 	 *
-	 * @param \Core\Application\Models\Directory\Files $filemodel FileModel, das in die DB gespeichert werden soll
+	 * @param \Corework\Application\Models\Directory\Files $filemodel FileModel, das in die DB gespeichert werden soll
 	 *
-	 * @return bool|\Core\Application\Models\Directory\Files
+	 * @return bool|\Corework\Application\Models\Directory\Files
 	 */
 	private function insertFile(FilesModel $filemodel)
 	{
@@ -492,7 +492,7 @@ class Files
 	 *
 	 * @param FilesModel $fileModel File Model der zu aktualisierenden Datei
 	 *
-	 * @return \Core\Application\Models\Directory\Files|bool
+	 * @return \Corework\Application\Models\Directory\Files|bool
 	 */
 	public static function updateFile(FilesModel $fileModel)
 	{
@@ -530,7 +530,7 @@ class Files
 	/**
 	 * Prüft, ob es sich bei der Datei um ein Image handelt
 	 *
-	 * @param \Core\Application\Models\Directory\Files $file FileModel der Datei, das überprüft werden soll
+	 * @param \Corework\Application\Models\Directory\Files $file FileModel der Datei, das überprüft werden soll
 	 *
 	 * @return bool|int
 	 */
@@ -570,7 +570,7 @@ class Files
 	 * Konvertiert das übergebene Bild in die angegebene Größe und speichert es im Cache
 	 * Verzeichnis (mit Angabe der Größe im Dateinamen). Liefert den Dateipfad der neuen Datei.
 	 *
-	 * @param \Core\Application\Models\Directory\Files $file   FileModel des betroffenen Bildes
+	 * @param \Corework\Application\Models\Directory\Files $file   FileModel des betroffenen Bildes
 	 * @param int                                      $width  Breite des Bildes
 	 * @param int                                      $height Höhe des Bildes
 	 *
@@ -684,7 +684,7 @@ class Files
 	}
 
 	/**
-	 * @param \Core\Application\Models\Directory\Files $filemodel
+	 * @param \Corework\Application\Models\Directory\Files $filemodel
 	 * @return array
 	 */
 	public function getSourcesByModel(FilesModel $filemodel)

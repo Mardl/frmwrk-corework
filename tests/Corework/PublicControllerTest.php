@@ -1,29 +1,29 @@
 <?php
 /**
- * Unittest für Core\PublicController
+ * Unittest für Corework\PublicController
  *
  * PHP version 5.3
  *
  * @category Unittest
- * @package  Core
+ * @package  Corework
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
-namespace tests\Core;
+namespace tests\Corework;
 
-use Core\Route,
-	Core\Controller,
+use Corework\Route,
+	Corework\Controller,
 	jamwork\common\Registry,
-	Core\Request,
-	Core\Response,
-	Core\View,
-	Core\Router,
-	Core\FrontController;
+	Corework\Request,
+	Corework\Response,
+	Corework\View,
+	Corework\Router,
+	Corework\FrontController;
 
 /**
  * PublicController test case.
  * 
  * @category Unittest
- * @package  Core
+ * @package  Corework
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
 class PublicControllerTest extends \PHPUnit_Framework_TestCase
@@ -67,8 +67,8 @@ class PublicControllerTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * Tests PublicController->__construct()
 	 * 
-	 * @covers Core\PublicController::__construct
-	 * @covers Core\Controller::__construct
+	 * @covers Corework\PublicController::__construct
+	 * @covers Corework\Controller::__construct
 	 * 
 	 * @return void
 	 */
@@ -129,7 +129,7 @@ class PublicControllerTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->Controller = new TestController();
 		$this->Controller->setRouter(Registry::getInstance()->router);
-		$this->assertInstanceOf('Core\View', $this->Controller->createView());
+		$this->assertInstanceOf('Corework\View', $this->Controller->createView());
 	}
 	
 	/**
@@ -235,10 +235,10 @@ class PublicControllerTest extends \PHPUnit_Framework_TestCase
 }
 
 /**
- * Interne Testklasse zum Testen von Core\Controller
+ * Interne Testklasse zum Testen von Corework\Controller
  * 
  * @category Unittest
- * @package  Core
+ * @package  Corework
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
 class TestController extends Controller

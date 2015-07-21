@@ -1,14 +1,14 @@
 <?php
 
-namespace Core\Application\Models\Right;
+namespace Corework\Application\Models\Right;
 
-use Core\Model as BaseModel, App\Models\Right as RightModel, App\Models\User as UserModel;
+use Corework\Model as BaseModel, App\Models\Right as RightModel, App\Models\User as UserModel;
 
 /**
  * Class Group
  *
- * @category Core
- * @package  Core\Application\Models\Right
+ * @category Corework
+ * @package  Corework\Application\Models\Right
  * @author   Alexander Jonser <alex@dreiwerken.de>
  *
  * @method string getName()

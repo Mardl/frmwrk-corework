@@ -1,29 +1,29 @@
 <?php
 /**
- * Unittest für Core\FrontController
+ * Unittest für Corework\FrontController
  *
  * PHP version 5.3
  *
  * @category Unittest
- * @package  Core
+ * @package  Corework
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
-namespace tests\Core;
+namespace tests\Corework;
 
-use Core\FrontController;
+use Corework\FrontController;
 
 /**
  * FrontController test case.
  * 
  * @category Unittest
- * @package  Core
+ * @package  Corework
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
 class FrontControllerTest extends \PHPUnit_Framework_TestCase
 {
 	
 	/**
-	 * Beinhaltet eine Instanz von Core\FrontController
+	 * Beinhaltet eine Instanz von Corework\FrontController
 	 * 
 	 * @var FrontController
 	 */

@@ -1,15 +1,15 @@
 <?php
 
-namespace Core\Html\Input;
+namespace Corework\Html\Input;
 
 /**
  * Class Select
  *
- * @category Core
- * @package  Core\Html\Input
+ * @category Corework
+ * @package  Corework\Html\Input
  * @author   Ionel-Alex Caizer <ionel@dreiwerken.de>
  */
-class Select extends \Core\Html\Input
+class Select extends \Corework\Html\Input
 {
 
 	private $options = array();

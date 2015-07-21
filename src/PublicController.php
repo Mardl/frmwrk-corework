@@ -1,6 +1,6 @@
 <?php
 
-namespace Core;
+namespace Corework;
 
 use App\Models\Right, App\Manager\Right as RightManager, jamwork\common\Registry;
 
@@ -8,8 +8,8 @@ use App\Models\Right, App\Manager\Right as RightManager, jamwork\common\Registry
  * Class PublicController
  * inkl. Rechteabfrage
  *
- * @category Core
- * @package  Core
+ * @category Corework
+ * @package  Corework
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
 class PublicController extends Controller
@@ -72,7 +72,7 @@ class PublicController extends Controller
 
 			if (!in_array($action, $this->noPermissionActions) && !RightManager::isAllowed($right, $login))
 			{
-				throw new \Core\Exceptions\AccessException('Zugriff auf nicht erlaubte Aktion');
+				throw new \Corework\Exceptions\AccessException('Zugriff auf nicht erlaubte Aktion');
 			}
 		}
 

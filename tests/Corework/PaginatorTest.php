@@ -1,29 +1,29 @@
 <?php
 /**
- * Unittest für Core\Paginator
+ * Unittest für Corework\Paginator
  *
  * PHP version 5.3
  *
  * @category Unittest
- * @package  Core
+ * @package  Corework
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
-namespace tests\Core;
+namespace tests\Corework;
 
-use Core\Paginator;
+use Corework\Paginator;
 
 /**
  * Paginator test case.
  * 
  * @category Unittest
- * @package  Core
+ * @package  Corework
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
 class PaginatorTest extends \PHPUnit_Framework_TestCase
 {
 	
 	/**
-	 * Beinhaltet eine Instanz von Core\Paginator
+	 * Beinhaltet eine Instanz von Corework\Paginator
 	 * 
 	 * @var Paginator
 	 */
@@ -71,7 +71,7 @@ class PaginatorTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * Tests Paginator->__construct()
 	 * 
-	 * @covers Core\Paginator::__construct
+	 * @covers Corework\Paginator::__construct
 	 * 
 	 * @expectedException \PHPUnit_Framework_Error_Warning
 	 * 
@@ -85,7 +85,7 @@ class PaginatorTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * Tests Paginator->__construct()
 	 *
-	 * @covers Core\Paginator::__construct
+	 * @covers Corework\Paginator::__construct
 	 *
 	 * @return void
 	 */
@@ -153,7 +153,7 @@ class PaginatorTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * Tests Paginator->__toString()
 	 * 
-	 * @covers Core\Paginator::__toString
+	 * @covers Corework\Paginator::__toString
 	 * 
 	 * @return void
 	 */

@@ -1,11 +1,11 @@
 <?php
-namespace Core\Html;
+namespace Corework\Html;
 
 /**
  * Class Ul
  *
- * @category Core
- * @package  Core\Html
+ * @category Corework
+ * @package  Corework\Html
  * @author   Ionel-Alex Caizer <ionel@dreiwerken.de>
  */
 class Ul extends Element

@@ -1,23 +1,23 @@
 <?php
 /**
- * Core\Request-Class
+ * Corework\Request-Class
  *
  * PHP version 5.3
  *
  * @category Routing
- * @package  Core
+ * @package  Corework
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
 
-namespace Core;
+namespace Corework;
 
 use jamwork\common\HttpRequest;
 
 /**
  * RequestObject and extends jamwork\common\HttpRequest
  *
- * @category Core
- * @package  Core
+ * @category Corework
+ * @package  Corework
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
 class Request extends HttpRequest

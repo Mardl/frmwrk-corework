@@ -1,12 +1,12 @@
 <?php
 
-namespace Core\Calendar;
+namespace Corework\Calendar;
 
 /**
  * Class Ics
  *
- * @category Core
- * @package  Core\Calendar
+ * @category Corework
+ * @package  Corework\Calendar
  * @author   Ionel-Alex Caizer <ionel@dreiwerken.de>
  */
 class Ics

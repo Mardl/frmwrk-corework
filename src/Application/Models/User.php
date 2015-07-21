@@ -1,14 +1,14 @@
 <?php
 
-namespace Core\Application\Models;
+namespace Corework\Application\Models;
 
-use Exception, Core\Application\Manager\Directory\Files as FilesManager, Core\Model as BaseModel;
+use Exception, Corework\Application\Manager\Directory\Files as FilesManager, Corework\Model as BaseModel;
 
 /**
  * Class User
  *
- * @category Core
- * @package  Core\Application\Models
+ * @category Corework
+ * @package  Corework\Application\Models
  * @author   Alexander Jonser <alex@dreiwerken.de>
  *
  *
@@ -130,9 +130,9 @@ class User extends BaseModel
 	/**
 	 * Address
 	 *
-	 * @var \Core\Application\Models\Address
+	 * @var \Corework\Application\Models\Address
 	 *
-	 * @OneToOne(targetEntity="\Core\Application\Models\Address", fetch="LAZY", mappedBy="user", cascade={"all"})
+	 * @OneToOne(targetEntity="\Corework\Application\Models\Address", fetch="LAZY", mappedBy="user", cascade={"all"})
 	 */
 	protected $address;
 
@@ -190,7 +190,7 @@ class User extends BaseModel
 		}
 		else
 		{
-			$this->password = \Core\String::bcryptEncode($password, md5($this->getId() . $this->getBirthday()->format('Ymd') . $this->getGender() . $this->getCreated()->format("Ymd")));
+			$this->password = \Corework\String::bcryptEncode($password, md5($this->getId() . $this->getBirthday()->format('Ymd') . $this->getGender() . $this->getCreated()->format("Ymd")));
 		}
 
 		return $this->password;
@@ -360,12 +360,12 @@ class User extends BaseModel
 	/**
 	 * Setzt die Sprache
 	 *
-	 * @param int|\Core\Application\Models\Language $language
+	 * @param int|\Corework\Application\Models\Language $language
 	 * @return void
 	 */
 	public function setLanguage($language)
 	{
-		if (class_exists('Core\Application\Models\Language', false) && !($language instanceof \Core\Application\Models\Language) && $language !== null)
+		if (class_exists('Corework\Application\Models\Language', false) && !($language instanceof \Corework\Application\Models\Language) && $language !== null)
 		{
 			if (class_exists('\App\Manager\Language') && class_exists('\App\Models\Language'))
 			{
@@ -374,8 +374,8 @@ class User extends BaseModel
 			}
 			else
 			{
-				$manager = new \Core\Application\Manager\Language();
-				$language = $manager->getModelById(new \Core\Application\Models\Language(), $language);
+				$manager = new \Corework\Application\Manager\Language();
+				$language = $manager->getModelById(new \Corework\Application\Models\Language(), $language);
 			}
 		}
 
@@ -390,7 +390,7 @@ class User extends BaseModel
 	 */
 	public function getLanguageId()
 	{
-		if ($this->language instanceof \Core\Application\Models\Language)
+		if ($this->language instanceof \Corework\Application\Models\Language)
 		{
 			return $this->language->getId();
 		}
@@ -487,7 +487,7 @@ class User extends BaseModel
 	}
 
 	/**
-	 * @param \Core\Application\Models\Address $address
+	 * @param \Corework\Application\Models\Address $address
 	 * @return void
 	 */
 	public function setAddress($address)
@@ -496,7 +496,7 @@ class User extends BaseModel
 	}
 
 	/**
-	 * @return \Core\Application\Models\Address
+	 * @return \Corework\Application\Models\Address
 	 */
 	public function getAddress()
 	{

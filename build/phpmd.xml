@@ -7,7 +7,7 @@
          xsi:noNamespaceSchemaLocation="
                      http://pmd.sf.net/ruleset_xml_schema.xsd">
     <description>
-        MD-Rules für das Core-Framework
+        MD-Rules für das Corework-Framework
     </description>
 
     <!-- Import the entire unused code rule set -->

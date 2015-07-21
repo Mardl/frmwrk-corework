@@ -1,29 +1,29 @@
 <?php
 /**
- * Unittest für Core\Model
+ * Unittest für Corework\Model
  *
  * PHP version 5.3
  *
  * @category Unittest
- * @package  Core
+ * @package  Corework
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
-namespace tests\Core;
+namespace tests\Corework;
 
-use Core\Model;
+use Corework\Model;
 
 /**
  * Model test case.
  * 
  * @category Unittest
- * @package  Core
+ * @package  Corework
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
 class ModelTest extends \PHPUnit_Framework_TestCase
 {
 	
 	/**
-	 * Beinhaltet eine Instanz von Core\Model
+	 * Beinhaltet eine Instanz von Corework\Model
 	 * 
 	 * @var Model
 	 */
@@ -69,7 +69,7 @@ class ModelTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * Tests Model->__call()
 	 * 
-	 * @covers Core\Model::__call
+	 * @covers Corework\Model::__call
 	 * 
 	 * @return void
 	 */
@@ -84,7 +84,7 @@ class ModelTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * Tests Model->__construct()
 	 * 
-	 * @covers Core\Model::__construct
+	 * @covers Corework\Model::__construct
 	 * 
 	 * @return void
 	 */

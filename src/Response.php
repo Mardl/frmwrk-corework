@@ -1,14 +1,14 @@
 <?php
 
-namespace Core;
+namespace Corework;
 
 use jamwork\common\HttpResponse;
 
 /**
  * Class Response
  *
- * @category Core
- * @package  Core
+ * @category Corework
+ * @package  Corework
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
 class Response extends HttpResponse

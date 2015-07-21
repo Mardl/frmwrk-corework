@@ -1,14 +1,14 @@
 <?php
 
-namespace Core\Mail;
+namespace Corework\Mail;
 
-use Exception, Core\Mail\Mime;
+use Exception, Corework\Mail\Mime;
 
 /**
  * Class Mailer
  *
- * @category Core
- * @package  Core\Mail
+ * @category Corework
+ * @package  Corework\Mail
  * @author   Ionel-Alex Caizer <ionel@dreiwerken.de>
  */
 class Mailer

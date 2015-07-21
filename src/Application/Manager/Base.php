@@ -1,15 +1,15 @@
 <?php
 
-namespace Core\Application\Manager;
+namespace Corework\Application\Manager;
 
 use jamwork\common\Registry;
 use jamwork\database\Query;
-use Core\SystemMessages;
-use Core\Application\Interfaces\ModelsInterface;
+use Corework\SystemMessages;
+use Corework\Application\Interfaces\ModelsInterface;
 
 /**
  * Class Base
- * @package Core\Application\Manager
+ * @package Corework\Application\Manager
  */
 class Base
 {
@@ -147,9 +147,9 @@ class Base
 	/**
 	 * Liefert ein Model von ModelsInterface aus dem Query-Select
 	 *
-	 * @param \Core\Application\Interfaces\ModelsInterface $model
+	 * @param \Corework\Application\Interfaces\ModelsInterface $model
 	 * @param                                              $id
-	 * @return \Core\Application\Interfaces\ModelsInterface
+	 * @return \Corework\Application\Interfaces\ModelsInterface
 	 * @throws \ErrorException
 	 */
 	public function getModelById(ModelsInterface $model, $id)
@@ -204,7 +204,7 @@ class Base
 		{
 			while (($rec = $rs->get()) == true)
 			{
-				/** @var $model \Core\Model */
+				/** @var $model \Corework\Model */
 				$model = new $modelClassName();
 				$clean = $model->clearDataRow($rec);
 				$model->setDataRow($clean);
@@ -222,7 +222,7 @@ class Base
 	 *
 	 * @param string                  $modelClassName
 	 * @param \jamwork\database\Query $query
-	 * @return \Core\Application\Interfaces\ModelsInterface|bool
+	 * @return \Corework\Application\Interfaces\ModelsInterface|bool
 	 */
 	public function getModelByQuery($modelClassName, Query $query)
 	{
@@ -237,7 +237,7 @@ class Base
 
 		if ($rs->isSuccessful() && ($rs->count() > 0))
 		{
-			/** @var $model \Core\Model */
+			/** @var $model \Corework\Model */
 			$model = new $modelClassName();
 			$clean = $model->clearDataRow($rs->get());
 			$model->setDataRow($clean);

@@ -1,12 +1,12 @@
 <?php
 
-namespace Core;
+namespace Corework;
 
 /**
  * Class Form
  *
- * @category Core
- * @package  Core
+ * @category Corework
+ * @package  Corework
  * @author   Ionel-Alex Caizer <ionel@dreiwerken.de>
  */
 class Form
@@ -160,13 +160,13 @@ class Form
 		{
 			$this->addElements($elements);
 		}
-		elseif ($elements instanceof \Core\Html\Element)
+		elseif ($elements instanceof \Corework\Html\Element)
 		{
 			$this->addElement($elements);
 		}
 		else
 		{
-			$text = new \Core\Html\Text('', $elements);
+			$text = new \Corework\Html\Text('', $elements);
 			$this->addElement($text);
 		}
 	}

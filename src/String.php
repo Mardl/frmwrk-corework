@@ -1,12 +1,12 @@
 <?php
 
-namespace Core;
+namespace Corework;
 
 /**
  * Class String
  *
- * @category Core
- * @package  Core
+ * @category Corework
+ * @package  Corework
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
 class String

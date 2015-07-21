@@ -1,7 +1,7 @@
 <?php
-namespace Core\Application\Manager;
+namespace Corework\Application\Manager;
 
-use Core\SystemMessages,
+use Corework\SystemMessages,
 	App\Models\Right as RightModel,
 	App\Models\User as UserModel,
 	jamwork\common\Registry,
@@ -10,8 +10,8 @@ use Core\SystemMessages,
 /**
  * Right
  *
- * @category Core
- * @package  Core\Application\Manager
+ * @category Corework
+ * @package  Corework\Application\Manager
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
 class Right
@@ -37,7 +37,7 @@ class Right
 			$reflection = new \ReflectionClass($controller);
 		} catch (\Exception $e)
 		{
-			\Core\SystemMessages::addError($e->getMessage());
+			\Corework\SystemMessages::addError($e->getMessage());
 
 			return false;
 		}
@@ -328,7 +328,7 @@ class Right
 	/**
 	 * Liefert alle Rechte
 	 *
-	 * @return \Core\Application\Models\Right[]
+	 * @return \Corework\Application\Models\Right[]
 	 */
 	public static function getAllRights()
 	{
@@ -366,7 +366,7 @@ class Right
 	 *
 	 * @param array $ids Array mit den IDs der zu liefernden Rechte
 	 *
-	 * @return \Core\Application\Models\Right[]
+	 * @return \Corework\Application\Models\Right[]
 	 */
 	public static function getRightsByMultipleIds(array $ids)
 	{
@@ -423,7 +423,7 @@ class Right
 	 *
 	 * @param integer $groupId ID der zugehörigen Gruppe
 	 *
-	 * @return \Core\Application\Models\Right[]
+	 * @return \Corework\Application\Models\Right[]
 	 */
 	public static function getRightsByGroupId($groupId)
 	{

@@ -1,14 +1,14 @@
 <?php
 
-namespace Core\Application\Manager;
+namespace Corework\Application\Manager;
 
 use App\Models\User as UserModel, jamwork\common\Registry;
 
 /**
  * Class User
  *
- * @category Core
- * @package  Core\Application\Manager
+ * @category Corework
+ * @package  Corework\Application\Manager
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
 class User
@@ -29,7 +29,7 @@ class User
 	 * @throws \ErrorException Wenn der Benutzer nicht gefunden wurde
 	 * @throws \InvalidArgumentException Wenn keine ID übergeben wurde
 	 *
-	 * @return \Core\Application\Models\User
+	 * @return \Corework\Application\Models\User
 	 */
 	public static function getUserById($userid)
 	{
@@ -250,7 +250,7 @@ class User
 			}
 			else
 			{
-				$checkup = \Core\String::bcryptCheckup($password, $rs['password']);
+				$checkup = \Corework\String::bcryptCheckup($password, $rs['password']);
 			}
 
 			return $checkup;
@@ -295,7 +295,7 @@ class User
 			}
 			else
 			{
-				$checkup = \Core\String::bcryptCheckup($password, $rs['password']);
+				$checkup = \Corework\String::bcryptCheckup($password, $rs['password']);
 			}
 
 			if ($checkup)
@@ -352,7 +352,7 @@ class User
 	 * @param int $status Der maximale Benutzerstatus, Default: Deleted
 	 * @param int $offset Optionaler Offset
 	 * @param int $limit  Optionales Limit
-	 * @return array von \Core\Application\Models\User
+	 * @return array von \Corework\Application\Models\User
 	 */
 	public static function getUsers($status = STATUS_DELETED, $offset = 0, $limit = 25)
 	{

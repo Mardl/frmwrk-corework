@@ -1,15 +1,15 @@
 <?php
 
-namespace Core\Application\Models;
+namespace Corework\Application\Models;
 
 
-use Core\Model;
+use Corework\Model;
 
 /**
  * Class UserModel
  *
  * @category Basis
- * @package  Core\Application\Models
+ * @package  Corework\Application\Models
  * @author   Cindy Paulitz <cindy@dreiwerken.de>
  */
 class UserModel extends Model

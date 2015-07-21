@@ -1,14 +1,14 @@
 <?php
 
-namespace Core\Application\Models\Directory;
+namespace Corework\Application\Models\Directory;
 
-use Core\Model as BaseModel, Core\Application\Manager\Directory\Files as FileManager;
+use Corework\Model as BaseModel, Corework\Application\Manager\Directory\Files as FileManager;
 
 /**
  * Class Files
  *
- * @category Core
- * @package  Core\Application\Models\Directory
+ * @category Corework
+ * @package  Corework\Application\Models\Directory
  * @author   Alexander Jonser <alex@dreiwerken.de>
  *
  * @method string getOrgname()
@@ -22,7 +22,7 @@ use Core\Model as BaseModel, Core\Application\Manager\Directory\Files as FileMan
  * @method setOrgname($value)
  * @method setName($value)
  * @method setBasename($value)
- * @method setDirectory(\Core\Application\Manager\Directory $value)
+ * @method setDirectory(\Corework\Application\Manager\Directory $value)
  * @method setParent(Files $value)
  * @method setMimetype($value)
  * @method setSize(\float $value)
@@ -74,7 +74,7 @@ class Files extends BaseModel
 	/**
 	 * Directory
 	 *
-	 * @var \Core\Application\Models\Directory
+	 * @var \Corework\Application\Models\Directory
 	 *
 	 * @ManyToOne(targetEntity="App\Models\Directory")
 	 * @JoinColumn(name="directory_id", referencedColumnName="id", nullable=false)
@@ -84,7 +84,7 @@ class Files extends BaseModel
 	/**
 	 * Parent
 	 *
-	 * @var \Core\Application\Models\Directory\Files
+	 * @var \Corework\Application\Models\Directory\Files
 	 *
 	 * @ManyToOne(targetEntity="App\Models\Directory\Files")
 	 * @JoinColumn(name="parent_id", referencedColumnName="id", nullable=true)

@@ -1,14 +1,14 @@
 <?php
-namespace Core\Application\Models;
+namespace Corework\Application\Models;
 
-use Core\Model as BaseModel, Core\Application\Manager\Directory as DirectoryManager, Core\Application\Models\Directory as DirectoryModel;
+use Corework\Model as BaseModel, Corework\Application\Manager\Directory as DirectoryManager, Corework\Application\Models\Directory as DirectoryModel;
 
 
 /**
  * Class Directories
  *
- * @category Core
- * @package  Core\Application\Models
+ * @category Corework
+ * @package  Corework\Application\Models
  * @author   Alexander Jonser <alex@dreiwerken.de>
  *
  * @method string getName()
@@ -47,7 +47,7 @@ class Directory extends BaseModel
 	/**
 	 * Parent
 	 *
-	 * @var \Core\Application\Models\Directory
+	 * @var \Corework\Application\Models\Directory
 	 *
 	 * @ManyToOne(targetEntity="App\Models\Directory")
 	 */
@@ -79,7 +79,7 @@ class Directory extends BaseModel
 	/**
 	 * Liefert das Parent Directory
 	 *
-	 * @return \Core\Application\Models\Directory
+	 * @return \Corework\Application\Models\Directory
 	 */
 	public function getParentDirectory()
 	{

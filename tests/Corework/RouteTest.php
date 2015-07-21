@@ -1,32 +1,32 @@
 <?php
 /**
- * Unittest für Core\Route
+ * Unittest für Corework\Route
  *
  * PHP version 5.3
  *
  * @category Unittest
- * @package  Core
+ * @package  Corework
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
-namespace tests\Core;
+namespace tests\Corework;
 
-use Core\Route,
-	Core\Router,
-	Core\Request,
+use Corework\Route,
+	Corework\Router,
+	Corework\Request,
 	jamwork\common\Registry;
 
 /**
  * Route test case.
  * 
  * @category Unittest
- * @package  Core
+ * @package  Corework
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
 class RouteTest extends \PHPUnit_Framework_TestCase
 {
 	
 	/**
-	 * Beinhaltet eine Instanz von Core\Route
+	 * Beinhaltet eine Instanz von Corework\Route
 	 * 
 	 * @var Route
 	 */
@@ -78,7 +78,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * Tests Route->__construct()
 	 * 
-	 * @covers Core\Route::__construct
+	 * @covers Corework\Route::__construct
 	 * 
 	 * @return void
 	 */

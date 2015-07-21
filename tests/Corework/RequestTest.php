@@ -1,22 +1,22 @@
 <?php
 /**
- * Unittest für Core\Request
+ * Unittest für Corework\Request
  *
  * PHP version 5.3
  *
  * @category Unittest
- * @package  Core
+ * @package  Corework
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
-namespace tests\Core;
+namespace tests\Corework;
 
-use Core\Request;
+use Corework\Request;
 
 /**
  * Request test case.
  * 
  * @category Unittest
- * @package  Core
+ * @package  Corework
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
 class RequestTest extends \PHPUnit_Framework_TestCase
@@ -61,7 +61,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * Tests Request->__construct()
 	 * 
-	 * @covers Core\Request::__construct
+	 * @covers Corework\Request::__construct
 	 * 
 	 * @expectedException \PHPUnit_Framework_Error
 	 * 

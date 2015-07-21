@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Exceptions;
+namespace Corework\Exceptions;
 /**
  * Exception AccessException
  *

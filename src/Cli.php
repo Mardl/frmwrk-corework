@@ -1,12 +1,12 @@
 <?php
 
-namespace Core;
+namespace Corework;
 
 /**
  * Class Cli
  *
- * @category Core
- * @package  Core
+ * @category Corework
+ * @package  Corework
  * @author   Ionel-Alex Caizer <ionel@dreiwerken.de>
  */
 class Cli

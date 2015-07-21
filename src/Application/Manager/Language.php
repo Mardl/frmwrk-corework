@@ -9,9 +9,9 @@
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
 
-namespace Core\Application\Manager;
+namespace Corework\Application\Manager;
 
-use jamwork\common\Registry, Core\SystemMessages, jamwork\database\MysqlRecordset as Recordset;
+use jamwork\common\Registry, Corework\SystemMessages, jamwork\database\MysqlRecordset as Recordset;
 
 /**
  * Languagemanager
@@ -20,7 +20,7 @@ use jamwork\common\Registry, Core\SystemMessages, jamwork\database\MysqlRecordse
  * @package  Manager
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
-class Language extends \Core\Application\Manager\Base
+class Language extends \Corework\Application\Manager\Base
 {
 
 }

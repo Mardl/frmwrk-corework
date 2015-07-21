@@ -1,29 +1,29 @@
 <?php
 /**
- * Unittest für Core\HTMLHelper
+ * Unittest für Corework\HTMLHelper
  *
  * PHP version 5.3
  *
  * @category Unittest
- * @package  Core
+ * @package  Corework
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
-namespace tests\Core;
+namespace tests\Corework;
 
-use Core\HTMLHelper;
+use Corework\HTMLHelper;
 
 /**
  * HTMLHelper test case.
  * 
  * @category Unittest
- * @package  Core
+ * @package  Corework
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
 class HTMLHelperTest extends \PHPUnit_Framework_TestCase
 {
 	
 	/**
-	 * Beinhaltet eine Instanz von Core\HTMLHelper
+	 * Beinhaltet eine Instanz von Corework\HTMLHelper
 	 * 
 	 * @var HTMLHelper
 	 */

@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Cache;
+namespace Corework\Cache;
 
 use \Memcached as BaseCache;
 
@@ -8,7 +8,7 @@ use \Memcached as BaseCache;
  * Memcache
  *
  * @category Cache
- * @package  Core\Cache
+ * @package  Corework\Cache
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
 class Memcache
@@ -17,7 +17,7 @@ class Memcache
 	/**
 	 * Instance-Keeper
 	 *
-	 * @var \Core\Cache\Memcache
+	 * @var \Corework\Cache\Memcache
 	 */
 	private static $instance = null;
 
@@ -32,7 +32,7 @@ class Memcache
 	/**
 	 * Liefert die Instanz des Singleton
 	 *
-	 * @return Core\Cache\Memcache
+	 * @return Corework\Cache\Memcache
 	 */
 	public static function getInstance()
 	{

@@ -115,10 +115,10 @@ class InitUnittests
 	{
 		require_once FRAMEWORK_PATH.'/Loader.php';
 		
-		$loader = new Core\Loader('Core', ROOT_PATH);
+		$loader = new Corework\Loader('Corework', ROOT_PATH);
 		$loader->register();
 		
-		$loader = new Core\Loader('jamwork', FRAMEWORKS_PATH);
+		$loader = new Corework\Loader('jamwork', FRAMEWORKS_PATH);
 		$loader->register();
 
 	}
@@ -181,16 +181,16 @@ class InitUnittests
 		$reg = Registry::getInstance();
 		
 		//Request
-		$request = new Core\Request($_GET, $_POST, $_SERVER, $_COOKIE);
+		$request = new Corework\Request($_GET, $_POST, $_SERVER, $_COOKIE);
 		$reg->setRequest($request);
 		
 		//Response
-		$response = new Core\Response();
+		$response = new Corework\Response();
 		$response->addHeader('Content-Type', 'text/html; charset=utf-8');
 		$reg->setResponse($response);
 		
 		//Router
-		$router = new Core\Router();
+		$router = new Corework\Router();
 		$router->addRoutes(
 			array(
 				array(

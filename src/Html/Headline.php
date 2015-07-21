@@ -1,12 +1,12 @@
 <?php
 
-namespace Core\Html;
+namespace Corework\Html;
 
 /**
  * Class Headline
  *
- * @category Core
- * @package  Core\Html
+ * @category Corework
+ * @package  Corework\Html
  * @author   Ionel-Alex Caizer <ionel@dreiwerken.de>
  */
 class Headline extends Element

@@ -1,14 +1,14 @@
 <?php
 
-namespace Core\Mail;
+namespace Corework\Mail;
 
 /**
  * Class Mime
  *
  * Encode files(string) as mime to send attachments via mail
  *
- * @category Core
- * @package  Core\Mail
+ * @category Corework
+ * @package  Corework\Mail
  * @author   Ionel-Alex Caizer <ionel@dreiwerken.de>
  */
 class Mime extends \ArrayObject
@@ -67,7 +67,7 @@ class Mime extends \ArrayObject
 	public function getHeaders()
 	{
 		return array(
-			'MIME-Version' => '1.0 (PHP Core\Mime)',
+			'MIME-Version' => '1.0 (PHP Corework\Mime)',
 			'Content-Type' => $this->type . ';' . " " . 'boundary="' . $this->boundary . '"'
 		);
 	}
@@ -88,7 +88,7 @@ class Mime extends \ArrayObject
 		// Wenn $type == 'text/html' dann füge vorher eine alternative text/plain ein
 		if ($part[0] == 'text/html' and $this->type == 'multipart/alternative')
 		{
-			$dom = new \Core\DOM\Document();
+			$dom = new \Corework\DOM\Document();
 			@ $dom->loadHTML($value);
 			$elements = $dom->getElementsByTagName('body');
 			if (count($elements) == 1)

@@ -1,15 +1,15 @@
 <?php
 
-namespace Core;
+namespace Corework;
 
-use Core\Request;
+use Corework\Request;
 use jamwork\common\Registry;
 
 /**
  * Class Route
  *
- * @category Core
- * @package  Core
+ * @category Corework
+ * @package  Corework
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
 class Route

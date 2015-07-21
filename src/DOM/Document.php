@@ -1,12 +1,12 @@
 <?php
 
-namespace Core\DOM;
+namespace Corework\DOM;
 
 /**
  * Class Document
  *
- * @category Core
- * @package  Core\DOM
+ * @category Corework
+ * @package  Corework\DOM
  * @author   Ionel-Alex Caizer <ionel@dreiwerken.de>
  */
 class Document extends \DOMDocument
@@ -22,7 +22,7 @@ class Document extends \DOMDocument
 	{
 		parent::__construct($version, $encoding);
 		$this->formatOutput = true;
-		$this->registerNodeClass('DOMElement', 'Core\\DOM\\Element');
+		$this->registerNodeClass('DOMElement', 'Corework\\DOM\\Element');
 	}
 
 	/**

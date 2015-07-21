@@ -1,14 +1,14 @@
 <?php
 
-namespace Core\Form;
+namespace Corework\Form;
 
-use Core\Form, Core\SystemMessages;
+use Corework\Form, Corework\SystemMessages;
 
 /**
  * Class BaseGenerator
  *
- * @category Core
- * @package  Core\Form
+ * @category Corework
+ * @package  Corework\Form
  * @author   Ionel-Alex Caizer <ionel@dreiwerken.de>
  */
 class BaseGenerator
@@ -31,7 +31,7 @@ class BaseGenerator
 	/**
 	 * Liefert das Formularobjekt
 	 *
-	 * @return \Core\Form
+	 * @return \Corework\Form
 	 */
 	public function getForm()
 	{
@@ -41,7 +41,7 @@ class BaseGenerator
 	/**
 	 * Liefert das Formularobjekt zur Ausgabe
 	 *
-	 * @return \Core\Form
+	 * @return \Corework\Form
 	 */
 	public function asString()
 	{
@@ -59,7 +59,7 @@ class BaseGenerator
 	/**
 	 * Standardvalidierung nach Pflichtfeldern
 	 *
-	 * @param \Core\Form|\Core\Form\Element $elementContainer
+	 * @param \Corework\Form|\Corework\Form\Element $elementContainer
 	 *
 	 * @return bool
 	 */
@@ -70,7 +70,7 @@ class BaseGenerator
 		foreach ($elementContainer->getElements() as $el)
 		{
 			$check = true;
-			if ($el instanceof \Core\Html\Input)
+			if ($el instanceof \Corework\Html\Input)
 			{
 				$check = $el->validate();
 			}

@@ -1,14 +1,14 @@
 <?php
 
-namespace Core\Application\Models;
+namespace Corework\Application\Models;
 
-use Core\Model as BaseModel, Core\Application\Models\Right\Group as RightGroup;
+use Corework\Model as BaseModel, Corework\Application\Models\Right\Group as RightGroup;
 
 /**
  * Right
  *
- * @category Core
- * @package  Core\Application\Models
+ * @category Corework
+ * @package  Corework\Application\Models
  * @author   Alexander Jonser <alex@dreiwerken.de>
  *
  * @MappedSuperclass
@@ -140,7 +140,7 @@ class Right extends BaseModel
 	}
 
 	/**
-	 * @return \Core\Application\Models\Right\Group
+	 * @return \Corework\Application\Models\Right\Group
 	 */
 	public function getGroups()
 	{

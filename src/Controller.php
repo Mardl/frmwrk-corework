@@ -1,14 +1,14 @@
 <?php
 
-namespace Core;
+namespace Corework;
 
-use InvalidArgumentException, Core\Request, Core\FrontController, jamwork\common\Registry;
+use InvalidArgumentException, Corework\Request, Corework\FrontController, jamwork\common\Registry;
 
 /**
  * Abstract controller class
  *
- * @category Core
- * @package  Core
+ * @category Corework
+ * @package  Corework
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
 abstract class Controller
@@ -24,7 +24,7 @@ abstract class Controller
 	/**
 	 * View
 	 *
-	 * @var   \Core\View
+	 * @var   \Corework\View
 	 */
 	protected $view;
 
@@ -95,7 +95,7 @@ abstract class Controller
 	/**
 	 * Speichert den FrontController zwischen
 	 *
-	 * @param \Core\FrontController $frontController FrontController
+	 * @param \Corework\FrontController $frontController FrontController
 	 *
 	 * @return void
 	 */
@@ -107,7 +107,7 @@ abstract class Controller
 	/**
 	 * Set router
 	 *
-	 * @param \Core\Router $router
+	 * @param \Corework\Router $router
 	 * @return bool Status
 	 */
 	public function setRouter(Router $router)
@@ -143,7 +143,7 @@ abstract class Controller
 	 *
 	 * @param string $template Template file
 	 *
-	 * @return \Core\View
+	 * @return \Corework\View
 	 */
 	public function createView($template = null)
 	{
@@ -156,7 +156,7 @@ abstract class Controller
 	/**
 	 * Set request
 	 *
-	 * @param \Core\Request $request Request
+	 * @param \Corework\Request $request Request
 	 *
 	 * @return bool Status
 	 */
@@ -170,7 +170,7 @@ abstract class Controller
 	/**
 	 * Set response
 	 *
-	 * @param \Core\Response $response Response
+	 * @param \Corework\Response $response Response
 	 *
 	 * @return bool Status
 	 */

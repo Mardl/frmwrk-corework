@@ -1,14 +1,14 @@
 <?php
 
-namespace Core\Html\Input;
+namespace Corework\Html\Input;
 
-use Core\Html\Input;
+use Corework\Html\Input;
 
 /**
  * Class Radio
  *
- * @category Core
- * @package  Core\Html\Input
+ * @category Corework
+ * @package  Corework\Html\Input
  * @author   Ionel-Alex Caizer <ionel@dreiwerken.de>
  */
 class Radio extends Input

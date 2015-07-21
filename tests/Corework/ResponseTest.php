@@ -1,29 +1,29 @@
 <?php
 /**
- * Unittest für Core\Response
+ * Unittest für Corework\Response
  *
  * PHP version 5.3
  *
  * @category Unittest
- * @package  Core
+ * @package  Corework
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
-namespace tests\Core;
+namespace tests\Corework;
 
-use Core\Response;
+use Corework\Response;
 
 /**
  * Response test case.
  * 
  * @category Unittest
- * @package  Core
+ * @package  Corework
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
 class ResponseTest extends \PHPUnit_Framework_TestCase
 {
 	
 	/**
-	 * Beinhaltet eine Instanz von Core\Response
+	 * Beinhaltet eine Instanz von Corework\Response
 	 * 
 	 * @var Response
 	 */

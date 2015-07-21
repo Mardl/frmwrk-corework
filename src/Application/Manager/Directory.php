@@ -1,19 +1,19 @@
 <?php
 
-namespace Core\Application\Manager;
+namespace Corework\Application\Manager;
 
 use jamwork\debug\DebugLogger,
-	Core\Application\Models\Directory as DirectoryModel,
-	Core\Application\Manager\Directory\Files as FilesManager,
+	Corework\Application\Models\Directory as DirectoryModel,
+	Corework\Application\Manager\Directory\Files as FilesManager,
 	jamwork\common\Registry,
-	Core\SystemMessages,
+	Corework\SystemMessages,
 	jamwork\database\MysqlRecordset as Recordset;
 
 /**
  * Class Directory
  *
- * @category Core
- * @package  Core\Application\Manager
+ * @category Corework
+ * @package  Corework\Application\Manager
  * @author   Reinhard Hampl <reini@dreiwerken.de>
  */
 class Directory
@@ -139,8 +139,8 @@ class Directory
 	 * Speichert ein neues Verzeichnis in der Datenbank
 	 *
 	 * @static
-	 * @param \Core\Application\Models\Directory $dirModel
-	 * @return bool|\Core\Application\Models\Directory
+	 * @param \Corework\Application\Models\Directory $dirModel
+	 * @return bool|\Corework\Application\Models\Directory
 	 */
 	public static function insertDirectory(DirectoryModel $dirModel)
 	{

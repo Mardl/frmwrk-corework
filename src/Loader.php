@@ -1,12 +1,12 @@
 <?php
 
-namespace Core;
+namespace Corework;
 
 /**
  * Class Loader
  *
- * @category Core
- * @package  Core
+ * @category Corework
+ * @package  Corework
  * @author   @author   Alexander Jonser <alex@dreiwerken.de>
  */
 class Loader

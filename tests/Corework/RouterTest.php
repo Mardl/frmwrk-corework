@@ -1,29 +1,29 @@
 <?php
 /**
- * Unittest für Core\Router
+ * Unittest für Corework\Router
  *
  * PHP version 5.3
  *
  * @category Unittest
- * @package  Core
+ * @package  Corework
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
-namespace tests\Core;
+namespace tests\Corework;
 
-use Core\Router;
+use Corework\Router;
 
 /**
  * Router test case.
  * 
  * @category Unittest
- * @package  Core
+ * @package  Corework
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
 class RouterTest extends \PHPUnit_Framework_TestCase
 {
 	
 	/**
-	 * Beinhaltet einen Instanz von Core\Router
+	 * Beinhaltet einen Instanz von Corework\Router
 	 * 
 	 * @var Router
 	 */
@@ -119,7 +119,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 		$router = new Router();
 		$router->addRoutes($routes);
 		
-		$this->assertInstanceOf('Core\Route', $router->getRoute('logout'));
+		$this->assertInstanceOf('Corework\Route', $router->getRoute('logout'));
 	
 	}
 	

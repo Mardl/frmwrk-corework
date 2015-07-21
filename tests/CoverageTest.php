@@ -6,12 +6,12 @@
  * PHP version 5.3
  *
  * @category Unittest
- * @package  Core
+ * @package  Corework
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
-namespace tests\Core;
+namespace tests\Corework;
 
-use Core\Config;
+use Corework\Config;
 
 /**
  * Coverage test case.

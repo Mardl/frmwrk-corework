@@ -1,34 +1,34 @@
 <?php
 /**
- * Unittest für Core\View
+ * Unittest für Corework\View
  *
  * PHP version 5.3
  *
  * @category Unittest
- * @package  Core
+ * @package  Corework
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
-namespace tests\Core;
+namespace tests\Corework;
 
-use Core\View,
-	Core\Request,
-	Core\Response,
-	Core\Router,
-	Core\HTMLHelper,
+use Corework\View,
+	Corework\Request,
+	Corework\Response,
+	Corework\Router,
+	Corework\HTMLHelper,
 	jamwork\common\Registry;
 
 /**
  * View test case.
  * 
  * @category Unittest
- * @package  Core
+ * @package  Corework
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
 class ViewTest extends \PHPUnit_Framework_TestCase
 {
 	
 	/**
-	 * Beinhaltet die Instanz von Core\View
+	 * Beinhaltet die Instanz von Corework\View
 	 *
 	 * @var View
 	 */
@@ -87,7 +87,7 @@ class ViewTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * Tests View->__construct()
 	 * 
-	 * @covers Core\View::__construct
+	 * @covers Corework\View::__construct
 	 * 
 	 * @return void
 	 */
@@ -99,7 +99,7 @@ class ViewTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * Tests View->__construct()
 	 *
-	 * @covers Core\View::__construct
+	 * @covers Corework\View::__construct
 	 *
 	 * @return void
 	 */
@@ -111,8 +111,8 @@ class ViewTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * Tests View->__toString()
 	 * 
-	 * @covers Core\View::__toString
-	 * @covers Core\View::render
+	 * @covers Corework\View::__toString
+	 * @covers Corework\View::render
 	 * 
 	 * @return void
 	 */
@@ -125,8 +125,8 @@ class ViewTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * Tests View->__toString()
 	 *
-	 * @covers Core\View::__toString
-	 * @covers Core\View::render
+	 * @covers Corework\View::__toString
+	 * @covers Corework\View::render
 	 *
 	 * @return void
 	 */
@@ -139,8 +139,8 @@ class ViewTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * Tests View->__toString()
 	 *
-	 * @covers Core\View::__toString
-	 * @covers Core\View::render
+	 * @covers Corework\View::__toString
+	 * @covers Corework\View::render
 	 *
 	 * @return void
 	 */
@@ -310,8 +310,8 @@ class ViewTest extends \PHPUnit_Framework_TestCase
 	 * Erwarteter Wert:
 	 * unittest first, unittest second, unittest third
 	 * 
-	 * @covers Core\View::addKeywords
-	 * @covers Core\View::getKeywords
+	 * @covers Corework\View::addKeywords
+	 * @covers Corework\View::getKeywords
 	 * 
 	 * @return void
 	 */
@@ -330,8 +330,8 @@ class ViewTest extends \PHPUnit_Framework_TestCase
 	 * Erwarteter Wert:
 	 * unittest first, unittest second, unittest third
 	 *
-	 * @covers Core\View::addKeywords
-	 * @covers Core\View::getKeywords
+	 * @covers Corework\View::addKeywords
+	 * @covers Corework\View::getKeywords
 	 *
 	 * @return void
 	 */
@@ -354,8 +354,8 @@ class ViewTest extends \PHPUnit_Framework_TestCase
 	 * Erwarteter Wert:
 	 * false, weil kein Keyword gesetzt
 	 *
-	 * @covers Core\View::addKeywords
-	 * @covers Core\View::getKeywords
+	 * @covers Corework\View::addKeywords
+	 * @covers Corework\View::getKeywords
 	 *
 	 * @return void
 	 */
@@ -367,8 +367,8 @@ class ViewTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * Tests View->setDescription()
 	 * 
-	 * @covers Core\View::setDescription
-	 * @covers Core\View::getDescription
+	 * @covers Corework\View::setDescription
+	 * @covers Corework\View::getDescription
 	 * 
 	 * @return void
 	 */

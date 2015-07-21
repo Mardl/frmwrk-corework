@@ -1,14 +1,14 @@
 <?php
 
-namespace Core\Application\Models;
+namespace Corework\Application\Models;
 
-use Core\Model as BaseModel;
+use Corework\Model as BaseModel;
 
 /**
  * Class Address
  *
- * @category Core
- * @package  Core\Application\Models
+ * @category Corework
+ * @package  Corework\Application\Models
  * @author   Alexander Jonser <alex@dreiwerken.de>
  *
  * @MappedSuperclass
@@ -66,7 +66,7 @@ class Address extends BaseModel
 	/**
 	 * User
 	 *
-	 * @var \Core\Application\Models\User
+	 * @var \Corework\Application\Models\User
 	 *
 	 * @OneToOne(targetEntity="App\Models\User", fetch="LAZY", inversedBy="address")
 	 */

@@ -1,22 +1,22 @@
 <?php
 /**
- * Unittest für Core\SystemMessages
+ * Unittest für Corework\SystemMessages
  *
  * PHP version 5.3
  *
  * @category Unittest
- * @package  Core
+ * @package  Corework
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
-namespace tests\Core;
+namespace tests\Corework;
 
-use Core\SystemMessages;
+use Corework\SystemMessages;
 
 /**
  * SystemMessages test case.
  * 
  * @category Unittest
- * @package  Core
+ * @package  Corework
  * @author   Alexander Jonser <alex@dreiwerken.de>
  */
 class SystemMessagesTest extends \PHPUnit_Framework_TestCase
