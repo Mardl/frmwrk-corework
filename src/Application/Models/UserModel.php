@@ -3,16 +3,16 @@
 namespace Corework\Application\Models;
 
 
-use Corework\Model;
-
 /**
  * Class UserModel
  *
- * @category Basis
+ * @category Corework
  * @package  Corework\Application\Models
  * @author   Cindy Paulitz <cindy@dreiwerken.de>
+ *
+ * @MappedSuperclass
  */
-class UserModel extends Model
+class UserModel extends \Corework\Model
 {
 	/**
 	 * Id
@@ -133,11 +133,10 @@ class UserModel extends Model
 	 */
 	protected $admin = false;
 
-
 	/**
 	 * Language
 	 *
-	 * @ManyToOne(targetEntity="App\Models\Language")
+	 * @ManyToOne(targetEntity="Corework\Application\Models\LanguageModel")
 	 * @JoinColumn(name="usr_language_id", referencedColumnName="lng_id", nullable=false)
 	 */
 	protected $language_id = null;
@@ -156,8 +155,8 @@ class UserModel extends Model
 	 *
 	 * @var \int
 	 *
-	 * @ManyToOne(targetEntity="App\Models\User")
-	 * @JoinColumn(name="usr_modifieduser_id", referencedColumnName="usr_id", nullable=true)
+	 * @ManyToOne(targetEntity="Corework\Application\Models\UserModel")
+	 * @JoinColumn(name="usr_createduser_id", referencedColumnName="usr_id", nullable=true)
 	 */
 	protected $createduser_id = null;
 
@@ -176,7 +175,7 @@ class UserModel extends Model
 	 *
 	 * @var \int
 	 *
-	 * @ManyToOne(targetEntity="App\Models\User")
+	 * @ManyToOne(targetEntity="Corework\Application\Models\UserModel")
 	 * @JoinColumn(name="usr_modifieduser_id", referencedColumnName="usr_id", nullable=true)
 	 */
 	protected $modifieduser_id = null;
@@ -191,10 +190,11 @@ class UserModel extends Model
 
 	/**
 	 * @param string $username
+	 * @return void
 	 */
 	public function setUsername($username)
 	{
-		$this->username = $username;
+		$this->set('username', $username);
 	}
 
 	/**
@@ -207,10 +207,11 @@ class UserModel extends Model
 
 	/**
 	 * @param string $firstname
+	 * @return void
 	 */
 	public function setFirstname($firstname)
 	{
-		$this->firstname = $firstname;
+		$this->set('firstname', $firstname);
 	}
 
 	/**
@@ -223,10 +224,11 @@ class UserModel extends Model
 
 	/**
 	 * @param string $lastname
+	 * @return void
 	 */
 	public function setLastname($lastname)
 	{
-		$this->lastname = $lastname;
+		$this->set('lastname', $lastname);
 	}
 
 	/**
@@ -247,10 +249,11 @@ class UserModel extends Model
 
 	/**
 	 * @param string $email
+	 * @return void
 	 */
 	public function setEmail($email)
 	{
-		$this->email = $email;
+		$this->set('email', $email);
 	}
 
 	/**
@@ -271,10 +274,11 @@ class UserModel extends Model
 
 	/**
 	 * @param boolean $emailcorrupted
+	 * @return void
 	 */
 	public function setEmailcorrupted($emailcorrupted)
 	{
-		$this->emailcorrupted = $emailcorrupted;
+		$this->set('emailcorrupted', $emailcorrupted);
 	}
 
 	/**
@@ -287,10 +291,11 @@ class UserModel extends Model
 
 	/**
 	 * @param string $avatar
+	 * @return void
 	 */
 	public function setAvatar($avatar)
 	{
-		$this->avatar = $avatar;
+		$this->set('avatar', $avatar);
 	}
 
 	/**
@@ -302,18 +307,7 @@ class UserModel extends Model
 	 */
 	public function setBirthday($datetime = '0000-00-00')
 	{
-		if (!($datetime instanceof \DateTime))
-		{
-			try
-			{
-				$datetime = new \DateTime($this->clearDateTimeSting($datetime));
-			} catch (\Exception $e)
-			{
-				throw new \InvalidArgumentException('Ungültige Datumsangabe');
-			}
-		}
-
-		$this->created = $datetime;
+		$this->set('birthday', $this->setDateTimeFrom($datetime));
 	}
 
 	/**
@@ -323,7 +317,7 @@ class UserModel extends Model
 	 */
 	public function getBirthdayAsString()
 	{
-		return $this->getBirthday()->format('Y-m-d H:i:s');
+		return ($this->getBirthday() instanceof \DateTime) ? $this->getBirthday()->format('Y-m-d H:i:s') : $this->getBirthday();
 	}
 
 	/**
@@ -331,10 +325,7 @@ class UserModel extends Model
 	 */
 	public function getBirthday()
 	{
-		if (!($this->birthday instanceof \DateTime))
-		{
-			$this->birthday = new \DateTime(!empty($this->birthday) ? $this->birthday : '0000-00-00 00:00:00');
-		}
+		$this->birthday = $this->getDateTimeFrom($this->birthday, '');
 		return $this->birthday;
 	}
 
@@ -348,10 +339,11 @@ class UserModel extends Model
 
 	/**
 	 * @param int $gender
+	 * @return void
 	 */
 	public function setGender($gender)
 	{
-		$this->gender = $gender;
+		$this->set('gender', $gender);
 	}
 
 	/**
@@ -364,10 +356,11 @@ class UserModel extends Model
 
 	/**
 	 * @param int $status
+	 * @return void
 	 */
 	public function setStatus($status)
 	{
-		$this->status = $status;
+		$this->set('status', $status);
 	}
 
 	/**
@@ -388,10 +381,11 @@ class UserModel extends Model
 
 	/**
 	 * @param boolean $otp
+	 * @return void
 	 */
 	public function setOtp($otp)
 	{
-		$this->otp = $otp;
+		$this->set('otp', $otp);
 	}
 
 	/**
@@ -412,10 +406,11 @@ class UserModel extends Model
 
 	/**
 	 * @param boolean $admin
+	 * @return void
 	 */
 	public function setAdmin($admin)
 	{
-		$this->admin = $admin;
+		$this->set('admin', $admin);
 	}
 
 	/**
@@ -428,10 +423,11 @@ class UserModel extends Model
 
 	/**
 	 * @param mixed $language_id
+	 * @return void
 	 */
 	public function setLanguage_id($language_id)
 	{
-		$this->language_id = $language_id;
+		$this->set('language_id', $language_id);
 	}
 
 	/**
@@ -439,15 +435,43 @@ class UserModel extends Model
 	 */
 	public function getPassword()
 	{
-		return '';
+		return $this->password;
 	}
 
 	/**
 	 * @param string $password
+	 * @return void
 	 */
 	public function setPassword($password)
 	{
-		$this->password = $password;
+		$this->set('password', $password);
 	}
 
+	/**
+	 * @return array
+	 */
+	public function getDataRow()
+	{
+		$data = array(
+			'usr_id' => $this->getId(),
+			'usr_language_id' => $this->getLanguage_id(),
+			'usr_firstname' => $this->getFirstname(),
+			'usr_lastname' => $this->getLastname(),
+			'usr_password' => $this->getPassword(),
+			'usr_email' => $this->getEmail(),
+			'usr_emailcorrupted' => $this->getEmailcorrupted(),
+			'usr_avatar' => $this->getAvatar(),
+			'usr_birthday' => $this->getBirthdayAsString(),
+			'usr_gender' => $this->getGender(),
+			'usr_status' => $this->getStatus(),
+			'usr_otp' => $this->getOtp(),
+			'usr_admin' => $this->getAdmin(),
+			'usr_created' => $this->getCreatedAsString(),
+			'usr_createduser_id' => $this->getCreateduser_Id(),
+			'usr_modified' => $this->getModifiedAsString(),
+			'usr_modifieduser_id' => $this->getModifieduser_Id()
+		);
+
+		return $data;
+	}
 }

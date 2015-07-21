@@ -1,28 +1,25 @@
 <?php
+
 namespace Corework\Application\Models;
 
-use Corework\Model as BaseModel;
-
 /**
- * Class Language
+ * Class LanguageModel
  *
  * @category Corework
  * @package  Corework\Application\Models
- * @author   Alexander Jonser <alex@dreiwerken.de>
- *
+ * @author   Cindy Paulitz <cindy@dreiwerken.de>
  *
  * @MappedSuperclass
  */
-class Language extends BaseModel implements \Corework\Application\Interfaces\ModelsInterface
+class LanguageModel extends \Corework\Model
 {
-
 	/**
 	 * Id
 	 *
 	 * @var integer
 	 *
 	 * @Id
-	 * @Column(type="integer")
+	 * @Column(type="integer", name="lng_id")
 	 * @GeneratedValue(strategy="AUTO")
 	 */
 	protected $id;
@@ -33,7 +30,7 @@ class Language extends BaseModel implements \Corework\Application\Interfaces\Mod
 	 *
 	 * @var string
 	 *
-	 * @Column(type="string", length=8)
+	 * @Column(type="string", length=8, name="lng_short")
 	 */
 	protected $short;
 
@@ -43,7 +40,7 @@ class Language extends BaseModel implements \Corework\Application\Interfaces\Mod
 	 *
 	 * @var string
 	 *
-	 * @Column(type="string", length=50, nullable=true)
+	 * @Column(type="string", length=50, nullable=true, name="lng_national")
 	 */
 	protected $national;
 
@@ -52,7 +49,7 @@ class Language extends BaseModel implements \Corework\Application\Interfaces\Mod
 	 *
 	 * @var string
 	 *
-	 * @Column(type="string", length=50)
+	 * @Column(type="string", length=50, name="lng_international")
 	 */
 	protected $international;
 
@@ -61,7 +58,7 @@ class Language extends BaseModel implements \Corework\Application\Interfaces\Mod
 	 *
 	 * @var string
 	 *
-	 * @Column(type="string", length=10)
+	 * @Column(type="string", length=10, name="lng_isocode")
 	 */
 	protected $isocode;
 
@@ -70,9 +67,48 @@ class Language extends BaseModel implements \Corework\Application\Interfaces\Mod
 	 *
 	 * @var string
 	 *
-	 * @Column(type="string", length=10)
+	 * @Column(type="string", length=10, name="lng_countryCode")
 	 */
 	protected $countryCode;
+
+	/**
+	 * Created (Registration date)
+	 *
+	 * @var \DateTime
+	 *
+	 * @Column(type="datetime", name="lng_created")
+	 */
+	protected $created;
+
+	/**
+	 * Modified User Id
+	 *
+	 * @var \int
+	 *
+	 * @ManyToOne(targetEntity="Corework\Application\Models\UserModel")
+	 * @JoinColumn(name="lng_createduser_id", referencedColumnName="usr_id", nullable=true)
+	 */
+	protected $createduser_id = null;
+
+
+	/**
+	 * Modified Datum
+	 *
+	 * @var \DateTime
+	 *
+	 * @Column(type="datetime", name="lng_modified")
+	 */
+	protected $modified = null;
+
+	/**
+	 * Modified User Id
+	 *
+	 * @var \int
+	 *
+	 * @ManyToOne(targetEntity="Corework\Application\Models\UserModel")
+	 * @JoinColumn(name="lng_modifieduser_id", referencedColumnName="usr_id", nullable=true)
+	 */
+	protected $modifieduser_id = null;
 
 	/**
 	 * @return array
@@ -80,18 +116,18 @@ class Language extends BaseModel implements \Corework\Application\Interfaces\Mod
 	public function getDataRow()
 	{
 		$data = array(
-			'id' => $this->getId(),
-			'isocode' => $this->getIsocode(),
-			'countryCode' => $this->getCountryCode(),
-			'international' => $this->getInternational(),
-			'national' => $this->getNational()
+			'lng_id' => $this->getId(),
+			'lng_isocode' => $this->getIsocode(),
+			'lng_countryCode' => $this->getCountryCode(),
+			'lng_international' => $this->getInternational(),
+			'lng_national' => $this->getNational()
 		);
 
 		return $data;
 	}
 
 	/**
-	 * Liefert LÃ¤nder-Sprachkennzeichen
+	 * Liefert Länder-Sprachkennzeichen
 	 * Beispiel de-de oder de-AT
 	 *
 	 * @return string
@@ -107,7 +143,7 @@ class Language extends BaseModel implements \Corework\Application\Interfaces\Mod
 	 */
 	public function setCountryCode($countryCode)
 	{
-		$this->countryCode = $countryCode;
+		$this->set('countryCode', $countryCode);
 	}
 
 	/**
@@ -124,7 +160,7 @@ class Language extends BaseModel implements \Corework\Application\Interfaces\Mod
 	 */
 	public function setInternational($international)
 	{
-		$this->international = $international;
+		$this->set('international', $international);
 	}
 
 	/**
@@ -141,7 +177,7 @@ class Language extends BaseModel implements \Corework\Application\Interfaces\Mod
 	 */
 	public function setIsocode($isocode)
 	{
-		$this->isocode = $isocode;
+		$this->set('isocode', $isocode);
 	}
 
 	/**
@@ -158,7 +194,7 @@ class Language extends BaseModel implements \Corework\Application\Interfaces\Mod
 	 */
 	public function setNational($national)
 	{
-		$this->national = $national;
+		$this->set('national', $national);
 	}
 
 	/**
@@ -175,7 +211,7 @@ class Language extends BaseModel implements \Corework\Application\Interfaces\Mod
 	 */
 	public function setShort($short)
 	{
-		$this->short = $short;
+		$this->set('short', $short);
 	}
 
 	/**
@@ -185,6 +221,4 @@ class Language extends BaseModel implements \Corework\Application\Interfaces\Mod
 	{
 		return $this->short;
 	}
-
-
 }

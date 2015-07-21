@@ -2,14 +2,16 @@
 
 namespace Corework;
 
+use Corework\Application\Interfaces\ModelsInterface;
+
 /**
  * Class Model
  *
  * @category Corework
  * @package  Corework
- * @author   Alexander Jonser <alex@dreiwerken.de>
+ * @author   Cindy Paulitz <cindy@dreiwerken.de>
  */
-class Model
+abstract class Model implements ModelsInterface
 {
 
 	/**
@@ -31,18 +33,9 @@ class Model
 	const GENDER_BOTH = 3;
 
 	/**
-	 * Haben sich Daten im Model geändert oder nicht
-	 *
-	 * @var boolean
+	 * @var array
 	 */
-	protected $changed = false;
-
-	/**
-	 * Handelt es sich um ein der Datenbank unbekanntes Objekt
-	 *
-	 * @var boolean
-	 */
-	protected $new = true;
+	protected $changedFields = array();
 
 	/**
 	 * Handelt es sich um ein der Datenbank unbekanntes Objekt
@@ -58,72 +51,40 @@ class Model
 	 * "get..." Liefere den Wert
 	 * "is..."  Vergleiche Wert (Beispiel: $user->isName('John'))
 	 * "has..." Prüft ob ein Attribut einen Wert hat (also nicht: null, 0 oder false)
-	 *
-	 * @param string $name   Name der Methode
-	 * @param array  $params Array mit Parametern
-	 * @throws \InvalidArgumentException Wenn das Attribut nicht vorhanden oder die Methode unbekannt ist
-	 * @return mixed
 	 */
+
+	/**
+	 * @var integer
+	 */
+	protected $id = null;
 
 	/**
 	 * @var \DateTime
 	 */
 	protected $modified = '';
+	protected $modifieduser_id = null;
 
 	/**
 	 * @var \DateTime
 	 */
 	protected $created = '';
+	protected $createduser_id = null;
 
+
+	/**
+	 * @return array
+	 */
+	abstract public function getDataRow();
+
+	/**
+	 * @param string $name
+	 * @param array  $params
+	 * @return mixed|void
+	 * @throws \Exception
+	 */
 	public function __call($name, $params)
 	{
-		$parts = preg_split('/^([a-z]+)/', $name, -1, PREG_SPLIT_DELIM_CAPTURE);
-		$parts[2] = lcfirst($parts[2]);
-		$prefix = $this->getTablePrefix();
-		if (!empty($prefix))
-		{
-			$parts[2] = str_replace($prefix, '', $parts[2]);
-
-			$newMethod = $parts[1] . ucfirst($parts[2]);
-
-			if (method_exists($this, $newMethod))
-			{
-				return $this->$newMethod($params[0]);
-			}
-		}
-
-		$method = $parts[1];
-		$attribute = $parts[2];
-
-		if (!property_exists($this, $attribute))
-		{
-			throw new \InvalidArgumentException('Die Klasse ' . __CLASS__ . ' hat das Attribut "' .$prefix . $attribute . '" nicht');
-		}
-
-		syslog(LOG_ERR, get_class($this). " {$method}{$attribute}");
-
-		switch ($method)
-		{
-			case 'set':
-				if ($this->$attribute != $params[0])
-				{
-					$this->$attribute = $params[0];
-					$this->changed = true;
-				}
-				break;
-			case 'get':
-				return $this->$attribute;
-				break;
-			case 'has':
-				return !empty($this->$attribute);
-				break;
-			case 'is':
-				return ($this->$attribute == $params[0]);
-				break;
-			default:
-				throw new \InvalidArgumentException('Unbekannte Methode "' . $name . '" in ' . __CLASS__);
-				break;
-		}
+		throw new \Exception("It is not allowed to use the call interceptor for '".$name."' from '".get_class($this)."' within the project models.");
 	}
 
 	/**
@@ -136,40 +97,6 @@ class Model
 	}
 
 	/**
-	 * Überprüft, ob für $name ein Attribut vorhanden ist, oder bei Prefix direkt die Function!
-	 *
-	 * @param string $name
-	 * @return bool
-	 *
-	 * @deprecated
-	 */
-	private function existsProperty($name)
-	{
-		$parts = preg_split('/^([a-z]+)/', $name, -1, PREG_SPLIT_DELIM_CAPTURE);
-		$method = $parts[1];
-		$attribute = lcfirst($parts[2]);
-
-		$prefix = $this->getTablePrefix();
-		if (!empty($prefix))
-		{
-			$attribute = str_replace($prefix, '', $attribute);
-
-			$newMethod = $method . ucfirst($attribute);
-			if (method_exists($this, $newMethod))
-			{
-				return true;
-			}
-		}
-
-		if (property_exists($this, $attribute))
-		{
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
 	 * Konstruktor
 	 *
 	 * @param array $data Attribut daten
@@ -177,7 +104,6 @@ class Model
 	public function __construct($data = array())
 	{
 		$this->setDataRow($data);
-		$this->changed = false;
 	}
 
 	/**
@@ -194,7 +120,7 @@ class Model
 	 */
 	public function setId($id)
 	{
-		$this->id = $id;
+		$this->set('id', $id);
 	}
 
 	/**
@@ -206,30 +132,6 @@ class Model
 	}
 
 	/**
-	 * @return void
-	 */
-	public function resetRegisterChange()
-	{
-		/** Muss in abgeleitender Klasse implementiert werden */
-	}
-	/**
-	 * @param array $data
-	 * @return void
-	 */
-	public function setDataRow($data = array())
-	{
-
-		if (!empty($data))
-		{
-			foreach ($data as $key => $value)
-			{
-				$setter = 'set' . ucfirst($key);
-				$this->$setter($value);
-			}
-		}
-	}
-
-	/**
 	 * Überprüft $data nach vorhandene Settern und liefert bereinigtes array zurück
 	 *
 	 *
@@ -238,24 +140,6 @@ class Model
 	 */
 	public function clearDataRow($data = array())
 	{
-		/*
-		$ret = array();
-		if (!empty($data))
-		{
-			foreach ($data as $key => $value)
-			{
-				$setter = 'set' . ucfirst($key);
-				if ($this->existsProperty($setter))
-				{
-					$ret[$key] = $value;
-				}
-			}
-		}
-
-		return $ret;
-		*/
-
-
 		$ret = array();
 		if (!empty($data))
 		{
@@ -284,6 +168,47 @@ class Model
 	}
 
 	/**
+	 * Validierung für Setter von Datumsfeldern
+	 *
+	 * @param \DateTime|string $dt
+	 * @throws \InvalidArgumentException
+	 * @return \DateTime
+	 */
+	public function setDateTimeFrom($dt)
+	{
+		if (!($dt instanceof \DateTime))
+		{
+			try
+			{
+				$dt = new \DateTime($this->clearDateTimeSting($dt));
+			} catch (\Exception $e)
+			{
+				throw new \InvalidArgumentException('Ungültige Datumsangabe');
+			}
+		}
+
+		return $dt;
+	}
+
+	/**
+	 * Validierung für Getter von Datumsfeldern
+	 *
+	 * @param        $dt
+	 * @param string $default
+	 * @return \DateTime|string
+	 */
+	public function getDateTimeFrom($dt, $default = '0000-00-00 00:00:00')
+	{
+		if(empty($dt)) {
+			$dt = $default;
+		}
+		if(!($dt instanceof \DateTime)) {
+			$dt = new \DateTime($dt);
+		}
+		return $dt;
+	}
+
+	/**
 	 * Sorgt dafür, dass das Erstellungsdatum immer ein DateTime-Objekt ist.
 	 *
 	 * @param \DateTime|string $datetime Datetime-Objekt oder String
@@ -292,18 +217,7 @@ class Model
 	 */
 	public function setCreated($datetime = 'now')
 	{
-		if (!($datetime instanceof \DateTime))
-		{
-			try
-			{
-				$datetime = new \DateTime($this->clearDateTimeSting($datetime));
-			} catch (\Exception $e)
-			{
-				throw new \InvalidArgumentException('Ungültige Datumsangabe');
-			}
-		}
-
-		$this->created = $datetime;
+		$this->set('created', $this->setDateTimeFrom($datetime) );
 	}
 
 	/**
@@ -321,10 +235,7 @@ class Model
 	 */
 	public function getCreated()
 	{
-		if (!($this->created instanceof \DateTime))
-		{
-			$this->created = new \DateTime(!empty($this->created) ? $this->created : '0000-00-00 00:00:00');
-		}
+		$this->created = $this->getDateTimeFrom($this->created);
 		return $this->created;
 	}
 
@@ -338,11 +249,12 @@ class Model
 
 		if (empty($userId) && isset($register->login) && $register->login instanceof \Corework\Application\Models\User)
 		{
-			$this->createduser_id = $register->login->getId();
+			$this->set('createduser_id', $register->login->getId());
 		}
 		else
 		{
-			$this->createduser_id = !empty($userId) ? $userId : null;
+			$this->set('createduser_id', !empty($userId) ? $userId : null);
+
 		}
 	}
 
@@ -363,18 +275,8 @@ class Model
 	 */
 	public function setModified($datetime = 'now')
 	{
-		if (!($datetime instanceof \DateTime))
-		{
-			try
-			{
-				$datetime = new \DateTime($this->clearDateTimeSting($datetime));
-			} catch (\Exception $e)
-			{
-				throw new \InvalidArgumentException('Ungültige Datumsangabe');
-			}
-		}
-
-		$this->modified = $datetime;
+		$datetime = $this->setDateTimeFrom($datetime);
+		$this->set('modified',$datetime);
 	}
 
 	/**
@@ -392,10 +294,7 @@ class Model
 	 */
 	public function getModified()
 	{
-		if (!($this->modified instanceof \DateTime))
-		{
-			$this->modified = new \DateTime(!empty($this->modified) ? $this->modified : '0000-00-00 00:00:00');
-		}
+		$this->modified = $this->getDateTimeFrom($this->modified);
 		return $this->modified;
 	}
 
@@ -408,12 +307,12 @@ class Model
 		$register = \jamwork\common\Registry::getInstance();
 		if (empty($userId) && isset($register->login) && $register->login instanceof \Corework\Application\Models\User)
 		{
-			$this->modifieduser_id = $register->login->getId();
+			$this->set('modifieduser_id', $register->login->getId());
 
 		}
 		else
 		{
-			$this->modifieduser_id = !empty($userId) ? $userId : null;
+			$this->set('modifieduser_id', !empty($userId) ? $userId : null);
 		}
 	}
 
@@ -423,23 +322,6 @@ class Model
 	public function getModifieduser_Id()
 	{
 		return $this->modifieduser_id;
-	}
-
-	/**
-	 * @param bool $new
-	 * @return void
-	 */
-	public function setNew($new)
-	{
-		$this->new = $new;
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function getNew()
-	{
-		return $this->new;
 	}
 
 	/**
@@ -551,5 +433,101 @@ class Model
 		}
 
 		throw new \ErrorException("Kein ID-Feld über @Id definiert");
+	}
+
+	/**
+	 * @param array $data
+	 * @return void
+	 */
+	public function setDataRow($data = array())
+	{
+		if (!empty($data)) {
+			foreach ($data as $key => $value) {
+				$key = $this->clearPropertyKey($key);
+				$setter = 'set' . ucfirst($key);
+				if(method_exists($this, $setter)) {
+					$this->$setter($value);
+				}
+			}
+		}
+	}
+
+	/**
+	 * @param string $key
+	 * @return string
+	 */
+	public function clearPropertyKey($key)
+	{
+		$prefix = $this->getTablePrefix();
+		if(!empty($prefix)) {
+			return preg_replace('/^'.$prefix.'/', '', $key);
+		}
+		return $key;
+	}
+
+	/**
+	 * @param string $propertyName
+	 * @param mixed  $value
+	 * @return void
+	 */
+	public function set($propertyName, $value)
+	{
+		$this->throwExceptionIfNotModelProperty($propertyName);
+
+		$propertyValue = $this->{$propertyName};
+		if($this->isDifferent($propertyValue, $value)) {
+			// Change property
+			$this->{$propertyName} = $value;
+			$this->registerChange($propertyName);
+		}
+	}
+
+	/**
+	 * @return void
+	 */
+	public function resetRegisterChange()
+	{
+		$this->changedFields = array();
+	}
+
+	/**
+	 * @param string $propertyName
+	 * @return void
+	 */
+	protected function registerChange($propertyName)
+	{
+		$this->changedFields[] = $propertyName;
+	}
+
+	/**
+	 * @param string $value1
+	 * @param string $value2
+	 * @return bool
+	 */
+	protected function isDifferent($value1, $value2)
+	{
+		return (bool) $value1 !== $value2;
+	}
+
+	/**
+	 * @param string $name
+	 * @return bool
+	 */
+	public function hasChanges($name)
+	{
+		$this->throwExceptionIfNotModelProperty($name);
+		return in_array($name, $this->changedFields);
+	}
+
+	/**
+	 * @param string $name
+	 * @return void
+	 * @throws \InvalidArgumentException
+	 */
+	protected function throwExceptionIfNotModelProperty($name)
+	{
+		if(!property_exists($this, $name)) {
+			throw new \InvalidArgumentException(sprintf("Object '%s' hasnt the property '%s'", get_class($this), $name));
+		}
 	}
 }
