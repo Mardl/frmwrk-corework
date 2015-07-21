@@ -11,6 +11,7 @@ namespace Corework\Application\Models;
  * @author   Cindy Paulitz <cindy@dreiwerken.de>
  *
  * @MappedSuperclass
+ * @Prefix(name="usr_")
  */
 class UserModel extends \Corework\Model
 {

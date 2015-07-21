@@ -2,6 +2,7 @@
 
 namespace Corework\Application\Manager;
 
+use Corework\Exceptions\DatabaseException;
 use jamwork\common\Registry;
 use jamwork\database\Query;
 use Corework\SystemMessages;
@@ -13,19 +14,55 @@ use Corework\Application\Interfaces\ModelsInterface;
  */
 class Base
 {
+	/**
+	 * Event bevor das Model gespeichert wird
+	 */
+	const EVENT_BEFORE_SAVE = 'onBeforeSaveModel';
 
 	/**
-	 * @var \jamwork\database\PDODatabase|\jamwork\database\MssqlDatabase
+	 * Event nachdem das Model gespeichert wurde
+	 */
+	const EVENT_AFTER_SAVE = 'onAfterSaveModel';
+
+	/**
+	 * Event bevor das Model gelöscht wird
+	 */
+	const EVENT_BEFORE_DELETE = 'onBeforeDeleteModel';
+
+	/**
+	 * Event nachdem das Model gelöscht wurde
+	 */
+	const EVENT_AFTER_DELETE = 'onAfterDeleteModel';
+
+	/**
+	 * Event-Types
+	 */
+	const EVENT_TYPE_DELETE = 'delete';
+	const EVENT_TYPE_INSERT = 'insert';
+	const EVENT_TYPE_UPDATE = 'update';
+
+	/**
+	 * @var \jamwork\database\Database
 	 */
 	protected $con = null;
 
+	/**
+	 * @var \jamwork\common\EventDispatcher
+	 */
+	protected $eventDispatcher = null;
 
 	/**
-	 *
+	 * @var \Corework\Application\Abstracts\Manager
+	 */
+	protected $manager;
+
+	/**
+	 * @param \jamwork\database\Database|null $dataBase
 	 */
 	public function __construct(\jamwork\database\Database $dataBase = null)
 	{
 		$this->con = is_null($dataBase) ? Registry::getInstance()->getDatabase() : $dataBase;
+		$this->eventDispatcher = Registry::getInstance()->getEventDispatcher();
 	}
 
 	public function getConnection()
@@ -34,32 +71,64 @@ class Base
 	}
 
 	/**
+	 * @param string          $name
+	 * @param ModelsInterface $model
+	 * @param string          $type
+	 * @param null|bool       $status
+	 * @return \jamwork\common\Event
+	 */
+	private function triggerEvent($name, $model, $type, $status)
+	{
+		return $this->eventDispatcher->triggerEvent(
+			$name,
+			array(
+				'model' => $model,
+				'manager' => $this->getManager(),
+			),
+			array(
+				'type' => $type,
+				'status' => $status,
+			)
+		);
+	}
+
+	/**
 	 * Insert method
 	 *
 	 * @param ModelsInterface $model
 	 *
+	 * @throws \Corework\Exceptions\DatabaseException
 	 * @return int|boolean
 	 */
 	public function insert(ModelsInterface $model)
 	{
-		$inserted = 0;
-
-		if ($model->getId() == 0)
+		if ($model->getId() > 0)
 		{
-			$model->setCreated();
-			$model->setCreateduser_Id();
-			$inserted = $this->con->insert($model->getTableName(), $model->getDataRow());
+			return false;
 		}
+
+		$model->setCreated();
+		$model->setCreateduser_Id();
+		$event = $this->triggerEvent(self::EVENT_BEFORE_SAVE, $model, self::EVENT_TYPE_INSERT, null);
+		if ($event && $event->isCanceled())
+		{
+			throw new DatabaseException(sprintf('"%s" für die Aktion "%s" wurde abgebrochen!', self::EVENT_BEFORE_SAVE, self::EVENT_TYPE_INSERT));
+		}
+		$inserted = $this->con->insert($model->getTableName(), $model->getDataRow());
 
 		if (!$inserted)
 		{
 			SystemMessages::addError('Beim Erstellen ist ein Fehler aufgetreten');
-
+			$this->triggerEvent(self::EVENT_AFTER_SAVE, $model, self::EVENT_TYPE_INSERT, false);
 			return false;
 		}
 
 		$model->setId($inserted);
-
+		$event = $this->triggerEvent(self::EVENT_AFTER_SAVE, $model, self::EVENT_TYPE_INSERT, true);
+		if ($event && $event->isCanceled())
+		{
+			throw new DatabaseException(sprintf('"%s" für die Aktion "%s" wurde abgebrochen!', self::EVENT_AFTER_SAVE, self::EVENT_TYPE_INSERT));
+		}
 		return $inserted;
 	}
 
@@ -68,6 +137,7 @@ class Base
 	 *
 	 * @param ModelsInterface $model
 	 *
+	 * @throws \Corework\Exceptions\DatabaseException
 	 * @return int|boolean
 	 */
 	public function update(ModelsInterface $model)
@@ -79,13 +149,24 @@ class Base
 
 		$model->setModified();
 		$model->setModifieduser_Id();
+		$event = $this->triggerEvent(self::EVENT_BEFORE_SAVE, $model, self::EVENT_TYPE_UPDATE, null);
+		if ($event && $event->isCanceled())
+		{
+			throw new DatabaseException(sprintf('"%s" für die Aktion "%s" wurde abgebrochen!', self::EVENT_BEFORE_SAVE, self::EVENT_TYPE_UPDATE));
+		}
 		$updated = $this->con->update($model->getTableName(), $model->getDataRow());
 
 		if (!$updated)
 		{
-			SystemMessages::addError('Beim Aktualisieren ist ein Fehler aufgetreten');
-
+			SystemMessages::addError(sprintf('Beim Aktualisieren ist ein Fehler aufgetreten'));
+			$this->triggerEvent(self::EVENT_AFTER_SAVE, $model, self::EVENT_TYPE_UPDATE, false);
 			return false;
+		}
+
+		$event = $this->triggerEvent(self::EVENT_AFTER_SAVE, $model, self::EVENT_TYPE_UPDATE, true);
+		if ($event && $event->isCanceled())
+		{
+			throw new DatabaseException(sprintf('"%s" für die Aktion "%s" wurde abgebrochen!', self::EVENT_AFTER_SAVE, self::EVENT_TYPE_UPDATE));
 		}
 
 		return $updated;
@@ -96,6 +177,7 @@ class Base
 	 *
 	 * @param ModelsInterface $model
 	 *
+	 * @throws \Corework\Exceptions\DatabaseException
 	 * @return boolean
 	 */
 	public function delete(ModelsInterface $model)
@@ -105,16 +187,44 @@ class Base
 			return false;
 		}
 
+		$event = $this->triggerEvent(self::EVENT_BEFORE_DELETE, $model, self::EVENT_TYPE_DELETE, null);
+		if ($event && $event->isCanceled())
+		{
+			throw new DatabaseException(sprintf('"%s" für die Aktion "%s" wurde abgebrochen!', self::EVENT_BEFORE_DELETE, self::EVENT_TYPE_DELETE));
+		}
+
 		if (!$this->con->delete($model->getTableName(), $model->getDataRow()))
 		{
 			SystemMessages::addError('Beim Entfernen ist ein Fehler aufgetreten');
-
+			$this->triggerEvent(self::EVENT_AFTER_DELETE, $model, self::EVENT_TYPE_DELETE, false);
 			return false;
 		}
 
 		$model->setId(0);
+		$event = $this->triggerEvent(self::EVENT_AFTER_DELETE, $model, self::EVENT_TYPE_DELETE, true);
+		if ($event && $event->isCanceled())
+		{
+			throw new DatabaseException(sprintf('"%s" für die Aktion "%s" wurde abgebrochen!', self::EVENT_AFTER_DELETE, self::EVENT_TYPE_DELETE));
+		}
 
 		return true;
+	}
+
+	/**
+	 * @param \Corework\Application\Abstracts\Manager $manager
+	 * @return void
+	 */
+	public function setManager($manager)
+	{
+		$this->manager = $manager;
+	}
+
+	/**
+	 * @return \Corework\Application\Abstracts\Manager
+	 */
+	public function getManager()
+	{
+		return $this->manager;
 	}
 
 	/**

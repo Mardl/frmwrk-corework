@@ -33,4 +33,8 @@ interface ModelsInterface
 	public function setCreateduser_Id($userId = 0);
 
 	public function setModifieduser_Id($userId = null);
+
+	public function resetRegisterChange();
+
+	public function clearDataRow($data = array());
 }
