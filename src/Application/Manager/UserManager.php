@@ -265,7 +265,7 @@ class UserManager extends Manager
 	 * @return bool|UserModel
 	 * @throws \ErrorException
 	 */
-	public function insertUser(array $data)
+	public function save(array $data)
 	{
 		/** @var UserModel $user */
 		$user = $this->getModelFromArray($data);
@@ -275,27 +275,7 @@ class UserManager extends Manager
 			throw new \ErrorException('Der gewünschte Benutzername ist bereits vergeben!');
 		}
 
-		$saveModel = $this->save($data);
-
-		return $saveModel;
-	}
-
-	/**
-	 * @param array $data
-	 * @return ModelsInterface
-	 * @throws \ErrorException
-	 */
-	public function updateUser(array $data)
-	{
-		/** @var UserModel $user */
-		$user = $this->getModelFromArray($data);
-
-		if (!$this->checkUniqueUsername($user))
-		{
-			throw new \ErrorException('Der gewünschte Benutzername ist bereits vergeben!');
-		}
-
-		$saveModel = $this->save($data);
+		$saveModel = parent::save($data);
 
 		return $saveModel;
 	}
@@ -343,7 +323,7 @@ class UserManager extends Manager
 		$data = $userModel->getDataRow();
 		$data['otpPasswd'] = $randompass;
 
-		$this->updateUser($data);
+		$this->save($data);
 
 		return $randompass;
 	}
