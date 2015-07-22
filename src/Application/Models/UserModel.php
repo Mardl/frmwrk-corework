@@ -299,7 +299,7 @@ class UserModel extends \Corework\Model
 	}
 
 	/**
-	 * Sorgt daf�r, dass das Geburtsdatum immer ein DateTime-Objekt ist.
+	 * Sorgt dafür, dass das Geburtsdatum immer ein DateTime-Objekt ist.
 	 *
 	 * @param \DateTime|string $datetime Datetime-Objekt oder String
 	 * @throws \InvalidArgumentException
@@ -311,7 +311,7 @@ class UserModel extends \Corework\Model
 	}
 
 	/**
-	 * Liefert das Geburtsdatum Datetime im Format Y-m-d H:i:s zur�ck
+	 * Liefert das Geburtsdatum Datetime im Format Y-m-d H:i:s zurück
 	 *
 	 * @return string
 	 */

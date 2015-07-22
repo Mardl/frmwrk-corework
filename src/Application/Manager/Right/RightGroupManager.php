@@ -1,6 +1,6 @@
 <?php
 
-namespace Corework\Application\Models\Right;
+namespace Corework\Application\Manager\Right;
 
 use App\Helper\Models\RightGroupsData;
 use App\Manager\Right\RightManager;
@@ -8,6 +8,8 @@ use App\Manager\UserManager;
 use App\Models\Right\RightGroupModel;
 use App\Models\UserModel;
 use Corework\Application\Abstracts\Manager;
+use Corework\SystemMessages;
+use jamwork\common\Registry;
 
 /**
  * Class RightGroupManager
@@ -18,6 +20,13 @@ use Corework\Application\Abstracts\Manager;
  */
 class RightGroupManager extends Manager
 {
+	/**
+	 * @return RightGroupModel
+	 */
+	protected function getNewModel()
+	{
+		return new RightGroupModel();
+	}
 
 	/** @var RightManager */
 	private $rightManager = null;
@@ -28,7 +37,7 @@ class RightGroupManager extends Manager
 	/**
 	 * @return UserManager
 	 */
-	private function getUserManager()
+	protected function getUserManager()
 	{
 		if (is_null($this->userManager))
 		{
@@ -39,9 +48,9 @@ class RightGroupManager extends Manager
 	}
 
 	/**
-	 * @return \App\Manager\RightManager
+	 * @return \App\Manager\Right\RightManager
 	 */
-	private function getRightManager()
+	protected function getRightManager()
 	{
 		if (is_null($this->rightManager))
 		{
@@ -49,14 +58,6 @@ class RightGroupManager extends Manager
 		}
 
 		return $this->rightManager;
-	}
-
-	/**
-	 * @return RightGroupModel
-	 */
-	protected function getNewModel()
-	{
-		return new RightGroupModel();
 	}
 
 	/**
@@ -237,5 +238,394 @@ class RightGroupManager extends Manager
 		$rightGroupData->setUsers(($users ? $users : array()));
 
 		return $rightGroupData;
+	}
+
+	/**
+	 * Erstellt eine Gruppe
+	 *
+	 * @param \Corework\Application\Models\Right\RightGroupModel $group Zu erstellende Gruppe
+	 *
+	 * @return bool|\Corework\Application\Models\Right\RightGroupModel
+	 */
+	public function createGroup(\Corework\Application\Models\Right\RightGroupModel $group)
+	{
+
+		try
+		{
+			$g = $this->getGroupByName($group->getName());
+			if ($g)
+			{
+				SystemMessages::addError('Eine Rolle mit dem Namen "' . $group->getName() . '" existiert bereits!');
+
+				return false;
+			}
+		} catch (\ErrorException $e)
+		{
+			/*** Ist ok ***/
+		}
+
+		$con = Registry::getInstance()->getDatabase();
+		$datetime = new \DateTime();
+
+		$inserted = $con->insert('right_groups',
+		                         array(
+			                         'name' => $group->getName(),
+			                         'modified' => $datetime->format('Y-m-d H:i:s')
+		                         )
+		);
+
+		if (!$inserted)
+		{
+			SystemMessages::addError('Beim Erstellen der Rolle ist ein Fehler aufgetreten!');
+
+			return false;
+		}
+
+		$usergroup = $this->getGroupById($inserted);
+
+		return $usergroup;
+	}
+
+	/**
+	 * Aktualisiert eine Gruppe
+	 *
+	 * @param RightGroupModel $group       Zu aktualisierende Gruppe
+	 * @param bool       $forceRights Rechte erzwingen
+	 * @param bool       $forceUser   Benutzer erzwingen
+	 *
+	 * @return bool
+	 */
+	public function updateGroup(RightGroupModel $group, $forceRights = false, $forceUser = false)
+	{
+		$con = Registry::getInstance()->getDatabase();
+		$datetime = new \DateTime();
+
+		$updated = $con->update('right_groups', array(
+			                                      'name' => $group->getName(),
+			                                      'modified' => $datetime->format('Y-m-d H:i:s'),
+			                                      'id' => $group->getId()
+		                                      )
+		);
+
+		if (!$updated)
+		{
+			SystemMessages::addError('Beim Update der Rolle ist ein Fehler aufgetreten!');
+
+			return false;
+		}
+
+		$rights = $group->getRights();
+
+		if (!empty($rights) || $forceRights)
+		{
+			if (!$this->updateGroupRights($group))
+			{
+				SystemMessages::addError('Beim Update der Rechte ist ein Fehler aufgetreten!');
+
+				return false;
+			}
+		}
+
+		$users = $group->getUsers();
+
+		if (!empty($users) || $forceUser)
+		{
+			if (!$this->updateGroupUsers($group))
+			{
+				SystemMessages::addError('Beim Update der Mitglieder ist ein Fehler aufgetreten!');
+
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Aktualisiert die Rechte einer Gruppe
+	 *
+	 * @param RightGroupModel $group zu aktualisierende Gruppe
+	 * @return bool
+	 */
+	public function updateGroupRights(RightGroupModel $group)
+	{
+		$rights = $group->getRights();
+
+		$delete = "
+			DELETE FROM
+				right_group_rights
+			WHERE
+				group_id = %d;
+		";
+
+		$insert = "
+			INSERT INTO
+				right_group_rights
+				(`group_id`, `right_id`)
+			VALUES
+				%s;
+		";
+
+		$values = array();
+		$value = "(%d, %d)";
+
+		/**
+		 * mysql_real_escape_string wird hier nicht benötigt, Daten kommen bereits aus der Datenbank
+		 *
+		foreach ($rights as $right)
+		{
+		$values[] = sprintf($value, mysql_real_escape_string($group->getId()), mysql_real_escape_string($right->getId()));
+		}
+
+		$deleteQuery = sprintf($delete, mysql_real_escape_string($group->getId()));
+		 */
+		foreach ($rights as $right)
+		{
+			$values[] = sprintf($value, $group->getId(), $right->getId());
+		}
+
+		$deleteQuery = sprintf($delete, $group->getId());
+		$insertQuery = '';
+
+		if (!empty($values))
+		{
+			$insertQuery = sprintf($insert, implode(',', $values));
+		}
+
+		$con = Registry::getInstance()->getDatabase();
+		$rs = $con->newRecordSet();
+
+		// Starte Transaktion
+		$con->startTransaction();
+
+		// Lösche die bestehenden Rechte
+		$execDelete = $rs->execute($con->newQuery()->setQueryOnce($deleteQuery));
+
+		// Verbinde Rechte und Gruppe neu
+		if ($execDelete->isSuccessfull())
+		{
+			if (!empty($values))
+			{
+				$execInsert = $rs->execute($con->newQuery()->setQueryOnce($insertQuery));
+			}
+			if (empty($values) || $execInsert->isSuccessfull())
+			{
+				// Schließe Transaktion erfolgreich ab
+				$con->commit();
+
+				return true;
+			}
+			else
+			{
+				// Führe Rollback durch
+				$con->rollback();
+
+				return false;
+			}
+		}
+		else
+		{
+			// Führe Rollback durch
+			$con->rollback();
+
+			return false;
+		}
+	}
+
+	/**
+	 * @param UserModel $user
+	 * @param array     $groups
+	 * @return bool
+	 */
+	public function updateUsersGroups(UserModel $user, array $groups)
+	{
+		$delete = "
+			DELETE FROM
+				right_group_users
+			WHERE
+				user_id = %d;
+		";
+		$insert = "
+			INSERT INTO
+				right_group_users
+				(`group_id`, `user_id`)
+			VALUES
+				%s;
+		";
+
+		$values = array();
+		$value = "(%d, %d)";
+
+		/**
+		 * mysql_real_escape_string wird hier nicht benötigt, Daten kommen bereits aus der Datenbank
+		 *
+		foreach ($groups as $group)
+		{
+		$values[] = sprintf($value, mysql_real_escape_string($group->getId()), mysql_real_escape_string($user->getId()));
+		}
+
+		$deleteQuery = sprintf($delete, mysql_real_escape_string($user->getId()));
+		 */
+
+		foreach ($groups as $group)
+		{
+			$values[] = sprintf($value, $group->getId(), $user->getId());
+		}
+
+		$deleteQuery = sprintf($delete, $user->getId());
+
+		$insertQuery = '';
+		if (!empty($values))
+		{
+			$insertQuery = sprintf($insert, implode(',', $values));
+		}
+
+		$con = Registry::getInstance()->getDatabase();
+		$rs = $con->newRecordSet();
+
+		// Starte Transaktion
+		$con->startTransaction();
+
+		// Lösche die bestehenden Mitglieder
+		$execDelete = $rs->execute($con->newQuery()->setQueryOnce($deleteQuery));
+
+		// Verbinde Mitglieder und Gruppe neu
+		if ($execDelete->isSuccessfull())
+		{
+			if (!empty($values))
+			{
+				$execInsert = $rs->execute($con->newQuery()->setQueryOnce($insertQuery));
+			}
+			if (empty($values) || $execInsert->isSuccessfull())
+			{
+				// Schließe Transaktion erfolgreich ab
+				$con->commit();
+
+				return true;
+			}
+			else
+			{
+				//Führe Rollback durch
+				$con->rollback();
+
+				return false;
+			}
+		}
+		else
+		{
+			// Führe Rollback durch
+			$con->rollback();
+
+			return false;
+		}
+	}
+
+	/**
+	 * Aktualisiert die Mitglieder einer Gruppe
+	 *
+	 * @param RightGroupModel $group zu aktualisierende Gruppe
+	 *
+	 * @return bool
+	 */
+	public function updateGroupUsers(RightGroupModel $group)
+	{
+		$users = $group->getUsers();
+
+		$delete = "
+			DELETE FROM
+				right_group_users
+			WHERE
+				group_id = %d;
+		";
+
+		$insert = "
+			INSERT INTO
+				right_group_users
+				(`group_id`, `user_id`)
+			VALUES
+				%s;
+		";
+
+		$values = array();
+		$value = "(%d, %d)";
+		/**
+		 * mysql_real_escape_string wird hier nicht benötigt, Daten kommen bereits aus der Datenbank
+		 *
+		foreach ($users as $user)
+		{
+		$values[] = sprintf($value, mysql_real_escape_string($group->getId()), mysql_real_escape_string($user->getId()));
+		}
+
+		$deleteQuery = sprintf($delete, mysql_real_escape_string($group->getId()));
+		 */
+		foreach ($users as $user)
+		{
+			$values[] = sprintf($value, $group->getId(), $user->getId());
+		}
+
+		$deleteQuery = sprintf($delete, $group->getId());
+		$insertQuery = '';
+		if (!empty($values))
+		{
+			$insertQuery = sprintf($insert, implode(',', $values));
+		}
+
+		$con = Registry::getInstance()->getDatabase();
+		$rs = $con->newRecordSet();
+
+		// Starte Transaktion
+		$con->startTransaction();
+
+		// Lösche die bestehenden Mitglieder
+		$execDelete = $rs->execute($con->newQuery()->setQueryOnce($deleteQuery));
+
+		// Verbinde Mitglieder und Gruppe neu
+		if ($execDelete->isSuccessfull())
+		{
+			if (!empty($values))
+			{
+				$execInsert = $rs->execute($con->newQuery()->setQueryOnce($insertQuery));
+			}
+			if (empty($values) || $execInsert->isSuccessfull())
+			{
+				// Schließe Transaktion erfolgreich ab
+				$con->commit();
+
+				return true;
+			}
+			else
+			{
+				// Führe Rollback durch
+				$con->rollback();
+
+				return false;
+			}
+		}
+		else
+		{
+			// Führe Rollback durch
+			$con->rollback();
+
+			return false;
+		}
+	}
+
+	/**
+	 * Fügt einen einzelnen Benutzer zur Gruppe hinzu
+	 *
+	 * @param RightGroupModel $group Betreffende Gruppe
+	 * @param UserModel  $user  Betreffender Benutzer
+	 * @return mixed
+	 */
+	public function addUserToGroup(RightGroupModel $group, UserModel $user)
+	{
+		$con = Registry::getInstance()->getDatabase();
+
+		return $con->insert('right_group_users',
+		                    array(
+			                    'group_id' => $group->getId(),
+			                    'user_id' => $user->getId()
+		                    )
+		);
 	}
 }

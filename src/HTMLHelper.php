@@ -556,7 +556,7 @@ class HTMLHelper
 
 		$link = $url;
 
-		if (substr($link, 0, 4) != 'http' && class_exists('\App\Models\Right'))
+		if (substr($link, 0, 4) != 'http' && class_exists('\App\Models\Right\RightModel'))
 		{
 			$link = null;
 

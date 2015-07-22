@@ -56,9 +56,9 @@ class RightManager extends Manager
 	}
 
 	/**
-	 * Zun�chst wird das Recht aktualisiert und danach gepr�ft ob der Benutzer das Recht besitzt.
+	 * Zunächst wird das Recht aktualisiert und danach geprüft ob der Benutzer das Recht besitzt.
 	 *
-	 * @param RightModel $rightModel Das zu pr�fende Recht
+	 * @param RightModel $rightModel Das zu prüfende Recht
 	 * @param UserModel  $userModel  Der Benutzer
 	 *
 	 * @return bool
@@ -98,16 +98,14 @@ class RightManager extends Manager
 	/**
 	 * Erstellt ein neues Recht. Falls es schon existiert wird die "Modified"-Eigenschaft aktualisiert
 	 *
-	 * @param array $right Rechte-Daten
+	 * @param RightModel $rightModel
 	 * @param bool       $force
 	 * @return bool
 	 */
-	public function createRight(array $right, $force=false)
+	public function createRight(RightModel $rightModel, $force=false)
 	{
 		try
 		{
-			/** @var RightModel $rightModel */
-			$rightModel = $this->getModelFromArray($right);
 			return $this->createRightEx($rightModel, $force);
 		}
 		catch (\Exception $e)
@@ -136,12 +134,17 @@ class RightManager extends Manager
 		}
 		$sess->set($toCheck, 1);
 
-		$actionInfo = $this->getActionName($rightModel->getModule(), $rightModel->getController(), $rightModel->getAction(), $rightModel->getPrefix(), $force);
-		$actionName = isset($actionInfo['actionName']) ? $actionInfo['actionName'] : '';
-		$moduleTitle = isset($actionInfo['modulTitle']) ? $actionInfo['modulTitle'] : '';
-		$controllerTitle = isset($actionInfo['title']) ? $actionInfo['title'] : '';
-
-		if ($actionName && $config->APPLICATION_ENV == ENV_DEV && !defined("UNITTEST"))
+		try
+		{
+			$actionInfo = $this->getActionName($rightModel->getModule(), $rightModel->getController(), $rightModel->getAction(), $rightModel->getPrefix(), $force);
+			$actionName = isset($actionInfo['actionName']) ? $actionInfo['actionName'] : '';
+			$moduleTitle = isset($actionInfo['modulTitle']) ? $actionInfo['modulTitle'] : '';
+			$controllerTitle = isset($actionInfo['title']) ? $actionInfo['title'] : '';
+		} catch (\Exception $e)
+		{
+			$actionName = '';
+		}
+		if (empty($actionName) && $config->APPLICATION_ENV == ENV_DEV && !defined("UNITTEST"))
 		{
 			$prefixSlash = '';
 			$pre = $rightModel->getPrefix();
@@ -167,7 +170,6 @@ class RightManager extends Manager
 	}
 
 	/**
-	 * @static
 	 * @param string  $module
 	 * @param  string $controller
 	 * @param string  $action
@@ -175,7 +177,7 @@ class RightManager extends Manager
 	 * @param bool    $force
 	 * @return string
 	 */
-	protected static function getActionName($module, $controller, $action, $prefix = '', $force = false)
+	protected function getActionName($module, $controller, $action, $prefix = '', $force = false)
 	{
 		$registry = Registry::getInstance();
 		$toCheck = strtolower('getActionName:' . "$module:$controller:$action:$prefix");
@@ -200,18 +202,18 @@ class RightManager extends Manager
 		$classDoc = $reflect->getDocComment();
 		if ($classDoc !== false)
 		{
-			preg_match('/.*\@title([A-Za-z0-9������\: \-\s\t]+).*/s', $classDoc, $matchClassDoc);
+			preg_match('/.*\@title([A-Za-z0-9äöüÄÖÜ\: \-\s\t]+).*/s', $classDoc, $matchClassDoc);
 			if (!empty($matchClassDoc))
 			{
 				$retArray['title'] = trim($matchClassDoc[1]);
 			}
-			preg_match('/.*\@modulTitle([A-Za-z0-9������\: \-\s\t]+).*/s', $classDoc, $matchClassDoc);
+			preg_match('/.*\@modulTitle([A-Za-z0-9äöüÄÖÜ\: \-\s\t]+).*/s', $classDoc, $matchClassDoc);
 			if (!empty($matchClassDoc))
 			{
 				$retArray['modulTitle'] = trim($matchClassDoc[1]);
 			}
 			else{
-				preg_match('/.*\@moduleTitle([A-Za-z0-9������\: \-\s\t]+).*/s', $classDoc, $matchClassDoc);
+				preg_match('/.*\@moduleTitle([A-Za-z0-9äöüÄÖÜ\: \-\s\t]+).*/s', $classDoc, $matchClassDoc);
 				if (!empty($matchClassDoc))
 				{
 					$retArray['modulTitle'] = trim($matchClassDoc[1]);
@@ -223,7 +225,7 @@ class RightManager extends Manager
 		$methods = $reflect->getMethods();
 		foreach ($methods as $method)
 		{
-			/** Pr�fe ob eine Methode eine HTML-Action ist */
+			/** Prüfe ob eine Methode eine HTML-Action ist */
 			preg_match("/(.+)(HTML|Html|JSON|Json)Action/", $method->getName(), $matches);
 			if (!empty($matches))
 			{
@@ -232,8 +234,8 @@ class RightManager extends Manager
 				$retArray['actionName'] = '';
 				if ($docComment !== false)
 				{
-					/** Hold den ActionName um in der Rechteverwaltung einen sch�nen titel zu haben */
-					preg_match('/.*\@actionName([A-Za-z0-9������\: \/\-\s\t]+).*/s', $docComment, $matchDoc);
+					/** Hold den ActionName um in der Rechteverwaltung einen schönen titel zu haben */
+					preg_match('/.*\@actionName([A-Za-z0-9äöüÄÖÜ\: \/\-\s\t]+).*/s', $docComment, $matchDoc);
 
 					if (!empty($matchDoc))
 					{
@@ -363,7 +365,7 @@ class RightManager extends Manager
 	/**
 	 * Liefert alle Rechte einer Rolle
 	 *
-	 * @param integer $groupId ID der zugeh�rigen Gruppe
+	 * @param integer $groupId ID der zugehörigen Gruppe
 	 * @return array of RightModel
 	 */
 	public function getRightsByGroupId($groupId)

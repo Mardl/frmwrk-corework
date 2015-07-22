@@ -107,7 +107,7 @@ class Navigation
 			foreach ($links as $action)
 			{
 
-				if ($action['permissions'] && class_exists('\App\Models\Right'))
+				if ($action['permissions'] && class_exists('\App\Models\Right\RightModel'))
 				{
 					$data = array(
 						'rig_module' => lcfirst($action['module']),

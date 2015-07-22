@@ -127,7 +127,7 @@ class LanguageModel extends \Corework\Model
 	}
 
 	/**
-	 * Liefert L�nder-Sprachkennzeichen
+	 * Liefert Länder-Sprachkennzeichen
 	 * Beispiel de-de oder de-AT
 	 *
 	 * @return string
