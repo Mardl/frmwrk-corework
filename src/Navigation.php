@@ -110,21 +110,15 @@ class Navigation
 				if ($action['permissions'] && class_exists('\App\Models\Right'))
 				{
 					$data = array(
-						'module' => lcfirst($action['module']),
-						'controller' => lcfirst($action['controller']),
-						'action' => lcfirst($action['action']),
-						'prefix' => lcfirst($action['prefix'])
+						'rig_module' => lcfirst($action['module']),
+						'rig_controller' => lcfirst($action['controller']),
+						'rig_action' => lcfirst($action['action']),
+						'rig_prefix' => lcfirst($action['prefix'])
 					);
 
-					$right = new \App\Models\Right($data);
-
-					$class = '\Corework\Application\Manager\Right';
-					if (class_exists('\App\Manager\Right'))
-					{
-						$class = '\App\Manager\Right';
-					}
-
-					if ($class::isAllowed($right, $user))
+					$rm = new \App\Manager\Right\RightManager();
+					$right = $rm->getModelFromArray($data);
+					if ($rm->isAllowed($right, $user))
 					{
 						$sp[ucfirst($action['module']) . '_' . ucfirst($action['controller'])][] = '<li><a href="' . $action['url'] . '"><span>' . $action['title'] . '</span></a></li>';
 					}

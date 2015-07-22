@@ -589,21 +589,15 @@ class HTMLHelper
 			if (is_null($link))
 			{
 				$data = array(
-					'module' => $route['module'],
-					'controller' => $route['controller'],
-					'action' => $route['action'],
-					'prefix' => $route['prefix']
+					'rig_module' => $route['module'],
+					'rig_controller' => $route['controller'],
+					'rig_action' => $route['action'],
+					'rig_prefix' => $route['prefix']
 				);
-				$right = new \App\Models\Right($data);
 
-				if (class_exists('\App\Manager\Right'))
-				{
-					$allowed = \App\Manager\Right::isAllowed($right, Registry::getInstance()->login);
-				}
-				else
-				{
-					$allowed = \Corework\Application\Manager\Right::isAllowed($right, Registry::getInstance()->login);
-				}
+				$rm = new \App\Manager\Right\RightManager();
+				$right = $rm->getModelFromArray($data);
+				$allowed = $rm->isAllowed($right, Registry::getInstance()->login);
 
 				if ($allowed)
 				{

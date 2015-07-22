@@ -10,6 +10,7 @@ namespace Corework\Application\Models\Right;
  * @author   Cindy Paulitz <cindy@dreiwerken.de>
  *
  * @MappedSuperclass
+ * @Prefix(name="rig_")
  */
 class RightModel extends \Corework\Model
 {
@@ -19,8 +20,8 @@ class RightModel extends \Corework\Model
 	* @var integer
 	*
 	* @Id
-	* @Column(type="integer")
-	* @GeneratedValue(strategy="AUTO", name="rig_id")
+	* @Column(type="integer", name="rig_id")
+	* @GeneratedValue(strategy="AUTO")
 	*/
 	protected $id;
 
@@ -92,7 +93,7 @@ class RightModel extends \Corework\Model
 	 *
 	 * @var bool
 	 *
-	 * @Column(type="bool", name="rig_inactive")
+	 * @Column(type="boolean", name="rig_inactive")
 	 */
 	protected $inactive = 0;
 
@@ -110,7 +111,7 @@ class RightModel extends \Corework\Model
 	 *
 	 * @var \int
 	 *
-	 * @ManyToOne(targetEntity="Corework\Application\Models\UserModel")
+	 * @ManyToOne(targetEntity="App\Models\UserModel")
 	 * @JoinColumn(name="rig_createduser_id", referencedColumnName="usr_id", nullable=true)
 	 */
 	protected $createduser_id = null;
@@ -129,7 +130,7 @@ class RightModel extends \Corework\Model
 	 *
 	 * @var \int
 	 *
-	 * @ManyToOne(targetEntity="Corework\Application\Models\UserModel")
+	 * @ManyToOne(targetEntity="App\Models\UserModel")
 	 * @JoinColumn(name="rig_modifieduser_id", referencedColumnName="usr_id", nullable=true)
 	 */
 	protected $modifieduser_id = null;

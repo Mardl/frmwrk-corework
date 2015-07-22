@@ -322,14 +322,8 @@ class FrontController
 			{
 				try
 				{
-					if (class_exists('\App\Manager\User'))
-					{
-						$this->view->login = \App\Manager\User::getUserById(Registry::getInstance()->getSession()->get('user'));
-					}
-					else
-					{
-						$this->view->login = \Corework\Application\Manager\User::getUserById(Registry::getInstance()->getSession()->get('user'));
-					}
+					$um = new \App\Manager\UserManager();
+					$this->view->login = $um->getById(Registry::getInstance()->getSession()->get('user'));
 
 					Registry::getInstance()->login = $this->view->login;
 				} catch (\Exception $e)

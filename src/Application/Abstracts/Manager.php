@@ -268,8 +268,18 @@ abstract class Manager
 	 */
 	protected function getAppModel($appModel, $directory = '')
 	{
-		$model = "\\App\\Modules\\" . ($directory) ? "\\".$directory : "" . ucfirst($appModel);
+		$model = $this->getAppModelName($appModel, $directory);
 		return new $model();
+	}
+
+	/**
+	 * @param string $appModel
+	 * @param string $directory
+	 * @return ModelsInterface
+	 */
+	protected function getAppModelName($appModel, $directory = '')
+	{
+		return "\\App\\Modules\\" . ($directory) ? "\\".$directory : "" . ucfirst($appModel);
 	}
 
 }

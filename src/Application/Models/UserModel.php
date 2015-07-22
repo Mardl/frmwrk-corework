@@ -11,7 +11,6 @@ namespace Corework\Application\Models;
  * @author   Cindy Paulitz <cindy@dreiwerken.de>
  *
  * @MappedSuperclass
- * @Prefix(name="usr_")
  */
 class UserModel extends \Corework\Model
 {
@@ -31,7 +30,7 @@ class UserModel extends \Corework\Model
 	 *
 	 * @var string
 	 *
-	 * @Column(type="string", length=64, unique=true, name="usr_username)
+	 * @Column(type="string", length=64, unique=true, name="usr_username")
 	 */
 	protected $username = '';
 
@@ -85,7 +84,7 @@ class UserModel extends \Corework\Model
 	 *
 	 * @var string
 	 *
-	 * @Column(type="string", length=255, nullable=true, name="usr_avatar')
+	 * @Column(type="string", length=255, nullable=true, name="usr_avatar")
 	 */
 	protected $avatar = '';
 
@@ -137,8 +136,8 @@ class UserModel extends \Corework\Model
 	/**
 	 * Language
 	 *
-	 * @ManyToOne(targetEntity="Corework\Application\Models\LanguageModel")
-	 * @JoinColumn(name="usr_language_id", referencedColumnName="lng_id", nullable=false)
+	 * @ManyToOne(targetEntity="App\Models\LanguageModel")
+	 * @JoinColumn(name="usr_language_id", referencedColumnName="lng_id", nullable=true)
 	 */
 	protected $language_id = null;
 
@@ -156,7 +155,7 @@ class UserModel extends \Corework\Model
 	 *
 	 * @var \int
 	 *
-	 * @ManyToOne(targetEntity="Corework\Application\Models\UserModel")
+	 * @ManyToOne(targetEntity="App\Models\UserModel")
 	 * @JoinColumn(name="usr_createduser_id", referencedColumnName="usr_id", nullable=true)
 	 */
 	protected $createduser_id = null;
@@ -176,7 +175,7 @@ class UserModel extends \Corework\Model
 	 *
 	 * @var \int
 	 *
-	 * @ManyToOne(targetEntity="Corework\Application\Models\UserModel")
+	 * @ManyToOne(targetEntity="App\Models\UserModel")
 	 * @JoinColumn(name="usr_modifieduser_id", referencedColumnName="usr_id", nullable=true)
 	 */
 	protected $modifieduser_id = null;
@@ -300,7 +299,7 @@ class UserModel extends \Corework\Model
 	}
 
 	/**
-	 * Sorgt dafür, dass das Geburtsdatum immer ein DateTime-Objekt ist.
+	 * Sorgt dafï¿½r, dass das Geburtsdatum immer ein DateTime-Objekt ist.
 	 *
 	 * @param \DateTime|string $datetime Datetime-Objekt oder String
 	 * @throws \InvalidArgumentException
@@ -312,7 +311,7 @@ class UserModel extends \Corework\Model
 	}
 
 	/**
-	 * Liefert das Geburtsdatum Datetime im Format Y-m-d H:i:s zurück
+	 * Liefert das Geburtsdatum Datetime im Format Y-m-d H:i:s zurï¿½ck
 	 *
 	 * @return string
 	 */

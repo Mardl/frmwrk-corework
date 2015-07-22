@@ -19,15 +19,15 @@ class RightGroupUsersModel extends \Corework\Model
 	 * @var integer
 	 *
 	 * @Id
-	 * @Column(type="integer")
-	 * @GeneratedValue(strategy="AUTO", name="rgu_id")
+	 * @Column(type="integer", name="rgu_id")
+	 * @GeneratedValue(strategy="AUTO")
 	 */
 	protected $id;
 
 	/**
 	 * RightGroup Id
 	 *
-	 * @ManyToOne(targetEntity="Corework\Application\Models\Right\RightGroupModel")
+	 * @ManyToOne(targetEntity="App\Models\Right\RightGroupModel")
 	 * @JoinColumn(name="rgu_rightgroup_id", referencedColumnName="gro_id", nullable=false)
 	 */
 	protected $rightgroup_id = null;
@@ -35,7 +35,7 @@ class RightGroupUsersModel extends \Corework\Model
 	/**
 	 * User Id
 	 *
-	 * @ManyToOne(targetEntity="Corework\Application\Models\UserModel")
+	 * @ManyToOne(targetEntity="App\Models\UserModel")
 	 * @JoinColumn(name="rgu_user_id", referencedColumnName="usr_id", nullable=false)
 	 */
 	protected $user_id = null;

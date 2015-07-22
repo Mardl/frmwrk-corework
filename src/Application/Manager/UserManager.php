@@ -16,12 +16,16 @@ use jamwork\common\Registry;
  */
 class UserManager extends Manager
 {
+    const STATUS_ACTIVE = 0;
+    const STATUS_INACTIVE = 1;
+    const STATUS_BLOCKED = 2;
+    const STATUS_DELETED = 3;
 	/**
 	 * @return UserModel
 	 */
-	protected function getNewModel()
+	public function getNewModel()
 	{
-		return new UserModel();
+		return $this->getAppModel('UserModel');
 	}
 
 	/**
@@ -41,7 +45,7 @@ class UserManager extends Manager
 		$query->from($mod->getTableName());
 		$query->addWhere('usr_username', $username);
 
-		return $this->getBaseManager()->getModelByQuery('\Corework\Application\Models\UserModel', $query);
+		return $this->getBaseManager()->getModelByQuery($this->getAppModelName('UserModel'), $query);
 	}
 
 	/**
@@ -61,7 +65,7 @@ class UserManager extends Manager
 		$query->from($mod->getTableName());
 		$query->addWhere('usr_email', $email);
 
-		return $this->getBaseManager()->getModelByQuery('\Corework\Application\Models\UserModel', $query);
+		return $this->getBaseManager()->getModelByQuery($this->getAppModelName('UserModel'), $query);
 	}
 
 	/**
@@ -71,7 +75,7 @@ class UserManager extends Manager
 	 * @return int
 	 * @deprecated Prüfen, obs noch verwendet wird
 	 */
-	public function getUserCount($status = STATUS_DELETED)
+	public function getUserCount($status = self::STATUS_DELETED)
 	{
 		$mod = $this->getAppModel('UserModel');
 
@@ -89,19 +93,31 @@ class UserManager extends Manager
 	 * Liefert ein Array mit den Benutzern.
 	 * Im ersten Parameter $status wird übermittelt bis (exklusive) welchem Benutzerstatus die Benutzer aus der Datenbank gelesen werden sollen.
 	 *
+	 * @param int $default
 	 * @param int $status
 	 * @return array of UserModel
 	 */
-	public function getUsersByStatus($status = STATUS_DELETED)
+	public function getAll($default = 0, $status = -1)
 	{
 		$mod = $this->getAppModel('UserModel');
 
 		$query = $this->getBaseManager()->getConnection()->newQuery();
 		$query->select('*');
 		$query->from($mod->getTableName());
-		$query->addWhere('usr_status', $status, '<=');
+		if ($status >= 0)
+		{
+			$query->addWhere('status', $status);
+		}
+		else{
+			$query->addWhere('status', self::STATUS_DELETED, '<=');
+		}
+		if (!empty($default))
+		{
+			$query->addWhere('id', $default, '=', 'OR');
+		}
+		$query->orderBy('usr_lastname, usr_status');
 
-		return $this->getBaseManager()->getModelsByQuery('\Corework\Application\Models\UserModel', $query);
+		return $this->getBaseManager()->getModelsByQuery($this->getAppModelName('UserModel'), $query);
 	}
 
 	/**
@@ -122,7 +138,7 @@ class UserManager extends Manager
 		$query->on('usr_id = rgu_user_id');
 		$query->addWhere('rgu_rightgroup_id', $groupId);
 
-		return $this->getBaseManager()->getModelsByQuery('\Corework\Application\Models\UserModel', $query);
+		return $this->getBaseManager()->getModelsByQuery($this->getAppModelName('UserModel'), $query);
 	}
 
 	/**
@@ -160,9 +176,9 @@ class UserManager extends Manager
 		$query->select('*');
 		$query->from($mod->getTableName());
 		$query->addWhere('usr_username', $username);
-		$query->addWhere('usr_status', STATUS_ACTIVE);
+		$query->addWhere('usr_status', self::STATUS_ACTIVE);
 
-		$model = $this->getBaseManager()->getModelByQuery('\Corework\Application\Models\UserModel', $query);
+		$model = $this->getBaseManager()->getModelByQuery($this->getAppModelName('UserModel'), $query);
 
 		/** @var \Corework\Application\Models\UserModel $model */
 
@@ -285,7 +301,7 @@ class UserManager extends Manager
 	 * @param int    $status
 	 * @return array
 	 */
-	public function searchUsers($keyword, $status = STATUS_DELETED)
+	public function searchUsers($keyword, $status = self::STATUS_ACTIVE)
 	{
 		$mod = $this->getAppModel('UserModel');
 
@@ -300,7 +316,7 @@ class UserManager extends Manager
 		$query->closeClosure();
 		$query->orderBy('usr_username');
 
-		return $this->getBaseManager()->getModelsByQuery('\Corework\Application\Models\UserModel', $query);
+		return $this->getBaseManager()->getModelsByQuery($this->getAppModelName('UserModel'), $query);
 	}
 
 	/**

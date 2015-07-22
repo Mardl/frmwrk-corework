@@ -23,7 +23,7 @@ class RightManager extends Manager
 	 */
 	protected function getNewModel()
 	{
-		return new RightModel();
+		return $this->getAppModel('RightModel');
 	}
 
 	/**
@@ -56,9 +56,9 @@ class RightManager extends Manager
 	}
 
 	/**
-	 * Zunächst wird das Recht aktualisiert und danach geprüft ob der Benutzer das Recht besitzt.
+	 * Zunï¿½chst wird das Recht aktualisiert und danach geprï¿½ft ob der Benutzer das Recht besitzt.
 	 *
-	 * @param RightModel $rightModel Das zu prüfende Recht
+	 * @param RightModel $rightModel Das zu prï¿½fende Recht
 	 * @param UserModel  $userModel  Der Benutzer
 	 *
 	 * @return bool
@@ -200,18 +200,18 @@ class RightManager extends Manager
 		$classDoc = $reflect->getDocComment();
 		if ($classDoc !== false)
 		{
-			preg_match('/.*\@title([A-Za-z0-9äöüÄÖÜ\: \-\s\t]+).*/s', $classDoc, $matchClassDoc);
+			preg_match('/.*\@title([A-Za-z0-9ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½\: \-\s\t]+).*/s', $classDoc, $matchClassDoc);
 			if (!empty($matchClassDoc))
 			{
 				$retArray['title'] = trim($matchClassDoc[1]);
 			}
-			preg_match('/.*\@modulTitle([A-Za-z0-9äöüÄÖÜ\: \-\s\t]+).*/s', $classDoc, $matchClassDoc);
+			preg_match('/.*\@modulTitle([A-Za-z0-9ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½\: \-\s\t]+).*/s', $classDoc, $matchClassDoc);
 			if (!empty($matchClassDoc))
 			{
 				$retArray['modulTitle'] = trim($matchClassDoc[1]);
 			}
 			else{
-				preg_match('/.*\@moduleTitle([A-Za-z0-9äöüÄÖÜ\: \-\s\t]+).*/s', $classDoc, $matchClassDoc);
+				preg_match('/.*\@moduleTitle([A-Za-z0-9ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½\: \-\s\t]+).*/s', $classDoc, $matchClassDoc);
 				if (!empty($matchClassDoc))
 				{
 					$retArray['modulTitle'] = trim($matchClassDoc[1]);
@@ -223,7 +223,7 @@ class RightManager extends Manager
 		$methods = $reflect->getMethods();
 		foreach ($methods as $method)
 		{
-			/** Prüfe ob eine Methode eine HTML-Action ist */
+			/** Prï¿½fe ob eine Methode eine HTML-Action ist */
 			preg_match("/(.+)(HTML|Html|JSON|Json)Action/", $method->getName(), $matches);
 			if (!empty($matches))
 			{
@@ -232,8 +232,8 @@ class RightManager extends Manager
 				$retArray['actionName'] = '';
 				if ($docComment !== false)
 				{
-					/** Hold den ActionName um in der Rechteverwaltung einen schönen titel zu haben */
-					preg_match('/.*\@actionName([A-Za-z0-9äöüÄÖÜ\: \/\-\s\t]+).*/s', $docComment, $matchDoc);
+					/** Hold den ActionName um in der Rechteverwaltung einen schï¿½nen titel zu haben */
+					preg_match('/.*\@actionName([A-Za-z0-9ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½\: \/\-\s\t]+).*/s', $docComment, $matchDoc);
 
 					if (!empty($matchDoc))
 					{
@@ -290,7 +290,7 @@ class RightManager extends Manager
 		$query->addWhere('rig_action', $rightModel->getAction());
 		$query->addWhere('rig_prefix', $rightModel->getPrefix());
 
-		return $this->getBaseManager()->getModelByQuery('\Corework\Application\Models\Right\RightModel', $query);
+		return $this->getBaseManager()->getModelByQuery($this->getAppModelName('RightModel', 'Right'), $query);
 	}
 
 	/**
@@ -339,7 +339,7 @@ class RightManager extends Manager
 		$query->from($mod->getTablename());
 		$query->orderBy('rig_prefix, rig_module, rig_controller, rig_action ASC');
 
-		return $this->getBaseManager()->getModelsByQuery('\Corework\Application\Models\Right\RightModel', $query);
+		return $this->getBaseManager()->getModelsByQuery($this->getAppModelName('RightModel', 'Right'), $query);
 	}
 
 	/**
@@ -359,7 +359,7 @@ class RightManager extends Manager
 	/**
 	 * Liefert alle Rechte einer Rolle
 	 *
-	 * @param integer $groupId ID der zugehörigen Gruppe
+	 * @param integer $groupId ID der zugehï¿½rigen Gruppe
 	 * @return array of RightModel
 	 */
 	public function getRightsByGroupId($groupId)
@@ -374,7 +374,7 @@ class RightManager extends Manager
 		$query->on('rig_id = rgr_right_id');
 		$query->addWhere('rgr_group_id', $groupId);
 
-		return $this->getBaseManager()->getModelsByQuery('\Corework\Application\Models\Right\RightModel', $query);
+		return $this->getBaseManager()->getModelsByQuery($this->getAppModelName('RightModel', 'Right'), $query);
 	}
 
 	/**
@@ -394,6 +394,6 @@ class RightManager extends Manager
 		$query->addWhere('rig_id', $ids);
 		$query->orderBy('rig_module');
 
-		return $this->getBaseManager()->getModelsByQuery('\Corework\Application\Models\Right\RightModel', $query);
+		return $this->getBaseManager()->getModelsByQuery($this->getAppModelName('RightModel', 'Right'), $query);
 	}
 }

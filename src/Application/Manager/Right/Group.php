@@ -4,9 +4,9 @@ namespace Corework\Application\Manager\Right;
 
 use App\Models\Right as RightModel,
 	App\Models\Right\Group as GroupModel,
-	App\Models\User as UserModel,
-	App\Manager\Right as RightManager,
-	App\Manager\User as UserManager,
+	App\Models\UserModel,
+	App\Manager\RightManager,
+	App\Manager\UserManager,
 	Corework\SystemMessages,
 	jamwork\common\Registry;
 

@@ -85,7 +85,7 @@ class LanguageModel extends \Corework\Model
 	 *
 	 * @var \int
 	 *
-	 * @ManyToOne(targetEntity="Corework\Application\Models\UserModel")
+	 * @ManyToOne(targetEntity="App\Models\UserModel")
 	 * @JoinColumn(name="lng_createduser_id", referencedColumnName="usr_id", nullable=true)
 	 */
 	protected $createduser_id = null;
@@ -105,7 +105,7 @@ class LanguageModel extends \Corework\Model
 	 *
 	 * @var \int
 	 *
-	 * @ManyToOne(targetEntity="Corework\Application\Models\UserModel")
+	 * @ManyToOne(targetEntity="App\Models\UserModel")
 	 * @JoinColumn(name="lng_modifieduser_id", referencedColumnName="usr_id", nullable=true)
 	 */
 	protected $modifieduser_id = null;
@@ -127,7 +127,7 @@ class LanguageModel extends \Corework\Model
 	}
 
 	/**
-	 * Liefert Länder-Sprachkennzeichen
+	 * Liefert Lï¿½nder-Sprachkennzeichen
 	 * Beispiel de-de oder de-AT
 	 *
 	 * @return string
