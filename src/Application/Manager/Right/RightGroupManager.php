@@ -67,7 +67,7 @@ class RightGroupManager extends Manager
 	 */
 	public function getAllGroups()
 	{
-		$mod = $this->getAppModel('RigthtGroupModel', 'Right');
+		$mod = $this->getAppModel('RightGroupModel', 'Right');
 
 		$query = $this->getBaseManager()->getConnection()->newQuery();
 		$query->select('*');
@@ -85,14 +85,7 @@ class RightGroupManager extends Manager
 	 */
 	public function getGroupById($id, $rights = false, $users = false)
 	{
-		$mod = $this->getAppModel('RigthtGroupModel', 'Right');
-
-		$query = $this->getBaseManager()->getConnection()->newQuery();
-		$query->select('*');
-		$query->from($mod->getTableName());
-		$query->addWhere('gro_id', $id);
-
-		$rightGroupModel = $this->getBaseManager()->getModelByQuery($this->getAppModelName('RightGroupModel', 'Right'), $query);
+		$rightGroupModel = $this->getById($id);
 
 		/** @var RightGroupModel $rightGroupModel */
 		if ($rightGroupModel)
@@ -124,7 +117,7 @@ class RightGroupManager extends Manager
 	 */
 	public function getGroupsByIds(array $ids, $rights = false, $users = false)
 	{
-		$mod = $this->getAppModel('RigthtGroupModel', 'Right');
+		$mod = $this->getAppModel('RightGroupModel', 'Right');
 
 		$query = $this->getBaseManager()->getConnection()->newQuery();
 		$query->select('*');
@@ -166,7 +159,7 @@ class RightGroupManager extends Manager
 	 */
 	public function getGroupByName($name, $rights = false, $users = false)
 	{
-		$mod = $this->getAppModel('RigthtGroupModel', 'Right');
+		$mod = $this->getAppModel('RightGroupModel', 'Right');
 
 		$query = $this->getBaseManager()->getConnection()->newQuery();
 		$query->select('*');
@@ -189,6 +182,9 @@ class RightGroupManager extends Manager
 				$users = $this->getUserManager()->getUsersByGroupId($rightGroupModel->getId());
 			}
 		}
+		else{
+			throw new \ErrorException("Rolle mit dem Namen: $name nicht gefunden!");
+		}
 
 		$rightGroupData = new RightGroupsData();
 		$rightGroupData->setRightGroupModel($rightGroupModel);
@@ -206,8 +202,8 @@ class RightGroupManager extends Manager
 	 */
 	public function getGroupsByUser(UserModel $user, $rights = false, $users = false)
 	{
-		$mod = $this->getAppModel('RigthtGroupModel', 'Right');
-		$modRgu = $this->getAppModel('RigthtGroupUsersModel', 'Right');
+		$mod = $this->getAppModel('RightGroupModel', 'Right');
+		$modRgu = $this->getAppModel('RightGroupUsersModel', 'Right');
 
 		$query = $this->getBaseManager()->getConnection()->newQuery();
 		$query->select('*');
@@ -238,52 +234,6 @@ class RightGroupManager extends Manager
 		$rightGroupData->setUsers(($users ? $users : array()));
 
 		return $rightGroupData;
-	}
-
-	/**
-	 * Erstellt eine Gruppe
-	 *
-	 * @param \Corework\Application\Models\Right\RightGroupModel $group Zu erstellende Gruppe
-	 *
-	 * @return bool|\Corework\Application\Models\Right\RightGroupModel
-	 */
-	public function createGroup(\Corework\Application\Models\Right\RightGroupModel $group)
-	{
-
-		try
-		{
-			$g = $this->getGroupByName($group->getName());
-			if ($g)
-			{
-				SystemMessages::addError('Eine Rolle mit dem Namen "' . $group->getName() . '" existiert bereits!');
-
-				return false;
-			}
-		} catch (\ErrorException $e)
-		{
-			/*** Ist ok ***/
-		}
-
-		$con = Registry::getInstance()->getDatabase();
-		$datetime = new \DateTime();
-
-		$inserted = $con->insert('right_groups',
-		                         array(
-			                         'name' => $group->getName(),
-			                         'modified' => $datetime->format('Y-m-d H:i:s')
-		                         )
-		);
-
-		if (!$inserted)
-		{
-			SystemMessages::addError('Beim Erstellen der Rolle ist ein Fehler aufgetreten!');
-
-			return false;
-		}
-
-		$usergroup = $this->getGroupById($inserted);
-
-		return $usergroup;
 	}
 
 	/**

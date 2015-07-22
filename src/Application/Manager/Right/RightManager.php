@@ -317,7 +317,7 @@ class RightManager extends Manager
 		$query->innerJoin($modRgu->getTablename());
 		$query->on('usr_id = rgu_user_id');
 		$query->innerJoin($modRgr->getTableName());
-		$query->on('rgr_group_id = rgu_group_id');
+		$query->on('rgr_rightgroup_id = rgu_group_id');
 		$query->innerJoin($mod->getTableName());
 		$query->on('rig_id = rgr_right_id');
 		$query->addWhere('usr_id', $userModel->getId());
@@ -378,7 +378,7 @@ class RightManager extends Manager
 		$query->from($mod->getTableName());
 		$query->innerJoin($modRgr->getTableName());
 		$query->on('rig_id = rgr_right_id');
-		$query->addWhere('rgr_group_id', $groupId);
+		$query->addWhere('rgr_rightgroup_id', $groupId);
 
 		return $this->getBaseManager()->getModelsByQuery($this->getAppModelName('RightModel', 'Right'), $query);
 	}
