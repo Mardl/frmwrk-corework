@@ -247,7 +247,7 @@ abstract class Model implements ModelsInterface
 	{
 		$register = \jamwork\common\Registry::getInstance();
 
-		if (empty($userId) && isset($register->login) && $register->login instanceof \Corework\Application\Models\User)
+		if (empty($userId) && isset($register->login) && $register->login instanceof \Corework\Application\Models\UserModel)
 		{
 			$this->set('createduser_id', $register->login->getId());
 		}
@@ -305,7 +305,7 @@ abstract class Model implements ModelsInterface
 	public function setModifieduser_Id($userId = null)
 	{
 		$register = \jamwork\common\Registry::getInstance();
-		if (empty($userId) && isset($register->login) && $register->login instanceof \Corework\Application\Models\User)
+		if (empty($userId) && isset($register->login) && $register->login instanceof \Corework\Application\Models\UserModel)
 		{
 			$this->set('modifieduser_id', $register->login->getId());
 

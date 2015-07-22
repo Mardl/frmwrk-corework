@@ -11,49 +11,34 @@ use Corework\Application\Interfaces\ModelsInterface;
 /**
  * Class Base
  * @package Corework\Application\Manager
+ * @author  Cindy Paulitz <cindy@dreiwerken.de>
  */
 class Base
 {
-	/**
-	 * Event bevor das Model gespeichert wird
-	 */
+	/** Event bevor das Model gespeichert wird  */
 	const EVENT_BEFORE_SAVE = 'onBeforeSaveModel';
 
-	/**
-	 * Event nachdem das Model gespeichert wurde
-	 */
+	/** Event nachdem das Model gespeichert wurde */
 	const EVENT_AFTER_SAVE = 'onAfterSaveModel';
 
-	/**
-	 * Event bevor das Model gelöscht wird
-	 */
+	/** Event bevor das Model gelöscht wird */
 	const EVENT_BEFORE_DELETE = 'onBeforeDeleteModel';
 
-	/**
-	 * Event nachdem das Model gelöscht wurde
-	 */
+	/** Event nachdem das Model gelöscht wurde */
 	const EVENT_AFTER_DELETE = 'onAfterDeleteModel';
 
-	/**
-	 * Event-Types
-	 */
+	/** Event-Types */
 	const EVENT_TYPE_DELETE = 'delete';
 	const EVENT_TYPE_INSERT = 'insert';
 	const EVENT_TYPE_UPDATE = 'update';
 
-	/**
-	 * @var \jamwork\database\Database
-	 */
+	/** @var \jamwork\database\Database */
 	protected $con = null;
 
-	/**
-	 * @var \jamwork\common\EventDispatcher
-	 */
+	/** @var \jamwork\common\EventDispatcher */
 	protected $eventDispatcher = null;
 
-	/**
-	 * @var \Corework\Application\Abstracts\Manager
-	 */
+	/** @var \Corework\Application\Abstracts\Manager */
 	protected $manager;
 
 	/**
@@ -65,6 +50,9 @@ class Base
 		$this->eventDispatcher = Registry::getInstance()->getEventDispatcher();
 	}
 
+	/**
+	 * @return \jamwork\database\Database|null
+	 */
 	public function getConnection()
 	{
 		return $this->con;
@@ -245,7 +233,7 @@ class Base
 		elseif (!is_object($prefixOrModel))
 		{
 			/**
-			 * Wenn er hier her kommt, dann wu5rde die Funktion Public von außen aufgerufen
+			 * Wenn er hier her kommt, dann würde die Funktion Public von außen aufgerufen
 			 * Parameter als String übergeben. Somit weiß der Herr Programmierer, was er macht!
 			 */
 			$query->addWhere($prefixOrModel . 'deleted', 0);
@@ -270,9 +258,7 @@ class Base
 		$query->addWhere($model->getIdField(), $id);
 		$query = $this->addDeleteWhere($model, $query);
 
-		/**
-		 * @var $rs \jamwork\database\PDORecordset
-		 */
+		/** @var $rs \jamwork\database\PDORecordset */
 		$rs = $this->con->newRecordSet();
 		$rs->execute($query);
 
@@ -281,7 +267,6 @@ class Base
 			$model->setDataRow($rs->get());
 			$model->resetRegisterChange();
 
-
 			return $model;
 		}
 
@@ -289,7 +274,6 @@ class Base
 		$name = $reflection->getName();
 
 		throw new \ErrorException('Datensatz nicht gefunden mit ID "' . $id . '" in Model "' . $name . '"');
-
 	}
 
 	/**
@@ -302,9 +286,8 @@ class Base
 	public function getModelsByQuery($modelClassName, Query $query)
 	{
 		$query = $this->addDeleteWhere(new $modelClassName(), $query);
-		/**
-		 * @var $rs \jamwork\database\PDORecordset
-		 */
+
+		/** @var $rs \jamwork\database\PDORecordset */
 		$rs = $this->con->newRecordSet();
 		$rs->execute($query);
 
@@ -338,9 +321,7 @@ class Base
 	{
 		$query = $this->addDeleteWhere(new $modelClassName(), $query);
 
-		/**
-		 * @var $rs \jamwork\database\PDORecordset
-		 */
+		/** @var $rs \jamwork\database\PDORecordset */
 		$rs = $this->con->newRecordSet();
 		$query->limit(0, 1);
 		$rs->execute($query);
@@ -367,9 +348,7 @@ class Base
 	 */
 	public function getArrayByQuery(Query $query)
 	{
-		/**
-		 * @var $rs \jamwork\database\PDORecordset
-		 */
+		/** @var $rs \jamwork\database\PDORecordset */
 		$rs = $this->con->newRecordSet();
 		$rs->execute($query);
 
@@ -394,9 +373,7 @@ class Base
 	 */
 	public function updateByQuery(Query $query)
 	{
-		/**
-		 * @var $ret \jamwork\database\PDORecordset
-		 */
+		/** @var $ret \jamwork\database\PDORecordset */
 		$rs = $this->con->newRecordSet();
 		$ret = $rs->execute($query);
 

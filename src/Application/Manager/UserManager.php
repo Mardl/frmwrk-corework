@@ -12,13 +12,12 @@ use jamwork\common\Registry;
  *
  * @category Corework
  * @package  Corework\Application\Manager
- * @author   Alexander Jonser <alex@dreiwerken.de>
+ * @author   Cindy Paulitz <cindy@dreiwerken.de>
  */
 class UserManager extends Manager
 {
-
 	/**
-	 * @return ModelsInterface
+	 * @return UserModel
 	 */
 	protected function getNewModel()
 	{
@@ -70,6 +69,7 @@ class UserManager extends Manager
 	 *
 	 * @param int $status Der maximale Benutzerstatus, Default: Deleted
 	 * @return int
+	 * @deprecated Prüfen, obs noch verwendet wird
 	 */
 	public function getUserCount($status = STATUS_DELETED)
 	{
@@ -78,7 +78,7 @@ class UserManager extends Manager
 		$query = $this->getBaseManager()->getConnection()->newQuery();
 		$query->select('COUNT(*) AS count');
 		$query->from($mod->getTableName());
-		$query->addWhere('status', $status, '<=');
+		$query->addWhere('usr_status', $status, '<=');
 
 		$result = $this->getBaseManager()->getArrayByQuery($query);
 
@@ -99,352 +99,228 @@ class UserManager extends Manager
 		$query = $this->getBaseManager()->getConnection()->newQuery();
 		$query->select('*');
 		$query->from($mod->getTableName());
-		$query->addWhere('status', $status, '<=');
+		$query->addWhere('usr_status', $status, '<=');
 
 		return $this->getBaseManager()->getModelsByQuery('\Corework\Application\Models\UserModel', $query);
-	}
-
-	public function login($username, $password)
-	{
-
-	}
-
-	public function getUsersByGroupId($groupId)
-	{
-
-	}
-
-	public function insertUser(UserModel $user, $password)
-	{
-
-	}
-
-	public function updateUser(UserModel $user, $password = '')
-	{
-
-	}
-
-	public static function searchUsers($keyword, $status = STATUS_DELETED)
-	{
-
-	}
-
-	private function checkUniqueUsername(UserModel $model)
-	{
-
-	}
-
-	/**
-	 * Loggt den Benutzer aus, indem die Session zerstört wird.
-	 * @return void
-	 */
-	public function logout()
-	{
-		Registry::getInstance()->getSession()->destroy();
-	}
-	/////////////////////////////////////////// alt /////////////////////////////////////////////////
-
-
-
-	/**
-	 * Users
-	 *
-	 * @var array
-	 */
-	private static $_users = array();
-
-
-	/**
-	 * Sucht einen Benutzer anhand von Benutzername und Passwort.
-	 * Wenn dies klappt, wird die Benutzer-ID in der Session gespeichert und die ID zurückgeliefert wird.
-	 *
-	 * @param string $username Benutzername
-	 * @param string $password Passwort
-	 *
-	 * @return mixed
-	 *
-	 * @throws \ErrorException Wenn mit den angegebenen Daten kein Benutzer gefunden wird
-	 */
-	public static function login_old($username, $password)
-	{
-		$con = Registry::getInstance()->getDatabase();
-		$query = $con->newQuery();
-		$query->select(
-			'id,
-			 password,
-			 otp,
-			 language_id as language'
-		);
-		$query->from('users')->addWhere('username', $username)->addWhere('status', STATUS_ACTIVE);
-
-		$rs = $con->newRecordSet();
-		$rsExecution = $rs->execute($query);
-
-		if ($rsExecution->isSuccessfull() && ($rsExecution->count() > 0))
-		{
-			$rs = $rsExecution->get();
-
-			if (strlen($rs['password']) <= 32)
-			{
-				$checkup = (md5($password) == $rs['password']);
-			}
-			else
-			{
-				$checkup = \Corework\String::bcryptCheckup($password, $rs['password']);
-			}
-
-			if ($checkup)
-			{
-				$session = Registry::getInstance()->getSession();
-				$session->set('user', $rs['id']);
-				$session->set('otp', $rs['otp']);
-				$session->set('language', $rs['language']);
-
-				return $rs['id'];
-			}
-		}
-
-		throw new \ErrorException('Benutzer nicht gefunden!');
 	}
 
 	/**
 	 * Liefert Benutzer einer bestimmten Rolle
 	 *
-	 * @param int $groupId ID der Rolle
-	 * @return UserModel
+	 * @param int $groupId
+	 * @return array
 	 */
-	public static function getUsersByGroupId_old($groupId)
+	public function getUsersByGroupId($groupId)
 	{
-		$con = Registry::getInstance()->getDatabase();
+		$mod = $this->getAppModel('UserModel');
+		$mod2 = $this->getAppModel('RightGroupUsersModel', 'Right');
 
-		$query = $con->newQuery();
-		$query->select(
-			'u.id,
-			u.username,
-			u.firstname,
-			u.lastname,
-			u.email,
-			u.email_corrupted AS emailCorrupted,
-			u.avatar,
-			u.birthday,
-			u.gender,
-			u.created,
-			u.status,
-			u.admin,
-			u.language_id as language,
-			u.otp'
-		);
-		$query->from('users as u')->innerJoin('right_group_users AS rgu')->on('rgu.user_id = u.id')->addWhere('rgu.group_id', $groupId);
+		$query = $this->getBaseManager()->getConnection()->newQuery();
+		$query->select('*');
+		$query->from($mod->getTableName());
+		$query->leftJoin($mod2->getTableName());
+		$query->on('usr_id = rgu_user_id');
+		$query->addWhere('rgu_rightgroup_id', $groupId);
 
-		$rs = $con->newRecordSet();
-		$rsExecution = $rs->execute($query);
-
-		$users = array();
-
-		if ($rsExecution->isSuccessfull())
-		{
-			while (($rs = $rsExecution->get()) == true)
-			{
-				$users[] = new UserModel($rs);
-			}
-		}
-
-		return $users;
-	}
-
-	/**
-	 * Speichert einen neuen Benutzer in der Datenbank
-	 *
-	 * @param UserModel $user     User-Objekt
-	 * @param string    $password Passwort
-	 * @return UserModel|bool
-	 * @throws \ErrorException
-	 */
-	public static function insertUser_old(UserModel $user, $password)
-	{
-		$con = Registry::getInstance()->getDatabase();
-		$datetime = new \DateTime();
-
-		if (!self::checkUniqueUsername($user))
-		{
-			throw new \ErrorException('Der gewünschte Benutzername ist bereits vergeben!');
-		}
-
-		$user->setCreated($datetime);
-
-		$id = $con->insert('users',
-			array(
-				'username' => $user->getUsername(),
-				'firstname' => $user->getFirstname(),
-				'lastname' => $user->getLastname(),
-				'password' => $user->setPassword($password, false),
-				'email' => $user->getEmail(),
-				'email_corrupted' => '',
-				'avatar' => null,
-				'birthday' => $user->getBirthday()->format('Y-m-d'),
-				'gender' => $user->getGender(),
-				'created' => $datetime->format('Y-m-d H:i:s'),
-				'status' => STATUS_ACTIVE,
-				'language_id' => $user->getLanguageId(),
-				'otp' => 0,
-				'admin' => $user->getAdmin()
-			)
-		);
-
-		if ($id)
-		{
-			$user->setId($id);
-
-			return $user;
-		}
-
-		return false;
-	}
-
-	/**
-	 * Speichert Änderungen eines Benutzers
-	 *
-	 * @param UserModel $user     User-Objekt
-	 * @param string    $password Optionales Passwort
-	 * @return UserModel|bool
-	 * @throws \ErrorException
-	 */
-	public static function updateUser_old(UserModel $user, $password = '')
-	{
-		unset(self::$_users[$user->getId()]);
-		$con = Registry::getInstance()->getDatabase();
-
-		if (!$user->getId())
-		{
-			return false;
-		}
-
-		if (!self::checkUniqueUsername($user))
-		{
-			throw new \ErrorException('Der gewünschte Benutzername ist bereits vergeben!');
-		}
-
-		if (empty($password))
-		{
-			$data = array(
-				'username' => $user->getUsername(),
-				'firstname' => $user->getFirstname(),
-				'lastname' => $user->getLastname(),
-				'email' => $user->getEmail(),
-				'birthday' => $user->getBirthday()->format('Y-m-d'),
-				'gender' => $user->getGender(),
-				'avatar' => $user->getAvatarId(),
-				'status' => $user->getStatus(),
-				'admin' => $user->getAdmin(),
-				'otp' => $user->getOtp(),
-				'language' => $user->getLanguage(),
-				'id' => $user->getId()
-			);
-		}
-		else
-		{
-			$data = array(
-				'username' => $user->getUsername(),
-				'firstname' => $user->getFirstname(),
-				'lastname' => $user->getLastname(),
-				'email' => $user->getEmail(),
-				'birthday' => $user->getBirthday()->format('Y-m-d'),
-				'gender' => $user->getGender(),
-				'avatar' => $user->getAvatarId(),
-				'status' => $user->getStatus(),
-				'password' => $user->setPassword($password, false),
-				'admin' => $user->getAdmin(),
-				'otp' => $user->getOtp(),
-				'language' => $user->getLanguage(),
-				'id' => $user->getId()
-			);
-		}
-
-		if ($con->update('users', $data))
-		{
-			return $user;
-		}
-		else
-		{
-			return false;
-		}
-	}
-
-	/**
-	 * Liefert ein Array mit den Benutzern.
-	 * Im ersten Parameter $status wird übermittelt bis (exklusive) welchem Benutzerstatus die Benutzer aus der Datenbank gelesen werden sollen.
-	 *
-	 * @param string $keyword Suchwort
-	 * @param int    $status  Der maximale Benutzerstatus, Default: Deleted
-	 * @return array von UserModel
-	 */
-	public static function searchUsers_old($keyword, $status = STATUS_DELETED)
-	{
-		$con = Registry::getInstance()->getDatabase();
-		$query = $con->newQuery();
-		$query->select(
-			'u.id,
-			u.username,
-			u.firstname,
-			u.lastname,
-			u.email,
-			u.email_corrupted AS emailCorrupted,
-			u.avatar,
-			u.birthday,
-			u.gender,
-			u.created,
-			u.status,
-			u.admin');
-		$query->from('users as u')
-			->addWhere('status', $status, '<=')
-			->openClosure()
-			->addWhereLike('username', $keyword)
-			->addWhereLike('firstname', $keyword, '%%%s%%', 'OR')
-			->addWhereLike('lastname', $keyword, '%%%s%%', 'OR')
-			->closeClosure()
-			->orderBy('username');
-
-		$query->distinct();
-
-		$rs = $con->newRecordSet();
-		$rsExecution = $rs->execute($query);
-
-		$models = array();
-
-		if ($rsExecution->isSuccessfull() && ($rsExecution->count() > 0))
-		{
-			while (($rec = $rs->get()) == true)
-			{
-				$models[] = new UserModel($rec);
-			}
-		}
-
-		return $models;
+		return $this->getBaseManager()->getModelsByQuery('\Corework\Application\Models\UserModel', $query);
 	}
 
 	/**
 	 * @param UserModel $model
 	 * @return bool
 	 */
-	public static function checkUniqueUsername_old(UserModel $model)
+	private function checkUniqueUsername(UserModel $model)
 	{
-		$con = Registry::getInstance()->getDatabase();
-		$query = $con->newQuery()->select('*')->from('users')->addWhere('username', $model->getUsername());
+		$userModelExists = $this->getUserByUsername($model->getUsername());
 
-
-		$rs = $con->newRecordSet();
-		$rsExecution = $rs->execute($query);
-
-		if ($rsExecution->isSuccessfull() && ($rsExecution->count() > 0))
+		if ($userModelExists && $model->getId() != $userModelExists->getId())
 		{
-			$rsExecution = $rs->get();
-			if ($rsExecution['id'] != $model->getId())
-			{
-				return false;
-			}
+			return false;
 		}
 
 		return true;
+	}
+
+	/**
+	 * Sucht einen Benutzer anhand von Benutzername und Passwort.
+	 * Wenn dies klappt, wird die Benutzer-ID in der Session gespeichert und das UserModel zurückgeliefert.
+	 *
+	 * @param string $username Benutzername
+	 * @param string $password Passworts
+	 *
+	 * @return mixed
+	 *
+	 * @throws \ErrorException Wenn mit den angegebenen Daten kein Benutzer gefunden wird
+	 */
+	public function login($username, $password)
+	{
+		$mod = $this->getAppModel('UserModel');
+
+		$query = $this->getBaseManager()->getConnection()->newQuery();
+		$query->select('*');
+		$query->from($mod->getTableName());
+		$query->addWhere('usr_username', $username);
+		$query->addWhere('usr_status', STATUS_ACTIVE);
+
+		$model = $this->getBaseManager()->getModelByQuery('\Corework\Application\Models\UserModel', $query);
+
+		/** @var \Corework\Application\Models\UserModel $model */
+
+		if ($model && $this->checkPasswordInput($password, $model))
+		{
+			$session = Registry::getInstance()->getSession();
+			$session->set('user', $model->getId());
+			$session->set('otp', $model->isOtp());
+			$session->set('language', $model->getLanguage_id());
+
+			return $model;
+		}
+
+		throw new \ErrorException('Benutzer nicht gefunden!');
+	}
+
+	/**
+	 * @param string    $password
+	 * @param UserModel $model
+	 * @return bool
+	 */
+	private function checkPasswordInput($password, UserModel $model)
+	{
+		if (strlen($model->getPassword()) <= 32)
+		{
+			$checkup = (md5($password) == $model->getPassword());
+		}
+		else
+		{
+			$checkup = \Corework\String::bcryptCheckup($password, $model->getPassword());
+		}
+
+		return $checkup;
+	}
+
+	/**
+	 * Loggt den Benutzer aus, indem die Session zerstört wird.
+	 *
+	 * @return void
+	 */
+	public function logout()
+	{
+		Registry::getInstance()->getSession()->destroy();
+	}
+
+	/**
+	 * @param array $data
+	 * @return array
+	 */
+	protected function verifySaveData(array $data)
+	{
+
+
+		if (array_key_exists('otpPasswd', $data) && !empty($data['otpPasswd']))
+		{
+			$data['usr_password'] = $data['otpPasswd'];
+		}
+		else
+		{
+			if (array_key_exists('pwd', $data) && !empty($data['pwd']))
+			{
+				/** @var UserModel $userModel */
+				$userModel = $this->getModelFromArray($data);
+				$generatedPassword = $this->generatePassword($userModel, $data['pwd'], ($userModel->getId() > 0 ? false : true));
+				$data['usr_password'] = $generatedPassword;
+			}
+		}
+
+		return $data;
+	}
+
+	/**
+	 * @param UserModel $user
+	 * @param string    $password
+	 * @param bool|true $md5
+	 * @return string
+	 */
+	private function generatePassword(UserModel $user, $password, $md5 = true)
+	{
+		if ($md5)
+		{
+			$generatedPwd = md5($password);
+		}
+		else
+		{
+			$birthday = $user->getBirthday() ? $user->getBirthday()->format('Ymd') : '00000000';
+
+			$generatedPwd = \Corework\String::bcryptEncode(
+				$password, md5($user->getId() . $birthday . $user->getGender() . $user->getCreated()->format("Ymd"))
+			);
+		}
+
+		return $generatedPwd;
+	}
+
+	/**
+	 * Speichert einen neuen Benutzer in der Datenbank
+	 *
+	 * @param array $data
+	 * @return bool|UserModel
+	 * @throws \ErrorException
+	 */
+	public function insertUser(array $data)
+	{
+		/** @var UserModel $user */
+		$user = $this->getModelFromArray($data);
+
+		if (!$this->checkUniqueUsername($user))
+		{
+			throw new \ErrorException('Der gewünschte Benutzername ist bereits vergeben!');
+		}
+
+		$saveModel = $this->save($data);
+
+		return $saveModel;
+	}
+
+	/**
+	 * @param array $data
+	 * @return ModelsInterface
+	 * @throws \ErrorException
+	 */
+	public function updateUser(array $data)
+	{
+		/** @var UserModel $user */
+		$user = $this->getModelFromArray($data);
+
+		if (!$this->checkUniqueUsername($user))
+		{
+			throw new \ErrorException('Der gewünschte Benutzername ist bereits vergeben!');
+		}
+
+		$saveModel = $this->save($data);
+
+		return $saveModel;
+	}
+
+	/**
+	 * @param string $keyword
+	 * @param int    $status
+	 * @return array
+	 */
+	public function searchUsers($keyword, $status = STATUS_DELETED)
+	{
+		$mod = $this->getAppModel('UserModel');
+
+		$query = $this->getBaseManager()->getConnection()->newQuery();
+		$query->select('*');
+		$query->from($mod->getTablename());
+		$query->addWhere('usr_status', $status, '<=');
+		$query->openClosure();
+		$query->addWhereLike('usr_username', $keyword);
+		$query->addWhereLike('usr_firstname', $keyword, '%%%s%%', 'OR');
+		$query->addWhereLike('usr_lastname', $keyword, '%%%s%%', 'OR');
+		$query->closeClosure();
+		$query->orderBy('usr_username');
+
+		return $this->getBaseManager()->getModelsByQuery('\Corework\Application\Models\UserModel', $query);
 	}
 
 	/**
@@ -453,18 +329,22 @@ class UserManager extends Manager
 	 * @param int $userid ID des Benutzers
 	 * @return string
 	 */
-	public static function generateOTP($userid)
+	public function generateOtp($userid)
 	{
-		$userModel = self::getUserById($userid);
+		/** @var UserModel $userModel */
+		$userModel = $this->getModelById($this->getNewModel(), $userid);
 
 		$crypttime = md5(crypt(time()));
 		$randompass = substr($crypttime, 0, 8);
 		$randompass = strtolower($randompass);
 
 		$userModel->setOtp(1);
-		self::updateUser($userModel, $randompass);
+
+		$data = $userModel->getDataRow();
+		$data['otpPasswd'] = $randompass;
+
+		$this->updateUser($data);
 
 		return $randompass;
 	}
-
 }

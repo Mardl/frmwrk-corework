@@ -36,7 +36,7 @@ class RightGroupUsersModel extends \Corework\Model
 	 * User Id
 	 *
 	 * @ManyToOne(targetEntity="Corework\Application\Models\UserModel")
-	 * @JoinColumn(name="rgu_right_id", referencedColumnName="usr_id", nullable=false)
+	 * @JoinColumn(name="rgu_user_id", referencedColumnName="usr_id", nullable=false)
 	 */
 	protected $user_id = null;
 
