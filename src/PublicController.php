@@ -2,7 +2,8 @@
 
 namespace Corework;
 
-use App\Models\Right, App\Manager\Right as RightManager, jamwork\common\Registry;
+use jamwork\common\Registry;
+use Corework\Application\Manager\UserManager;
 
 /**
  * Class PublicController
@@ -50,13 +51,14 @@ class PublicController extends Controller
 			$prefix = $this->request->getRouteParam('prefix');
 
 			$urlArray = array(
-				'module' => $module,
-				'controller' => $controller,
-				'action' => $action,
-				'prefix' => $prefix
+				'rig_module' => $module,
+				'rig_controller' => $controller,
+				'rig_action' => $action,
+				'rig_prefix' => $prefix
 			);
 
-			$right = new Right($urlArray);
+			$rm = new \App\Manager\Right\RightManager();
+			$right = $rm->getModelFromArray($urlArray);
 
 			try
 			{
@@ -70,7 +72,7 @@ class PublicController extends Controller
 				$this->response->redirect($this->view->url(array(), 'login', true));
 			}
 
-			if (!in_array($action, $this->noPermissionActions) && !RightManager::isAllowed($right, $login))
+			if (!in_array($action, $this->noPermissionActions) && !$rm->isAllowed($right, $login))
 			{
 				throw new \Corework\Exceptions\AccessException('Zugriff auf nicht erlaubte Aktion');
 			}

@@ -66,10 +66,13 @@ abstract class Manager
 	}
 
 	/**
+	 * Funktion wird vor dem Speichern aufgerufen. In der Regel ist data der $_POST
+	 *
 	 * @param array $data
+	 * @param bool  $forSave
 	 * @return array
 	 */
-	protected function verifySaveData(array $data)
+	protected function verifySaveData(array $data, $forSave = true)
 	{
 		return $data;
 	}
@@ -122,7 +125,7 @@ abstract class Manager
 		{
 			$model = $this->getNewModel();
 		}
-		$data = $this->verifySaveData($data);
+		$data = $this->verifySaveData($data, false);
 		$toSave = $model->clearDataRow($data);
 		$model->setDataRow($toSave);
 
@@ -266,7 +269,7 @@ abstract class Manager
 	 * @param string $directory
 	 * @return ModelsInterface
 	 */
-	protected function getAppModel($appModel, $directory = '')
+	public function getAppModel($appModel, $directory = '')
 	{
 		$model = $this->getAppModelName($appModel, $directory);
 		return new $model();
@@ -279,7 +282,7 @@ abstract class Manager
 	 */
 	protected function getAppModelName($appModel, $directory = '')
 	{
-		return "\\App\\Modules\\" . ($directory) ? "\\".$directory : "" . ucfirst($appModel);
+		return "\\App\\Models\\" . (($directory) ? $directory."\\" : "") . ucfirst($appModel);
 	}
 
 }

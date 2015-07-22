@@ -23,7 +23,7 @@ class RightManager extends Manager
 	 */
 	protected function getNewModel()
 	{
-		return $this->getAppModel('RightModel');
+		return $this->getAppModel('RightModel', 'Right');
 	}
 
 	/**
@@ -259,8 +259,12 @@ class RightManager extends Manager
 	 * @param array $data
 	 * @return array
 	 */
-	protected function verifySaveData(array $data)
+	protected function verifySaveData(array $data, $forSave = true)
 	{
+		if (!$forSave)
+		{
+			return $data;
+		}
 		/** @var RightModel $checkModel */
 		$checkModel = $this->getModelFromArray($data);
 

@@ -228,9 +228,12 @@ class UserManager extends Manager
 	 * @param array $data
 	 * @return array
 	 */
-	protected function verifySaveData(array $data)
+	protected function verifySaveData(array $data, $forSave = true)
 	{
-
+		if (!$forSave)
+		{
+			return $data;
+		}
 
 		if (array_key_exists('otpPasswd', $data) && !empty($data['otpPasswd']))
 		{
