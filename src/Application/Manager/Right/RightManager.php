@@ -16,7 +16,7 @@ use jamwork\common\Registry;
  * @package  Corework\Application\Manager\Right
  * @author   Cindy Paulitz <cindy@dreiwerken.de>
  */
-class RightManager extends Manager
+abstract class RightManager extends Manager
 {
 	/**
 	 * @return RightModel

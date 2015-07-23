@@ -14,7 +14,7 @@ use jamwork\common\Registry;
  * @package  Corework\Application\Manager
  * @author   Cindy Paulitz <cindy@dreiwerken.de>
  */
-class UserManager extends Manager
+abstract class UserManager extends Manager
 {
     const STATUS_ACTIVE = 0;
     const STATUS_INACTIVE = 1;

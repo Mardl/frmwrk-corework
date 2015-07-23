@@ -15,7 +15,7 @@ use Corework\Application\Interfaces\ModelsInterface;
  * @package  Corework\Application\Manager\Right
  * @author   Cindy Paulitz <cindy@dreiwerken.de>
  */
-class RightGroupRightsManager extends Manager
+abstract class RightGroupRightsManager extends Manager
 {
 
 	/**

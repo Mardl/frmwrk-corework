@@ -2,7 +2,6 @@
 
 namespace Corework\Application\Manager\Right;
 
-use App\Manager\UserManager;
 use App\Models\Right\RightGroupModel;
 use App\Models\UserModel;
 use Corework\Application\Abstracts\Manager;
@@ -24,14 +23,22 @@ abstract class RightGroupManager extends Manager
 	/** @var RightManager */
 	private $rightManager = null;
 
-	/** @var UserManager */
+	/** @var \App\Manager\UserManager */
 	private $userManager = null;
 
-	/** @var RightGroupRightsManager */
+	/** @var \App\Manager\Right\RightGroupRightsManager */
 	private $rightGroupRightsManager = null;
 
-	/** @var RightGroupUsersManager */
+	/** @var \App\Manager\Right\RightGroupUsersManager */
 	private $rightGroupUsersManager = null;
+
+	/**
+	 * @return RightGroupModel
+	 */
+	protected function getNewModel()
+	{
+		return $this->getAppModel('RightGroupModel', 'Right');
+	}
 
 	/**
 	 * @return RightGroupRightsManager
@@ -40,7 +47,7 @@ abstract class RightGroupManager extends Manager
 	{
 		if (is_null($this->rightGroupRightsManager))
 		{
-			$this->rightGroupRightsManager = new RightGroupRightsManager();
+			$this->rightGroupRightsManager = new \App\Manager\Right\RightGroupRightsManager();
 		}
 
 		return $this->rightGroupRightsManager;
@@ -53,7 +60,7 @@ abstract class RightGroupManager extends Manager
 	{
 		if (is_null($this->rightGroupUsersManager))
 		{
-			$this->rightGroupUsersManager = new RightGroupUsersManager();
+			$this->rightGroupUsersManager = new \App\Manager\Right\RightGroupUsersManager();
 		}
 
 		return $this->rightGroupUsersManager;
@@ -66,7 +73,7 @@ abstract class RightGroupManager extends Manager
 	{
 		if (is_null($this->userManager))
 		{
-			$this->userManager = new UserManager();
+			$this->userManager = new \App\Manager\UserManager();
 		}
 
 		return $this->userManager;
