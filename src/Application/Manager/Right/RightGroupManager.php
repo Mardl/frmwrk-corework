@@ -27,6 +27,38 @@ abstract class RightGroupManager extends Manager
 	/** @var UserManager */
 	private $userManager = null;
 
+	/** @var RightGroupRightsManager */
+	private $rightGroupRightsManager = null;
+
+	/** @var RightGroupUsersManager */
+	private $rightGroupUsersManager = null;
+
+	/**
+	 * @return RightGroupRightsManager
+	 */
+	protected function getRightGroupRightsManager()
+	{
+		if (is_null($this->rightGroupRightsManager))
+		{
+			$this->rightGroupRightsManager = new RightGroupRightsManager();
+		}
+
+		return $this->rightGroupRightsManager;
+	}
+
+	/**
+	 * @return RightGroupUsersManager
+	 */
+	protected function getRightGroupUsersManager()
+	{
+		if (is_null($this->rightGroupUsersManager))
+		{
+			$this->rightGroupUsersManager = new RightGroupUsersManager();
+		}
+
+		return $this->rightGroupUsersManager;
+	}
+
 	/**
 	 * @return UserManager
 	 */
@@ -260,25 +292,15 @@ abstract class RightGroupManager extends Manager
 	/**
 	 * Aktualisiert eine Gruppe
 	 *
-	 * @param RightGroupModel $group       Zu aktualisierende Gruppe
-	 * @param bool       $forceRights Rechte erzwingen
-	 * @param bool       $forceUser   Benutzer erzwingen
+	 * @param RightGroupsData $group       Zu aktualisierende Gruppe
+	 * @param bool            $forceRights Rechte erzwingen
+	 * @param bool            $forceUser   Benutzer erzwingen
 	 *
 	 * @return bool
 	 */
 	public function updateGroup(RightGroupsData $group, $forceRights = false, $forceUser = false)
 	{
-		$con = Registry::getInstance()->getDatabase();
-		$datetime = new \DateTime();
-
-		$updated = $con->update('right_groups', array(
-			                                      'name' => $group->getName(),
-			                                      'modified' => $datetime->format('Y-m-d H:i:s'),
-			                                      'id' => $group->getId()
-		                                      )
-		);
-
-		$this->save($group->getRightGroupModel()->getDataRow());
+		$updated = $this->save($group->getRightGroupModel()->getDataRow());
 
 		if (!$updated)
 		{
@@ -291,7 +313,7 @@ abstract class RightGroupManager extends Manager
 
 		if (!empty($rights) || $forceRights)
 		{
-			if (!$this->updateGroupRights($group))
+			if (!$this->getRightGroupRightsManager()->updateGroupRights($group))
 			{
 				SystemMessages::addError('Beim Update der Rechte ist ein Fehler aufgetreten!');
 
@@ -303,7 +325,7 @@ abstract class RightGroupManager extends Manager
 
 		if (!empty($users) || $forceUser)
 		{
-			if (!$this->updateGroupUsers($group))
+			if (!$this->getRightGroupUsersManager()->updateGroupUsers($group))
 			{
 				SystemMessages::addError('Beim Update der Mitglieder ist ein Fehler aufgetreten!');
 
@@ -312,97 +334,6 @@ abstract class RightGroupManager extends Manager
 		}
 
 		return true;
-	}
-
-	/**
-	 * Aktualisiert die Rechte einer Gruppe
-	 *
-	 * @param RightGroupModel $group zu aktualisierende Gruppe
-	 * @return bool
-	 */
-	public function updateGroupRights(RightGroupModel $group)
-	{
-		$rights = $group->getRights();
-
-		$delete = "
-			DELETE FROM
-				right_group_rights
-			WHERE
-				group_id = %d;
-		";
-
-		$insert = "
-			INSERT INTO
-				right_group_rights
-				(`group_id`, `right_id`)
-			VALUES
-				%s;
-		";
-
-		$values = array();
-		$value = "(%d, %d)";
-
-		/**
-		 * mysql_real_escape_string wird hier nicht benötigt, Daten kommen bereits aus der Datenbank
-		 *
-		foreach ($rights as $right)
-		{
-		$values[] = sprintf($value, mysql_real_escape_string($group->getId()), mysql_real_escape_string($right->getId()));
-		}
-
-		$deleteQuery = sprintf($delete, mysql_real_escape_string($group->getId()));
-		 */
-		foreach ($rights as $right)
-		{
-			$values[] = sprintf($value, $group->getId(), $right->getId());
-		}
-
-		$deleteQuery = sprintf($delete, $group->getId());
-		$insertQuery = '';
-
-		if (!empty($values))
-		{
-			$insertQuery = sprintf($insert, implode(',', $values));
-		}
-
-		$con = Registry::getInstance()->getDatabase();
-		$rs = $con->newRecordSet();
-
-		// Starte Transaktion
-		$con->startTransaction();
-
-		// Lösche die bestehenden Rechte
-		$execDelete = $rs->execute($con->newQuery()->setQueryOnce($deleteQuery));
-
-		// Verbinde Rechte und Gruppe neu
-		if ($execDelete->isSuccessfull())
-		{
-			if (!empty($values))
-			{
-				$execInsert = $rs->execute($con->newQuery()->setQueryOnce($insertQuery));
-			}
-			if (empty($values) || $execInsert->isSuccessfull())
-			{
-				// Schließe Transaktion erfolgreich ab
-				$con->commit();
-
-				return true;
-			}
-			else
-			{
-				// Führe Rollback durch
-				$con->rollback();
-
-				return false;
-			}
-		}
-		else
-		{
-			// Führe Rollback durch
-			$con->rollback();
-
-			return false;
-		}
 	}
 
 	/**
@@ -479,96 +410,6 @@ abstract class RightGroupManager extends Manager
 			else
 			{
 				//Führe Rollback durch
-				$con->rollback();
-
-				return false;
-			}
-		}
-		else
-		{
-			// Führe Rollback durch
-			$con->rollback();
-
-			return false;
-		}
-	}
-
-	/**
-	 * Aktualisiert die Mitglieder einer Gruppe
-	 *
-	 * @param RightGroupModel $group zu aktualisierende Gruppe
-	 *
-	 * @return bool
-	 */
-	public function updateGroupUsers(RightGroupModel $group)
-	{
-		$users = $group->getUsers();
-
-		$delete = "
-			DELETE FROM
-				right_group_users
-			WHERE
-				group_id = %d;
-		";
-
-		$insert = "
-			INSERT INTO
-				right_group_users
-				(`group_id`, `user_id`)
-			VALUES
-				%s;
-		";
-
-		$values = array();
-		$value = "(%d, %d)";
-		/**
-		 * mysql_real_escape_string wird hier nicht benötigt, Daten kommen bereits aus der Datenbank
-		 *
-		foreach ($users as $user)
-		{
-		$values[] = sprintf($value, mysql_real_escape_string($group->getId()), mysql_real_escape_string($user->getId()));
-		}
-
-		$deleteQuery = sprintf($delete, mysql_real_escape_string($group->getId()));
-		 */
-		foreach ($users as $user)
-		{
-			$values[] = sprintf($value, $group->getId(), $user->getId());
-		}
-
-		$deleteQuery = sprintf($delete, $group->getId());
-		$insertQuery = '';
-		if (!empty($values))
-		{
-			$insertQuery = sprintf($insert, implode(',', $values));
-		}
-
-		$con = Registry::getInstance()->getDatabase();
-		$rs = $con->newRecordSet();
-
-		// Starte Transaktion
-		$con->startTransaction();
-
-		// Lösche die bestehenden Mitglieder
-		$execDelete = $rs->execute($con->newQuery()->setQueryOnce($deleteQuery));
-
-		// Verbinde Mitglieder und Gruppe neu
-		if ($execDelete->isSuccessfull())
-		{
-			if (!empty($values))
-			{
-				$execInsert = $rs->execute($con->newQuery()->setQueryOnce($insertQuery));
-			}
-			if (empty($values) || $execInsert->isSuccessfull())
-			{
-				// Schließe Transaktion erfolgreich ab
-				$con->commit();
-
-				return true;
-			}
-			else
-			{
-				// Führe Rollback durch
 				$con->rollback();
 
 				return false;
