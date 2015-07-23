@@ -79,7 +79,7 @@ abstract class Manager
 
 	/**
 	 * @param \Corework\Application\Interfaces\ModelsInterface $model
-	 * @return array
+	 * @return bool
 	 */
 	protected function verifyBevorSave(ModelsInterface $model)
 	{

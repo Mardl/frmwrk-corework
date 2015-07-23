@@ -2,12 +2,12 @@
 
 namespace Corework\Application\Manager\Right;
 
-use App\Helper\Models\RightGroupsData;
-use App\Manager\Right\RightManager;
 use App\Manager\UserManager;
 use App\Models\Right\RightGroupModel;
 use App\Models\UserModel;
 use Corework\Application\Abstracts\Manager;
+use Corework\Application\Helper\Models\RightGroupsData;
+use Corework\Application\Interfaces\ModelsInterface;
 use Corework\SystemMessages;
 use jamwork\common\Registry;
 
@@ -18,15 +18,8 @@ use jamwork\common\Registry;
  * @package  Corework\Application\Models\Right
  * @author   Cindy Paulitz <cindy@dreiwerken.de>
  */
-class RightGroupManager extends Manager
+abstract class RightGroupManager extends Manager
 {
-	/**
-	 * @return RightGroupModel
-	 */
-	protected function getNewModel()
-	{
-		return new RightGroupModel();
-	}
 
 	/** @var RightManager */
 	private $rightManager = null;
@@ -54,10 +47,38 @@ class RightGroupManager extends Manager
 	{
 		if (is_null($this->rightManager))
 		{
-			$this->rightManager = new RightManager();
+			$this->rightManager = new \App\Manager\Right\RightManager();
 		}
 
 		return $this->rightManager;
+	}
+
+	/**
+	 * @param \Corework\Application\Interfaces\ModelsInterface $model
+	 * @return array
+	 */
+	protected function verifyBevorSave(ModelsInterface $model)
+	{
+		try
+		{
+			$found = $this->getGroupByName($model->getName());
+		} catch (\Exception $e)
+		{
+			$found = false;
+		}
+		if ($model->getId() == 0 && $found)
+		{
+			// Neuanlage, und Name bereits vorhanden !
+			SystemMessages::addError('Rolle bereits vorhanden');
+			return false;
+		}
+		if ($model->getId() > 0 && $found && $found->getRightGroupModel()->getId() != $model->getId())
+		{
+			// Update und Name bereits vorhanden !
+			SystemMessages::addError('Rolle bereits vorhanden');
+			return false;
+		}
+		return true;
 	}
 
 	/**
@@ -245,7 +266,7 @@ class RightGroupManager extends Manager
 	 *
 	 * @return bool
 	 */
-	public function updateGroup(RightGroupModel $group, $forceRights = false, $forceUser = false)
+	public function updateGroup(RightGroupsData $group, $forceRights = false, $forceUser = false)
 	{
 		$con = Registry::getInstance()->getDatabase();
 		$datetime = new \DateTime();
@@ -256,6 +277,8 @@ class RightGroupManager extends Manager
 			                                      'id' => $group->getId()
 		                                      )
 		);
+
+		$this->save($group->getRightGroupModel()->getDataRow());
 
 		if (!$updated)
 		{
