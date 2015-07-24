@@ -134,6 +134,9 @@ abstract class RightManager extends Manager
 		}
 		$sess->set($toCheck, 1);
 
+		$moduleTitle = '';
+		$controllerTitle = '';
+
 		try
 		{
 			$actionInfo = $this->getActionName($rightModel->getModule(), $rightModel->getController(), $rightModel->getAction(), $rightModel->getPrefix(), $force);
@@ -161,6 +164,7 @@ abstract class RightManager extends Manager
 
 		$rightModel->setModuletitle($moduleTitle);
 		$rightModel->setControllertitle($controllerTitle);
+		$rightModel->setTitle($actionName);
 
 		$data = $rightModel->getDataRow();
 
