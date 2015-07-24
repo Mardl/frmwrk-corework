@@ -65,7 +65,7 @@ class RightGroupsData
 	/**
 	 * @param RightGroupModel $rightGroupModel
 	 */
-	public function setRightGroupModel($rightGroupModel)
+	public function setRightGroupModel(RightGroupModel $rightGroupModel)
 	{
 		$this->rightGroupModel = $rightGroupModel;
 	}

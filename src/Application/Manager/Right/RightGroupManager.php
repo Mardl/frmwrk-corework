@@ -67,7 +67,7 @@ abstract class RightGroupManager extends Manager
 	}
 
 	/**
-	 * @return UserManager
+	 * @return \App\Manager\UserManager
 	 */
 	protected function getUserManager()
 	{
@@ -287,6 +287,10 @@ abstract class RightGroupManager extends Manager
 				$users = $this->getUserManager()->getUsersByGroupId($rightGroupModel->getId());
 			}
 		}
+		else
+		{
+			$rightGroupModel = new RightGroupModel();
+		}
 
 		$rightGroupData = new RightGroupsData();
 		$rightGroupData->setRightGroupModel($rightGroupModel);
@@ -344,91 +348,34 @@ abstract class RightGroupManager extends Manager
 	}
 
 	/**
-	 * @param UserModel $user
-	 * @param array     $groups
-	 * @return bool
+	 * @return array
 	 */
-	public function updateUsersGroups(UserModel $user, array $groups)
+	public function getAll()
 	{
-		$delete = "
-			DELETE FROM
-				right_group_users
-			WHERE
-				user_id = %d;
-		";
-		$insert = "
-			INSERT INTO
-				right_group_users
-				(`group_id`, `user_id`)
-			VALUES
-				%s;
-		";
+		$mod = $this->getAppModel('RightGroupModel', 'Right');
 
-		$values = array();
-		$value = "(%d, %d)";
+		$query = $this->getBaseManager()->getConnection()->newQuery();
+		$query->select('*');
+		$query->from($mod->getTableName());
 
-		/**
-		 * mysql_real_escape_string wird hier nicht benötigt, Daten kommen bereits aus der Datenbank
-		 *
-		foreach ($groups as $group)
+		return $this->getBaseManager()->getModelsByQuery($this->getAppModelName('RightGroupModel', 'Right'), $query);
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getAllAsArray()
+	{
+		$allGroups = $this->getAll();
+
+		$groupArray = array();
+
+		foreach ($allGroups as $group)
 		{
-		$values[] = sprintf($value, mysql_real_escape_string($group->getId()), mysql_real_escape_string($user->getId()));
+			$groupArray[$group->getId()] = $group;
 		}
 
-		$deleteQuery = sprintf($delete, mysql_real_escape_string($user->getId()));
-		 */
-
-		foreach ($groups as $group)
-		{
-			$values[] = sprintf($value, $group->getId(), $user->getId());
-		}
-
-		$deleteQuery = sprintf($delete, $user->getId());
-
-		$insertQuery = '';
-		if (!empty($values))
-		{
-			$insertQuery = sprintf($insert, implode(',', $values));
-		}
-
-		$con = Registry::getInstance()->getDatabase();
-		$rs = $con->newRecordSet();
-
-		// Starte Transaktion
-		$con->startTransaction();
-
-		// Lösche die bestehenden Mitglieder
-		$execDelete = $rs->execute($con->newQuery()->setQueryOnce($deleteQuery));
-
-		// Verbinde Mitglieder und Gruppe neu
-		if ($execDelete->isSuccessfull())
-		{
-			if (!empty($values))
-			{
-				$execInsert = $rs->execute($con->newQuery()->setQueryOnce($insertQuery));
-			}
-			if (empty($values) || $execInsert->isSuccessfull())
-			{
-				// Schließe Transaktion erfolgreich ab
-				$con->commit();
-
-				return true;
-			}
-			else
-			{
-				//Führe Rollback durch
-				$con->rollback();
-
-				return false;
-			}
-		}
-		else
-		{
-			// Führe Rollback durch
-			$con->rollback();
-
-			return false;
-		}
+		return $groupArray;
 	}
 
 	/**
@@ -440,13 +387,186 @@ abstract class RightGroupManager extends Manager
 	 */
 	public function addUserToGroup(RightGroupModel $group, UserModel $user)
 	{
-		$con = Registry::getInstance()->getDatabase();
-
-		return $con->insert('right_group_users',
-		                    array(
-			                    'group_id' => $group->getId(),
-			                    'user_id' => $user->getId()
-		                    )
+		$data = array(
+			'rgu_rightgroup_id' => $group->getId(),
+			'rgu_user_id' => $user->getId(),
 		);
+
+		$saveModel = $this->save($data);
+
+		return $saveModel->getId() > 0 ? true : false;
+	}
+
+	/**
+	 * @param array $user
+	 * @return array
+	 */
+	public function getGroupsFromAllUser(array $user)
+	{
+		$rights = array();
+		/** @var UserModel $userModel */
+		foreach($user as $userModel)
+		{
+			$groups = $this->getRightGroupUsersManager()->getAllByUserId($userModel->getId());
+
+			$rights[$userModel->getId()] = $groups;
+
+		}
+
+		return $rights;
+	}
+
+	/**
+	 * @param int $userId
+	 * @return array
+	 */
+	public function getByUserId($userId)
+	{
+		$mod = $this->getAppModel('RightGroupModel', 'Right');
+		$modRgu = $this->getAppModel('RightGroupUsersModel', 'Right');
+
+		$query = $this->getBaseManager()->getConnection()->newQuery();
+		$query->select('*');
+		$query->from($mod->getTableName());
+		$query->leftJoin($modRgu->getTableName());
+		$query->on('gro_id = rgu_rightgroup_id');
+		$query->addWhere('rgu_user_id', $userId);
+
+		$ret = $this->getBaseManager()->getArrayByQuery($query);
+
+		$resultArray = array();
+		foreach ($ret as $row)
+		{
+			$group = new RightGroupModel();
+			$clearStd = $group->clearDataRow($row);
+			$group->setDataRow($clearStd);
+
+			$resultArray[$row['gro_id']] = $group;
+		}
+
+		return $resultArray;
+	}
+
+	/**
+	 * @param int $groupId
+	 * @param int $userId
+	 * @return bool
+	 */
+	public function addGroupsUser($groupId , $userId)
+	{
+		$group = $this->getGroupById($groupId, false, true);
+		$user = $this->getUserManager()->getById($userId);
+
+		$groupUsers = $group->getUsers();
+		$check = true;
+
+		foreach ($groupUsers as $gUser)
+		{
+			if ($gUser == $user)
+			{
+				$check = false;
+			}
+		}
+
+		$saveOk = true;
+		if ($check)
+		{
+			$groupUsers[] = $user;
+			$group->setUsers($groupUsers);
+
+			$this->getBaseManager()->getConnection()->startTransaction();
+			try
+			{
+				if (!$this->updateGroup($group, false, true))
+				{
+					$saveOk = false;
+				}
+			} catch (\Exception $e)
+			{
+				\Corework\SystemMessages::addError($e->getMessage(), array('exception' => $e));
+				$log = Registry::getInstance()->getLogger($this);
+				$log->fatal($e->getMessage());
+				$saveOk = false;
+			}
+
+			if ($saveOk === false)
+			{
+				$this->getBaseManager()->getConnection()->rollback();
+			}
+			else
+			{
+				$this->getBaseManager()->getConnection()->commit();
+			}
+		}
+		return $saveOk;
+	}
+
+	/**
+	 * @param int $groupId
+	 * @param int $userId
+	 * @return bool
+	 */
+	public function subGroupsUser($groupId , $userId)
+	{
+		$group = $this->GetGroupById($groupId, false, true);
+		$user = $this->getUserManager()->getById($userId);
+
+		$groupUsers = $group->getUsers();
+		$newUsers = array();
+
+		foreach ($groupUsers as $gUser)
+		{
+			if ($gUser != $user)
+			{
+				$newUsers[] = $gUser;
+			}
+		}
+
+		$group->setUsers($newUsers);
+		$saveOk = true;
+
+		$this->getBaseManager()->getConnection()->startTransaction();
+		try
+		{
+
+			if (!$this->updateGroup($group, false, true))
+			{
+				$saveOk = false;
+			}
+		} catch (\Exception $e)
+		{
+			\Corework\SystemMessages::addError($e->getMessage(), array('exception' => $e));
+			$log = Registry::getInstance()->getLogger($this);
+			$log->fatal($e->getMessage());
+			$saveOk = false;
+		}
+
+		if ($saveOk === false)
+		{
+			$this->getBaseManager()->getConnection()->rollback();
+		}
+		else
+		{
+			$this->getBaseManager()->getConnection()->commit();
+		}
+
+		return $saveOk;
+	}
+
+	/**
+	 * @param array $groups
+	 * @return array
+	 */
+	public function getUsersByGroups(array $groups)
+	{
+		$users = array();
+		/** @var RightGroupModel  $groupModel */
+		foreach ($groups as $groupModel)
+		{
+			$userArray = $this->getUserManager()->getUsersByGroupId($groupModel->getId());
+			$users[$groupModel->getId()] = $userArray;
+		}
+
+		return $users;
 	}
 }

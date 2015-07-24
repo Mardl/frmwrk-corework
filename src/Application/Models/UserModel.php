@@ -113,7 +113,7 @@ class UserModel extends \Corework\Model
 	 *
 	 * @Column(type="integer", name="usr_status")
 	 */
-	protected $status = 1;
+	protected $status = 0;
 
 	/**
 	 * Einmal-Passwort wurde gesetzt
@@ -455,6 +455,7 @@ class UserModel extends \Corework\Model
 		$data = array(
 			'usr_id' => $this->getId(),
 			'usr_language_id' => $this->getLanguage_id(),
+			'usr_username' => $this->getUsername(),
 			'usr_firstname' => $this->getFirstname(),
 			'usr_lastname' => $this->getLastname(),
 			'usr_password' => $this->getPassword(),
@@ -473,5 +474,19 @@ class UserModel extends \Corework\Model
 		);
 
 		return $data;
+	}
+
+	/**
+	 * Liefert das Alter des Mitglieds
+	 *
+	 * @return string
+	 */
+	public function getAge()
+	{
+		$today = new \DateTime();
+		$birthdate = $this->getBirthday();
+		$interval = $today->diff($birthdate);
+
+		return $interval->format('%y');
 	}
 }

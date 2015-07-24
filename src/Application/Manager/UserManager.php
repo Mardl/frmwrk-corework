@@ -3,7 +3,10 @@
 namespace Corework\Application\Manager;
 
 use Corework\Application\Abstracts\Manager;
+use Corework\Application\Helper\Models\RightGroupsData;
+use Corework\Application\Helper\Models\UserRightData;
 use Corework\Application\Interfaces\ModelsInterface;
+use Corework\Application\Manager\Right\RightGroupManager;
 use Corework\Application\Models\UserModel;
 use jamwork\common\Registry;
 
@@ -20,6 +23,40 @@ abstract class UserManager extends Manager
     const STATUS_INACTIVE = 1;
     const STATUS_BLOCKED = 2;
     const STATUS_DELETED = 3;
+
+	/** @var \App\Manager\Right\RightGroupManager */
+	protected $rightGroupManager = null;
+
+	/** @var \App\Manager\Right\RightGroupUsersManager */
+	protected $rightGroupUsersManager = null;
+
+	/**
+	 * @return \App\Manager\Right\RightGroupUsersManager
+	 */
+	public function getRightGroupUsersManager()
+	{
+		if (is_null($this->rightGroupUsersManager))
+		{
+			$this->rightGroupUsersManager = new \App\Manager\Right\RightGroupUsersManager();
+		}
+
+		return $this->rightGroupUsersManager;
+	}
+
+	/**
+	 * @return \App\Manager\Right\RightGroupManager
+	 */
+	public function getRightGroupManager()
+	{
+		if (is_null($this->rightGroupManager))
+		{
+			$this->rightGroupManager = new \App\Manager\Right\RightGroupManager();
+		}
+
+		return $this->rightGroupManager;
+	}
+
+
 	/**
 	 * @return UserModel
 	 */
@@ -106,14 +143,14 @@ abstract class UserManager extends Manager
 		$query->from($mod->getTableName());
 		if ($status >= 0)
 		{
-			$query->addWhere('status', $status);
+			$query->addWhere('usr_status', $status);
 		}
 		else{
-			$query->addWhere('status', self::STATUS_DELETED, '<=');
+			$query->addWhere('usr_status', self::STATUS_DELETED, '<=');
 		}
 		if (!empty($default))
 		{
-			$query->addWhere('id', $default, '=', 'OR');
+			$query->addWhere('usr_id', $default, '=', 'OR');
 		}
 		$query->orderBy('usr_lastname, usr_status');
 
@@ -254,6 +291,38 @@ abstract class UserManager extends Manager
 	}
 
 	/**
+	 * @param \Corework\Application\Interfaces\ModelsInterface $model
+	 * @param array                                            $data
+	 * @return bool
+	 */
+	protected function afterSaveAddOn(ModelsInterface $model, array $data)
+	{
+		$success = true;
+
+		if (!isset($data['noGroups']))
+		{
+			$allEntries = $this->getRightGroupUsersManager()->getAllByUserId($model->getId());
+			$success = $this->getRightGroupUsersManager()->clearExistingEntries($allEntries);
+
+			if ($success && isset($data['groups']) && !empty($data['groups']))
+			{
+				$arrayOfGroups = $this->getRightGroupManager()->getGroupsByIds($data['groups']);
+
+				/** @var RightGroupsData $group */
+				foreach ($arrayOfGroups as $group)
+				{
+					if (!$this->getRightGroupUsersManager()->addUserToGroup($group->getRightGroupModel(), $model))
+					{
+						return false;
+					}
+				}
+			}
+		}
+
+		return $success;
+	}
+
+	/**
 	 * @param UserModel $user
 	 * @param string    $password
 	 * @param bool|true $md5
@@ -345,5 +414,25 @@ abstract class UserManager extends Manager
 		$this->save($data);
 
 		return $randompass;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getUserRightsData()
+	{
+		$retData = array();
+
+		/** @var \App\Models\UserModel $users */
+		$users = $this->getAll();
+		foreach($users as $user)
+		{
+			$groups = $this->getRightGroupManager()->getByUserId($user->getId());
+			$avmData = new UserRightData();
+			$avmData->setUserModel($user);
+			$avmData->setGroupModels($groups);
+			$retData[] = $avmData;
+		}
+		return $retData;
 	}
 }

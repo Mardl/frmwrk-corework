@@ -67,7 +67,7 @@ class RightGroupModel extends \Corework\Model
 	 * @var \int
 	 *
 	 * @ManyToOne(targetEntity="App\Models\UserModel")
-	 * @JoinColumn(name="grogro_modifieduser_id", referencedColumnName="usr_id", nullable=true)
+	 * @JoinColumn(name="gro_modifieduser_id", referencedColumnName="usr_id", nullable=true)
 	 */
 	protected $modifieduser_id = null;
 
