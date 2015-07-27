@@ -286,6 +286,11 @@ abstract class UserManager extends Manager
 			}
 		}
 
+		if (array_key_exists('usr_birthday', $data) && empty($data['usr_birthday']))
+		{
+			$data['usr_birthday'] = '00.00.0000';
+		}
+
 		return $data;
 	}
 
