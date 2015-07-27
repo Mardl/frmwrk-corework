@@ -6,7 +6,6 @@ use Corework\Application\Abstracts\Manager;
 use Corework\Application\Helper\Models\RightGroupsData;
 use Corework\Application\Helper\Models\UserRightData;
 use Corework\Application\Interfaces\ModelsInterface;
-use Corework\Application\Manager\Right\RightGroupManager;
 use Corework\Application\Models\UserModel;
 use jamwork\common\Registry;
 

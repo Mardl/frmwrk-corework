@@ -6,6 +6,7 @@ use Corework\Application\Abstracts\Manager;
 use Corework\Application\Models\Right\RightModel;
 use Corework\Application\Models\UserModel;
 use Corework\SystemMessages;
+use DirectoryIterator;
 use Exception;
 use jamwork\common\Registry;
 
@@ -312,8 +313,8 @@ abstract class RightManager extends Manager
 	{
 		$mod = $this->getAppModel('RightModel', 'Right');
 		$modU = $this->getAppModel('UserModel');
-		$modRgr = $this->getAppModel('RightGroupRights', 'Right');
-		$modRgu = $this->getAppModel('RightGroupUsers', 'Right');
+		$modRgr = $this->getAppModel('RightGroupRightsModel', 'Right');
+		$modRgu = $this->getAppModel('RightGroupUsersModel', 'Right');
 
 		$query = $this->getBaseManager()->getConnection()->newQuery();
 		$query->select('usr_id');
@@ -321,7 +322,7 @@ abstract class RightManager extends Manager
 		$query->innerJoin($modRgu->getTablename());
 		$query->on('usr_id = rgu_user_id');
 		$query->innerJoin($modRgr->getTableName());
-		$query->on('rgr_rightgroup_id = rgu_group_id');
+		$query->on('rgr_rightgroup_id = rgu_rightgroup_id');
 		$query->innerJoin($mod->getTableName());
 		$query->on('rig_id = rgr_right_id');
 		$query->addWhere('usr_id', $userModel->getId());
@@ -405,5 +406,248 @@ abstract class RightManager extends Manager
 		$query->orderBy('rig_module');
 
 		return $this->getBaseManager()->getModelsByQuery($this->getAppModelName('RightModel', 'Right'), $query);
+	}
+
+	/**
+	 * @param bool $inaktiv
+	 * @return array
+	 */
+	public function getAll($inaktiv = false)
+	{
+		$mod = $this->getAppModel('RightModel', 'Right');
+
+		$query = $this->getBaseManager()->getConnection()->newQuery();
+		$query->select('*');
+		$query->from($mod->getTableName());
+		$query->addWhere('rig_inactive', $inaktiv ? 1 : 0);
+
+		return $this->getBaseManager()->getModelsByQuery('\App\Models\Right\RightModel', $query);
+	}
+
+	/**
+	 * @param string $startpath
+	 * @return bool
+	 */
+	public function createAllRights($startpath)
+	{
+		$moduleslist = $this->getModulesDirectory($startpath);
+		$error = 0;
+
+		foreach ($moduleslist as $modules)
+		{
+			$filelist = $this->getControllerFiles($startpath . '/Modules/' . $modules['verzeichnis'] . '/Controller/');
+
+			foreach ($filelist as $controller)
+			{
+				/** Methoden auslesen */
+				$class = '\App\Modules\\' . $modules['verzeichnis'] . '\Controller\\' . $controller['filename'];
+
+				$reflectionClass = new \ReflectionClass($class);
+				$properties = $reflectionClass->getDefaultProperties();
+
+				if (!isset($properties['checkPermissions']) || $properties['checkPermissions'] == false)
+				{
+					continue;
+				}
+
+				$methods = $reflectionClass->getMethods();
+				foreach ($methods as $method)
+				{
+					$prefix = '';
+
+					/** Prüfe ob eine Methode eine HTML-Action ist */
+					preg_match("/(.+)(HTML|Html|JSON|Json)Action/", $method->getName(), $matches);
+					if (!empty($matches))
+					{
+						/** @var \App\Models\Right\RightModel $rightModel */
+						$rightModel = $this->getAppModel('RightModel', 'Right');
+						$rightModel->setAction(strtolower($matches[1]));
+						$rightModel->setModule($modules['verzeichnis']);
+						$rightModel->setController($controller['filename']);
+						$rightModel->setPrefix($prefix);
+
+						if (!$this->createRight($rightModel, true))
+						{
+							$error++;
+						}
+					}
+				}
+			}
+		}
+
+		return $error;
+	}
+
+	/**
+	 * @param string $startpath
+	 * @return array
+	 */
+	private function getModulesDirectory($startpath = '')
+	{
+		$directorySearch = 'Controller/';
+		$directory = $startpath . '/Modules/';
+
+		$directoryList = array();
+
+		if (file_exists($directory))
+		{
+			$iterator = new DirectoryIterator($directory);
+			foreach ($iterator as $verzeichnis)
+			{
+				if (file_exists($directory . $verzeichnis->getFilename() . '/' . $directorySearch))
+				{
+					$directoryList[] = array('verzeichnis' => $verzeichnis->getFilename());
+				}
+			}
+		}
+
+		/** Array mit Verzeichnisnamen sortieren */
+		sort($directoryList);
+
+		return $directoryList;
+	}
+
+	/**
+	 * @param string $path
+	 * @return array
+	 */
+	private function getControllerFiles($path)
+	{
+		$filelist = array();
+
+		$iterator = new DirectoryIterator($path);
+
+		foreach ($iterator as $fileinfo)
+		{
+			if ($fileinfo->getExtension() == 'php')
+			{
+				$filelist[] = array('filename' => $fileinfo->getBasename('.php'));
+			}
+		}
+
+		/**  Array mit Dateienamen sortieren */
+		sort($filelist);
+
+		return $filelist;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function setInactiveModels()
+	{
+		$ret = true;
+		$controllerNotExists = $this->getControllerNotExists();
+
+		foreach ($controllerNotExists as $model)
+		{
+			$right = $this->getByID($model['id']);
+
+			$right->setInactive(1);
+
+			if ($this->updateModel($right))
+			{
+				$ret = $ret && true;
+			}
+			else
+			{
+				$ret = false;
+			}
+		}
+
+		return $ret;
+	}
+
+	/**
+	 * @return array
+	 */
+	private function getControllerNotExists()
+	{
+		$rightlist = $this->getAllRights();
+
+		$listNotExists = array();
+
+		/** @var \App\Models\Right\RightModel $rights */
+		foreach ($rightlist as $rights)
+		{
+			$id = $rights->getId();
+			$module = $rights->getModule();
+			$controller = $rights->getController();
+			$action = strtolower($rights->getAction());
+
+			if ($rights->getInactive())
+			{
+				continue;
+			}
+
+			$directory = APPLICATION_PATH . '/Modules/';
+
+			if (file_exists($directory . ucfirst($module) . '/Controller/' . ucfirst($controller) . '.php'))
+			{
+				$foundmethod = array();
+				$class = '\App\Modules\\' . ucfirst($module) . '\Controller\\' . ucfirst($controller);
+
+
+				$reflectionClass = new \ReflectionClass($class);
+				$properties = $reflectionClass->getDefaultProperties();
+
+				if (!isset($properties['checkPermissions']) || $properties['checkPermissions'] == false
+					|| $this->inArray($rights->getAction(), $properties['noPermissionActions'])
+				)
+				{
+					if ($rights->getInactive() == 0)
+					{
+						$listNotExists[] = array('id' => $id, 'module' => ucfirst($module), 'controller' => ucfirst($controller), 'action' => '');
+					}
+					continue;
+				}
+
+				$methods = $reflectionClass->getMethods();
+
+				foreach ($methods as $method)
+				{
+					preg_match("/(.+)(HTML|Html|JSON|Json)Action/i", $method->getName(), $matches);
+
+					if (!empty($matches))
+					{
+						$foundmethod[] = strtolower($matches[1]);
+					}
+				}
+
+				if (!in_array($action, $foundmethod))
+				{
+					if ($rights->getInactive() == 0)
+					{
+						$listNotExists[] = array('id' => $id, 'module' => ucfirst($module), 'controller' => ucfirst($controller), 'action' => $action);
+					}
+				}
+			}
+			else
+			{
+				if ($rights->getInactive() == 0)
+				{
+					$listNotExists[] = array('id' => $id, 'module' => ucfirst($module), 'controller' => ucfirst($controller), 'action' => '');
+				}
+			}
+		}
+
+		return $listNotExists;
+	}
+
+	/**
+	 * @param string $needle
+	 * @param array  $data
+	 * @return bool
+	 */
+	private function inArray($needle, $data)
+	{
+		foreach($data as $value)
+		{
+			if ($needle == strtolower($value))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 }
