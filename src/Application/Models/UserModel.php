@@ -317,7 +317,12 @@ class UserModel extends \Corework\Model
 	 */
 	public function getBirthdayAsString()
 	{
-		return ($this->getBirthday() instanceof \DateTime) ? $this->getBirthday()->format('Y-m-d H:i:s') : $this->getBirthday();
+		$dt = $this->getBirthday();
+		if ($dt->format('Y') < 1900)
+		{
+			return null;
+		}
+		return $this->getBirthday()->format('Y-m-d H:i:s');
 	}
 
 	/**
@@ -325,7 +330,7 @@ class UserModel extends \Corework\Model
 	 */
 	public function getBirthday()
 	{
-		$this->birthday = $this->getDateTimeFrom($this->birthday, '');
+		$this->birthday = $this->getDateTimeFrom($this->birthday);
 		return $this->birthday;
 	}
 

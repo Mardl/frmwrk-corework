@@ -93,15 +93,20 @@ class DbManagement
 
 		// Connection Options definieren
 		$connectionOptions = array(
-			'driver' => 'pdo_mysql',
+			'driver' => DB_DRIVER,
 			'dbname' => DB_DATABASE,
 			'user' => DB_USER,
 			'password' => DB_PASSWORD,
-			'host' => DB_SERVER
+			'host' => DB_SERVER,
+			'port' => DB_PORT
 		);
 
 		$event = new \Doctrine\Common\EventManager();
-		$event->addEventSubscriber(new \Doctrine\DBAL\Event\Listeners\MysqlSessionInit('utf8', 'utf8_unicode_ci'));
+
+		if (DB_UTF8)
+		{
+			$event->addEventSubscriber(new \Doctrine\DBAL\Event\Listeners\MysqlSessionInit('utf8', 'utf8_unicode_ci'));
+		}
 
 		// EntityManager
 		$em = \Doctrine\ORM\EntityManager::create($connectionOptions, $config, $event);

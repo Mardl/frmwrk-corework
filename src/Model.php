@@ -84,7 +84,7 @@ abstract class Model implements ModelsInterface
 	 */
 	public function __call($name, $params)
 	{
-		throw new \Exception("It is not allowed to use the call interceptor for '".$name."' from '".get_class($this)."' within the project models.");
+		throw new \Exception("It is not allowed to use the call interceptor for '" . $name . "' from '" . get_class($this) . "' within the project models.");
 	}
 
 	/**
@@ -148,9 +148,10 @@ abstract class Model implements ModelsInterface
 				$keyToCheck = $key;
 				$method = 'set' . ucfirst($keyToCheck);
 				$prefix = $this->getTablePrefix();
-				if (!empty($prefix)) {
+				if (!empty($prefix))
+				{
 					$keyToCheck = str_replace($prefix, '', $keyToCheck);
-					$method = 'set'.ucfirst($keyToCheck);
+					$method = 'set' . ucfirst($keyToCheck);
 				}
 
 				if (property_exists($this, $keyToCheck) || method_exists($this, $method))
@@ -159,6 +160,7 @@ abstract class Model implements ModelsInterface
 				}
 			}
 		}
+
 		return $ret;
 	}
 
@@ -193,18 +195,21 @@ abstract class Model implements ModelsInterface
 	/**
 	 * Validierung für Getter von Datumsfeldern
 	 *
-	 * @param        $dt
-	 * @param string $default
-	 * @return \DateTime|string
+	 * @param \Datetime|string $dt
+	 * @param string           $default
+	 * @return \DateTime
 	 */
 	public function getDateTimeFrom($dt, $default = '0000-00-00 00:00:00')
 	{
-		if(empty($dt)) {
+		if (empty($dt))
+		{
 			$dt = $default;
 		}
-		if(!($dt instanceof \DateTime)) {
+		if (!($dt instanceof \DateTime))
+		{
 			$dt = new \DateTime($dt);
 		}
+
 		return $dt;
 	}
 
@@ -217,7 +222,7 @@ abstract class Model implements ModelsInterface
 	 */
 	public function setCreated($datetime = 'now')
 	{
-		$this->set('created', $this->setDateTimeFrom($datetime) );
+		$this->set('created', $this->setDateTimeFrom($datetime));
 	}
 
 	/**
@@ -236,6 +241,7 @@ abstract class Model implements ModelsInterface
 	public function getCreated()
 	{
 		$this->created = $this->getDateTimeFrom($this->created);
+
 		return $this->created;
 	}
 
@@ -276,7 +282,7 @@ abstract class Model implements ModelsInterface
 	public function setModified($datetime = 'now')
 	{
 		$datetime = $this->setDateTimeFrom($datetime);
-		$this->set('modified',$datetime);
+		$this->set('modified', $datetime);
 	}
 
 	/**
@@ -295,6 +301,7 @@ abstract class Model implements ModelsInterface
 	public function getModified()
 	{
 		$this->modified = $this->getDateTimeFrom($this->modified);
+
 		return $this->modified;
 	}
 
@@ -441,11 +448,14 @@ abstract class Model implements ModelsInterface
 	 */
 	public function setDataRow($data = array())
 	{
-		if (!empty($data)) {
-			foreach ($data as $key => $value) {
+		if (!empty($data))
+		{
+			foreach ($data as $key => $value)
+			{
 				$key = $this->clearPropertyKey($key);
 				$setter = 'set' . ucfirst($key);
-				if(method_exists($this, $setter)) {
+				if (method_exists($this, $setter))
+				{
 					$this->$setter($value);
 				}
 			}
@@ -459,9 +469,11 @@ abstract class Model implements ModelsInterface
 	public function clearPropertyKey($key)
 	{
 		$prefix = $this->getTablePrefix();
-		if(!empty($prefix)) {
-			return preg_replace('/^'.$prefix.'/', '', $key);
+		if (!empty($prefix))
+		{
+			return preg_replace('/^' . $prefix . '/', '', $key);
 		}
+
 		return $key;
 	}
 
@@ -475,7 +487,8 @@ abstract class Model implements ModelsInterface
 		$this->throwExceptionIfNotModelProperty($propertyName);
 
 		$propertyValue = $this->{$propertyName};
-		if($this->isDifferent($propertyValue, $value)) {
+		if ($this->isDifferent($propertyValue, $value))
+		{
 			// Change property
 			$this->{$propertyName} = $value;
 			$this->registerChange($propertyName);
@@ -506,7 +519,7 @@ abstract class Model implements ModelsInterface
 	 */
 	protected function isDifferent($value1, $value2)
 	{
-		return (bool) $value1 !== $value2;
+		return (bool)$value1 !== $value2;
 	}
 
 	/**
@@ -516,6 +529,7 @@ abstract class Model implements ModelsInterface
 	public function hasChanges($name)
 	{
 		$this->throwExceptionIfNotModelProperty($name);
+
 		return in_array($name, $this->changedFields);
 	}
 
@@ -526,7 +540,8 @@ abstract class Model implements ModelsInterface
 	 */
 	protected function throwExceptionIfNotModelProperty($name)
 	{
-		if(!property_exists($this, $name)) {
+		if (!property_exists($this, $name))
+		{
 			throw new \InvalidArgumentException(sprintf("Object '%s' hasnt the property '%s'", get_class($this), $name));
 		}
 	}
