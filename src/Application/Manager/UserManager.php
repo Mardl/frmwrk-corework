@@ -129,11 +129,12 @@ abstract class UserManager extends Manager
 	 * Liefert ein Array mit den Benutzern.
 	 * Im ersten Parameter $status wird übermittelt bis (exklusive) welchem Benutzerstatus die Benutzer aus der Datenbank gelesen werden sollen.
 	 *
-	 * @param int $default
-	 * @param int $status
+	 * @param int    $default
+	 * @param int    $status
+	 * @param string $op
 	 * @return array of UserModel
 	 */
-	public function getAll($default = 0, $status = -1)
+	public function getAll($default = 0, $status = -1, $op = '=')
 	{
 		$mod = $this->getAppModel('UserModel');
 
@@ -142,9 +143,10 @@ abstract class UserManager extends Manager
 		$query->from($mod->getTableName());
 		if ($status >= 0)
 		{
-			$query->addWhere('usr_status', $status);
+			$query->addWhere('usr_status', $status, $op);
 		}
-		else{
+		else
+		{
 			$query->addWhere('usr_status', self::STATUS_DELETED, '<=');
 		}
 		if (!empty($default))
@@ -373,11 +375,11 @@ abstract class UserManager extends Manager
 	}
 
 	/**
-	 * @param string $keyword
-	 * @param int    $status
-	 * @return array
+	 * @param string $keyword   Suchwort
+	 * @param int    $status    Der maximale Benutzerstatus, Default: Deleted
+	 * @return array of UserModel
 	 */
-	public function searchUsers($keyword, $status = self::STATUS_ACTIVE)
+	public function searchUsers($keyword, $status = self::STATUS_DELETED)
 	{
 		$mod = $this->getAppModel('UserModel');
 
