@@ -2,6 +2,8 @@
 
 namespace Corework\Helpers;
 
+use jamwork\common\Registry;
+
 /**
  * Class DbManagement
  *
@@ -91,19 +93,20 @@ class DbManagement
 		$driverImpl = $config->newDefaultAnnotationDriver(array(APPLICATION_PATH . '/Models'));
 		$config->setMetadataDriverImpl($driverImpl);
 
+		$conf = Registry::getInstance()->conf;
 		// Connection Options definieren
 		$connectionOptions = array(
-			'driver' => DB_DRIVER,
-			'dbname' => DB_DATABASE,
-			'user' => DB_USER,
-			'password' => DB_PASSWORD,
-			'host' => DB_SERVER,
-			'port' => DB_PORT
+			'driver' => $conf->DB_DRIVER,
+			'dbname' => $conf->DB_DATABASE,
+			'user' => $conf->DB_USER,
+			'password' => $conf->DB_PASSWORD,
+			'host' => $conf->DB_SERVER,
+			'port' => $conf->DB_PORT
 		);
 
 		$event = new \Doctrine\Common\EventManager();
 
-		if (DB_UTF8)
+		if ($conf->DB_UTF8)
 		{
 			$event->addEventSubscriber(new \Doctrine\DBAL\Event\Listeners\MysqlSessionInit('utf8', 'utf8_unicode_ci'));
 		}
