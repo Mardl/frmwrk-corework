@@ -57,7 +57,7 @@ class RightModel extends \Corework\Model
 	 *
 	 * @var string
 	 *
-	 * @Column(type="string", name="rig_module", options={"default" = ""})
+	 * @Column(type="string", name="rig_module", length=50, options={"default" = ""})
 	 */
 	protected $module;
 
@@ -66,7 +66,7 @@ class RightModel extends \Corework\Model
 	 *
 	 * @var string
 	 *
-	 * @Column(type="string", name="rig_controller", options={"default" = ""})
+	 * @Column(type="string", name="rig_controller", length=50, options={"default" = ""})
 	 */
 	protected $controller;
 
@@ -75,7 +75,7 @@ class RightModel extends \Corework\Model
 	 *
 	 * @var string
 	 *
-	 * @Column(type="string", name="rig_action", options={"default" = ""})
+	 * @Column(type="string", name="rig_action", length=50, options={"default" = ""})
 	 */
 	protected $action;
 
@@ -84,7 +84,7 @@ class RightModel extends \Corework\Model
 	 *
 	 * @var string
 	 *
-	 * @Column(type="string", name="rig_prefix", options={"default" = ""})
+	 * @Column(type="string", name="rig_prefix", length=50, options={"default" = ""})
 	 */
 	protected $prefix = '';
 

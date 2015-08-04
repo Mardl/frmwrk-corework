@@ -164,11 +164,6 @@ abstract class Model implements ModelsInterface
 		return $ret;
 	}
 
-	protected function clearDateTimeSting($datetime)
-	{
-		return str_replace(':000', '', $datetime);
-	}
-
 	/**
 	 * Validierung für Setter von Datumsfeldern
 	 *
@@ -182,7 +177,7 @@ abstract class Model implements ModelsInterface
 		{
 			try
 			{
-				$dt = new \DateTime($this->clearDateTimeSting($dt));
+				$dt = new \DateTime(empty($dt) ? '0000-00-00 00:00:00' : $dt);
 			} catch (\Exception $e)
 			{
 				throw new \InvalidArgumentException('Ungültige Datumsangabe');
