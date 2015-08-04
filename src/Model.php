@@ -361,11 +361,18 @@ abstract class Model implements ModelsInterface
 			$tmp = substr($matches[1], strpos($matches[1], 'name="'));
 			$tmp = substr($tmp, strpos($tmp, '"') + 1);
 			$tableName = substr($tmp, 0, strpos($tmp, '"'));
-			$cache = $tableName;
+
+			//$cache = $tableName;
+
+			$tmp = substr($matches[1], strpos($matches[1], 'schema="'));
+			$tmp = substr($tmp, strpos($tmp, '"') + 1);
+			$schema = substr($tmp, 0, strpos($tmp, '"'));
+			$cache = !empty($schema) ? $schema.'.'.$tableName : $tableName;
 		}
 		ModelInformation::set(get_class($this), "tablename", $cache);
 
-		return $tableName;
+		return !empty($schema) ? $schema.'.'.$tableName : $tableName;
+		//return $tableName;
 	}
 
 	/**

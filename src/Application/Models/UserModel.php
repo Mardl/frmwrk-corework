@@ -30,7 +30,7 @@ class UserModel extends \Corework\Model
 	 *
 	 * @var string
 	 *
-	 * @Column(type="string", length=64, unique=true, name="usr_username")
+	 * @Column(type="string", length=64, unique=true, name="usr_username", options={"default" = ""})
 	 */
 	protected $username = '';
 
@@ -39,7 +39,7 @@ class UserModel extends \Corework\Model
 	 *
 	 * @var string
 	 *
-	 * @Column(type="string", length=32, nullable=true, name="usr_firstname")
+	 * @Column(type="string", length=32, nullable=true, name="usr_firstname", options={"default" = ""})
 	 */
 	protected $firstname = '';
 
@@ -48,7 +48,7 @@ class UserModel extends \Corework\Model
 	 *
 	 * @var string
 	 *
-	 * @Column(type="string", length=32, nullable=true, name="usr_lastname")
+	 * @Column(type="string", length=32, nullable=true, name="usr_lastname", options={"default" = ""})
 	 */
 	protected $lastname = '';
 
@@ -57,7 +57,7 @@ class UserModel extends \Corework\Model
 	 *
 	 * @var string
 	 *
-	 * @Column(type="string", length=255, name="usr_password")
+	 * @Column(type="string", length=255, name="usr_password", options={"default" = ""})
 	 */
 	protected $password = '';
 
@@ -66,7 +66,7 @@ class UserModel extends \Corework\Model
 	 *
 	 * @var string
 	 *
-	 * @Column(type="string", length=255, name="usr_email")
+	 * @Column(type="string", length=255, name="usr_email", options={"default" = ""})
 	 */
 	protected $email = '';
 
@@ -75,7 +75,7 @@ class UserModel extends \Corework\Model
 	 *
 	 * @var boolean
 	 *
-	 * @Column(type="boolean", name="usr_emailcorrupted")
+	 * @Column(type="boolean", name="usr_emailcorrupted", options={"default" = 0})
 	 */
 	protected $emailcorrupted = false;
 
@@ -84,7 +84,7 @@ class UserModel extends \Corework\Model
 	 *
 	 * @var string
 	 *
-	 * @Column(type="string", length=255, nullable=true, name="usr_avatar")
+	 * @Column(type="string", length=255, nullable=true, name="usr_avatar", options={"default" = ""})
 	 */
 	protected $avatar = '';
 
@@ -93,7 +93,7 @@ class UserModel extends \Corework\Model
 	 *
 	 * @var \DateTime
 	 *
-	 * @Column(type="date", name="usr_birthday")
+	 * @Column(type="date", name="usr_birthday", nullable=true)
 	 */
 	protected $birthday = '';
 
@@ -102,16 +102,16 @@ class UserModel extends \Corework\Model
 	 *
 	 * @var integer
 	 *
-	 * @Column(type="integer", name="usr_gender")
+	 * @Column(type="integer", name="usr_gender", options={"default" = 1})
 	 */
-	protected $gender = 0;
+	protected $gender = 1;
 
 	/**
 	 * Status
 	 *
 	 * @var integer
 	 *
-	 * @Column(type="integer", name="usr_status")
+	 * @Column(type="integer", name="usr_status", options={"default" = 0})
 	 */
 	protected $status = 0;
 
@@ -120,7 +120,7 @@ class UserModel extends \Corework\Model
 	 *
 	 * @var bool
 	 *
-	 * @Column(type="boolean", name="usr_otp")
+	 * @Column(type="boolean", name="usr_otp", options={"default" = 0})
 	 */
 	protected $otp = false;
 
@@ -129,7 +129,7 @@ class UserModel extends \Corework\Model
 	 *
 	 * @var bool
 	 *
-	 * @Column(type="boolean", name="usr_admin")
+	 * @Column(type="boolean", name="usr_admin", options={"default" = 0})
 	 */
 	protected $admin = false;
 
@@ -146,7 +146,7 @@ class UserModel extends \Corework\Model
 	 *
 	 * @var \DateTime
 	 *
-	 * @Column(type="datetime", name="usr_created")
+	 * @Column(type="datetime", name="usr_created", nullable=true)
 	 */
 	protected $created;
 
@@ -166,7 +166,7 @@ class UserModel extends \Corework\Model
 	 *
 	 * @var \DateTime
 	 *
-	 * @Column(type="datetime", name="usr_modified")
+	 * @Column(type="datetime", name="usr_modified", nullable=true)
 	 */
 	protected $modified = null;
 

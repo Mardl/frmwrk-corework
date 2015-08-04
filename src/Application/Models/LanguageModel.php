@@ -30,7 +30,7 @@ class LanguageModel extends \Corework\Model
 	 *
 	 * @var string
 	 *
-	 * @Column(type="string", length=8, name="lng_short")
+	 * @Column(type="string", length=8, name="lng_short", options={"default" = ""})
 	 */
 	protected $short;
 
@@ -40,7 +40,7 @@ class LanguageModel extends \Corework\Model
 	 *
 	 * @var string
 	 *
-	 * @Column(type="string", length=50, nullable=true, name="lng_national")
+	 * @Column(type="string", length=50, nullable=true, name="lng_national", options={"default" = ""})
 	 */
 	protected $national;
 
@@ -49,7 +49,7 @@ class LanguageModel extends \Corework\Model
 	 *
 	 * @var string
 	 *
-	 * @Column(type="string", length=50, name="lng_international")
+	 * @Column(type="string", length=50, name="lng_international", options={"default" = ""})
 	 */
 	protected $international;
 
@@ -58,7 +58,7 @@ class LanguageModel extends \Corework\Model
 	 *
 	 * @var string
 	 *
-	 * @Column(type="string", length=10, name="lng_isocode")
+	 * @Column(type="string", length=10, name="lng_isocode", options={"default" = ""})
 	 */
 	protected $isocode;
 
@@ -67,7 +67,7 @@ class LanguageModel extends \Corework\Model
 	 *
 	 * @var string
 	 *
-	 * @Column(type="string", length=10, name="lng_countryCode")
+	 * @Column(type="string", length=10, name="lng_countryCode", options={"default" = ""})
 	 */
 	protected $countryCode;
 
@@ -76,7 +76,7 @@ class LanguageModel extends \Corework\Model
 	 *
 	 * @var \DateTime
 	 *
-	 * @Column(type="datetime", name="lng_created")
+	 * @Column(type="datetime", name="lng_created", nullable=true)
 	 */
 	protected $created;
 
@@ -96,7 +96,7 @@ class LanguageModel extends \Corework\Model
 	 *
 	 * @var \DateTime
 	 *
-	 * @Column(type="datetime", name="lng_modified")
+	 * @Column(type="datetime", name="lng_modified", nullable=true)
 	 */
 	protected $modified = null;
 

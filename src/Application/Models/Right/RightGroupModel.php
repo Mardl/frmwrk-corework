@@ -29,7 +29,7 @@ class RightGroupModel extends \Corework\Model
 	 *
 	 * @var string
 	 *
-	 * @Column(type="string", unique=true, name="gro_name")
+	 * @Column(type="string", unique=true, name="gro_name", options={"default" = ""})
 	 */
 	protected $name;
 
@@ -38,7 +38,7 @@ class RightGroupModel extends \Corework\Model
 	 *
 	 * @var \DateTime
 	 *
-	 * @Column(type="datetime", name="gro_created")
+	 * @Column(type="datetime", name="gro_created", nullable=true)
 	 */
 	protected $created;
 
@@ -57,7 +57,7 @@ class RightGroupModel extends \Corework\Model
 	 *
 	 * @var \DateTime
 	 *
-	 * @Column(type="datetime", name="gro_modified")
+	 * @Column(type="datetime", name="gro_modified", nullable=true)
 	 */
 	protected $modified = null;
 

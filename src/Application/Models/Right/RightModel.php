@@ -15,14 +15,14 @@ namespace Corework\Application\Models\Right;
 class RightModel extends \Corework\Model
 {
 	/**
-	* Id
-	*
-	* @var integer
-	*
-	* @Id
-	* @Column(type="integer", name="rig_id")
-	* @GeneratedValue(strategy="AUTO")
-	*/
+	 * Id
+	 *
+	 * @var integer
+	 *
+	 * @Id
+	 * @Column(type="integer", name="rig_id")
+	 * @GeneratedValue(strategy="AUTO")
+	 */
 	protected $id;
 
 	/**
@@ -30,7 +30,7 @@ class RightModel extends \Corework\Model
 	 *
 	 * @var string
 	 *
-	 * @Column(type="string", name="rig_title")
+	 * @Column(type="string", name="rig_title", options={"default" = ""})
 	 */
 	protected $title;
 
@@ -39,7 +39,7 @@ class RightModel extends \Corework\Model
 	 *
 	 * @var string
 	 *
-	 * @Column(type="string", name="rig_moduletitle")
+	 * @Column(type="string", name="rig_moduletitle", options={"default" = ""})
 	 */
 	protected $moduletitle;
 
@@ -48,7 +48,7 @@ class RightModel extends \Corework\Model
 	 *
 	 * @var string
 	 *
-	 * @Column(type="string", name="rig_controllertitle")
+	 * @Column(type="string", name="rig_controllertitle", options={"default" = ""})
 	 */
 	protected $controllertitle;
 
@@ -57,7 +57,7 @@ class RightModel extends \Corework\Model
 	 *
 	 * @var string
 	 *
-	 * @Column(type="string", name="rig_module")
+	 * @Column(type="string", name="rig_module", options={"default" = ""})
 	 */
 	protected $module;
 
@@ -66,7 +66,7 @@ class RightModel extends \Corework\Model
 	 *
 	 * @var string
 	 *
-	 * @Column(type="string", name="rig_controller")
+	 * @Column(type="string", name="rig_controller", options={"default" = ""})
 	 */
 	protected $controller;
 
@@ -75,7 +75,7 @@ class RightModel extends \Corework\Model
 	 *
 	 * @var string
 	 *
-	 * @Column(type="string", name="rig_action")
+	 * @Column(type="string", name="rig_action", options={"default" = ""})
 	 */
 	protected $action;
 
@@ -84,7 +84,7 @@ class RightModel extends \Corework\Model
 	 *
 	 * @var string
 	 *
-	 * @Column(type="string", name="rig_prefix")
+	 * @Column(type="string", name="rig_prefix", options={"default" = ""})
 	 */
 	protected $prefix = '';
 
@@ -93,7 +93,7 @@ class RightModel extends \Corework\Model
 	 *
 	 * @var bool
 	 *
-	 * @Column(type="boolean", name="rig_inactive")
+	 * @Column(type="boolean", name="rig_inactive", options={"default" = 0})
 	 */
 	protected $inactive = 0;
 
@@ -102,7 +102,7 @@ class RightModel extends \Corework\Model
 	 *
 	 * @var \DateTime
 	 *
-	 * @Column(type="datetime", name="rig_created")
+	 * @Column(type="datetime", name="rig_created", nullable=true)
 	 */
 	protected $created;
 
@@ -121,7 +121,7 @@ class RightModel extends \Corework\Model
 	 *
 	 * @var \DateTime
 	 *
-	 * @Column(type="datetime", name="rig_modified")
+	 * @Column(type="datetime", name="rig_modified", nullable=true)
 	 */
 	protected $modified = null;
 

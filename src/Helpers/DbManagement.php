@@ -82,6 +82,7 @@ class DbManagement
  	 */
 	public function __construct()
 	{
+		$conf = Registry::getInstance()->conf;
 		// Doctrine in den ClassLoader holen
 		$loader = new \Corework\Loader('Doctrine', FRAMEWORK_PATH);
 		$loader->register();
@@ -92,8 +93,10 @@ class DbManagement
 		$config->setProxyNamespace('Proxy');
 		$driverImpl = $config->newDefaultAnnotationDriver(array(APPLICATION_PATH . '/Models'));
 		$config->setMetadataDriverImpl($driverImpl);
-
-		$conf = Registry::getInstance()->conf;
+		if ($conf->DOCTRINE_FILTERSCHEMAASSETS)
+		{
+			$config->setFilterSchemaAssetsExpression('/^('.$conf->DOCTRINE_FILTERSCHEMAASSETS.').*$/');
+		}
 		// Connection Options definieren
 		$connectionOptions = array(
 			'driver' => $conf->DB_DRIVER,
