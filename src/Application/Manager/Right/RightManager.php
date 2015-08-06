@@ -280,6 +280,7 @@ abstract class RightManager extends Manager
 		if ($rightModel)
 		{
 			$data['rig_id'] = $rightModel->getId();
+			$data['rig_created'] = $rightModel->getCreatedAsString();
 		}
 
 		return $data;
@@ -287,7 +288,7 @@ abstract class RightManager extends Manager
 
 	/**
 	 * @param RightModel $rightModel
-	 * @return bool|\Corework\Application\Interfaces\ModelsInterface
+	 * @return bool|RightModel|\Corework\Application\Interfaces\ModelsInterface
 	 */
 	private function checkRightExists(RightModel $rightModel)
 	{
