@@ -110,6 +110,7 @@ class Route
 
 		// Get file extension
 		$temp = pathinfo($url['path']);
+		$temp['dirname'] = str_replace('\\','/', $temp['dirname']); // OS WIN save
 
 		$url['path'] = $temp['dirname'] . '/' . $temp['filename'];
 
@@ -176,7 +177,7 @@ class Route
 
 		// Get file extension
 		$temp = pathinfo($url['path']);
-
+		$temp['dirname'] = str_replace('\\','/', $temp['dirname']); // OS WIN save
 		$url['path'] = $temp['dirname'] . '/' . $temp['filename'];
 
 		if (isset($temp['extension']) && $temp['extension'])
