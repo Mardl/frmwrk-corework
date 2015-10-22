@@ -220,6 +220,11 @@ abstract class Model implements ModelsInterface
 		$this->set('created', $this->setDateTimeFrom($datetime));
 	}
 
+    public function getDateTimeAsString($dt)
+    {
+        return $dt->format('Y-m-d H:i:s');
+    }
+
 	/**
 	 * Liefert Create Datetime als mysql Format zurück
 	 *
@@ -227,7 +232,7 @@ abstract class Model implements ModelsInterface
 	 */
 	public function getCreatedAsString()
 	{
-		return $this->getCreated()->format('Y-m-d H:i:s');
+		return $this->getDateTimeAsString($this->getCreated());
 	}
 
 	/**
@@ -287,7 +292,7 @@ abstract class Model implements ModelsInterface
 	 */
 	public function getModifiedAsString()
 	{
-		return $this->getModified()->format('Y-m-d H:i:s');
+		return $this->getDateTimeAsString($this->getModified());
 	}
 
 	/**

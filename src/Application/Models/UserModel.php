@@ -317,7 +317,7 @@ class UserModel extends \Corework\Model
 	 */
 	public function getBirthdayAsString()
 	{
-		return $this->getBirthday()->format('Y-m-d H:i:s');
+		return $this->getDateTimeAsString($this->getBirthday());
 	}
 
 	/**
