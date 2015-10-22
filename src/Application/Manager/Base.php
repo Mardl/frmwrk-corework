@@ -102,8 +102,9 @@ class Base
 		{
 			throw new DatabaseException(sprintf('"%s" für die Aktion "%s" wurde abgebrochen!', self::EVENT_BEFORE_SAVE, self::EVENT_TYPE_INSERT));
 		}
+        $model->setDateTimeToSave(true);
 		$inserted = $this->con->insert($model->getTableName(), $model->getDataRow());
-
+        $model->setDateTimeToSave(false);
 		if (!$inserted)
 		{
 			SystemMessages::addError('Beim Erstellen ist ein Fehler aufgetreten');
@@ -142,8 +143,9 @@ class Base
 		{
 			throw new DatabaseException(sprintf('"%s" für die Aktion "%s" wurde abgebrochen!', self::EVENT_BEFORE_SAVE, self::EVENT_TYPE_UPDATE));
 		}
+        $model->setDateTimeToSave(true);
 		$updated = $this->con->update($model->getTableName(), $model->getDataRow());
-
+        $model->setDateTimeToSave(false);
 		if (!$updated)
 		{
 			SystemMessages::addError(sprintf('Beim Aktualisieren ist ein Fehler aufgetreten'));

@@ -32,6 +32,8 @@ abstract class Model implements ModelsInterface
 	 */
 	const GENDER_BOTH = 3;
 
+    private $dateTimeToSave = false;
+
 	/**
 	 * @var array
 	 */
@@ -69,6 +71,23 @@ abstract class Model implements ModelsInterface
 	 */
 	protected $created = '';
 	protected $createduser_id = null;
+
+    /**
+     * @return boolean
+     */
+    public function isDateTimeToSave()
+    {
+        return $this->dateTimeToSave;
+    }
+
+    /**
+     * @param boolean $dateTimeToSave
+     */
+    public function setDateTimeToSave($dateTimeToSave)
+    {
+        $this->dateTimeToSave = $dateTimeToSave;
+    }
+
 
 
 	/**
@@ -222,6 +241,16 @@ abstract class Model implements ModelsInterface
 
     public function getDateTimeAsString($dt)
     {
+        if ($dt->format('Y') < 1000)
+        {
+            return null;
+        }
+        if (defined('GERMANDATETOSAVE') && GERMANDATETOSAVE === true)
+        {
+            if ($this->isDateTimeToSave()) {
+                return $dt->format('d.m.Y H:i:s');
+            }
+        }
         return $dt->format('Y-m-d H:i:s');
     }
 
