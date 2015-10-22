@@ -99,7 +99,7 @@ class DbManagement
 		}
 		// Connection Options definieren
 		$connectionOptions = array(
-			'driver' => $conf->DB_DRIVER,
+			'driver' => $conf->DOCTRINE_DB_DRIVER,
 			'dbname' => $conf->DB_DATABASE,
 			'user' => $conf->DB_USER,
 			'password' => $conf->DB_PASSWORD,
