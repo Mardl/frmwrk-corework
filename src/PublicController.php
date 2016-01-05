@@ -67,7 +67,14 @@ class PublicController extends Controller
 			{
 				$registry = Registry::getInstance();
 				$session = $registry->getSession();
-				$session->set('callUrlAction', $urlArray);
+                $urlAfterLogin= array(
+                    'module' => $module,
+                    'controller' => $controller,
+                    'action' => $action,
+                    'prefix' => $prefix
+                );
+
+				$session->set('callUrlAction', array_merge($urlAfterLogin, $this->request->getAllParameters()));
 
 				$this->response->redirect($this->view->url(array(), 'login', true));
 			}
