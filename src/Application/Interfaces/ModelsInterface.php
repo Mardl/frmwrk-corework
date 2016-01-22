@@ -9,32 +9,88 @@ namespace Corework\Application\Interfaces;
  * @package  Corework\Application\Interfaces
  * @author   Martin Eisenführer <martin@dreiwerken.de>
  */
-interface ModelsInterface
-{
+/**
+ * Interface ModelsInterface
+ *
+ * @package Corework\Application\Interfaces
+ */
+interface ModelsInterface {
 
-	public function getTableName();
+    /**
+     * @return mixed
+     */
+    public function getTableName();
 
-	public function getTablePrefix();
+    /**
+     * @return mixed
+     */
+    public function getTablePrefix();
 
-	public function getIdField();
+    /**
+     * @return mixed
+     */
+    public function getIdField();
 
-	public function getDataRow();
+    /**
+     * @return mixed
+     */
+    public function getDataRow();
 
-	public function setDataRow($data = array());
+    /**
+     * @param array $data
+     * @return mixed
+     */
+    public function setDataRow($data = []);
 
-	public function getId();
+    /**
+     * @return mixed
+     */
+    public function getId();
 
-	public function setId($id);
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function setId($id);
 
-	public function setCreated($datetime = 'now');
+    /**
+     * @param string $datetime
+     * @return mixed
+     */
+    public function setCreated($datetime = 'now');
 
-	public function setModified($datetime = 'now');
+    /**
+     * @param string $datetime
+     * @return mixed
+     */
+    public function setModified($datetime = 'now');
 
-	public function setCreateduser_Id($userId = 0);
+    /**
+     * @param int $userId
+     * @return mixed
+     */
+    public function setCreateduser_Id($userId = 0);
 
-	public function setModifieduser_Id($userId = null);
+    /**
+     * @param null $userId
+     * @return mixed
+     */
+    public function setModifieduser_Id($userId = null);
 
-	public function resetRegisterChange();
+    /**
+     * @return mixed
+     */
+    public function resetRegisterChange();
 
-	public function clearDataRow($data = array());
+    /**
+     * @param array $data
+     * @return mixed
+     */
+    public function clearDataRow($data = []);
+
+    /** @param boolean $dateTimeToSave */
+    public function setDateTimeToSave($dateTimeToSave);
+
+    /** @return boolean */
+    public function isDateTimeToSave();
 }

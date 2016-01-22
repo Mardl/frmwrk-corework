@@ -4,6 +4,7 @@ namespace Corework\Application\Manager;
 
 use Corework\Exceptions\DatabaseException;
 use jamwork\common\Registry;
+use jamwork\database\Database;
 use jamwork\database\Query;
 use Corework\SystemMessages;
 use Corework\Application\Interfaces\ModelsInterface;
@@ -32,7 +33,7 @@ class Base
 	const EVENT_TYPE_INSERT = 'insert';
 	const EVENT_TYPE_UPDATE = 'update';
 
-	/** @var \jamwork\database\Database */
+	/** @var Database|\jamwork\database\MssqlDatabase */
 	protected $con = null;
 
 	/** @var \jamwork\common\EventDispatcher */
@@ -42,16 +43,16 @@ class Base
 	protected $manager;
 
 	/**
-	 * @param \jamwork\database\Database|null $dataBase
+	 * @param Database|null $dataBase
 	 */
-	public function __construct(\jamwork\database\Database $dataBase = null)
+	public function __construct(Database $dataBase = null)
 	{
 		$this->con = is_null($dataBase) ? Registry::getInstance()->getDatabase() : $dataBase;
 		$this->eventDispatcher = Registry::getInstance()->getEventDispatcher();
 	}
 
 	/**
-	 * @return \jamwork\database\Database|null
+	 * @return Database|\jamwork\database\MssqlDatabase
 	 */
 	public function getConnection()
 	{
