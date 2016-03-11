@@ -171,7 +171,7 @@ class HTMLHelper
 			'rel' => 'stylesheet'
 		);
 
-		if (!\Corework\String::startsWith($filename, 'http'))
+		if (!\Corework\MyString::startsWith($filename, 'http'))
 		{
 			$attributes['href'] = $this->app('css/' . $filename);
 		}

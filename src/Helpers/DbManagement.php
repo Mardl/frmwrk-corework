@@ -307,7 +307,7 @@ class DbManagement
 	{
 		foreach ($this->response as $index => $statement)
 		{
-			if (\Corework\String::startsWith($statement, "ALTER TABLE"))
+			if (\Corework\MyString::startsWith($statement, "ALTER TABLE"))
 			{
 				//Beginne NACH dem "ALTER TABLE"
 				$sub = substr($statement, 12);
@@ -324,7 +324,7 @@ class DbManagement
 			}
 			else
 			{
-				if (\Corework\String::startsWith($statement, "CREATE TABLE"))
+				if (\Corework\MyString::startsWith($statement, "CREATE TABLE"))
 				{
 					//Beginne NACH dem "CREATE TABLE"
 					$sub = substr($statement, 13);
@@ -341,7 +341,7 @@ class DbManagement
 				}
 				else
 				{
-					if (\Corework\String::startsWith($statement, "DROP TABLE"))
+					if (\Corework\MyString::startsWith($statement, "DROP TABLE"))
 					{
 						//Beginne NACH dem "DROP TABLE"
 						$table = substr($statement, 11);
