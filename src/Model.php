@@ -169,7 +169,10 @@ abstract class Model implements ModelsInterface
 				$prefix = $this->getTablePrefix();
 				if (!empty($prefix))
 				{
-					$keyToCheck = str_replace($prefix, '', $keyToCheck);
+                    if (substr($keyToCheck, 0, strlen($prefix)) == $prefix) {
+                        $keyToCheck = substr($keyToCheck, strlen($prefix));
+                    }
+
 					$method = 'set' . ucfirst($keyToCheck);
 				}
 
