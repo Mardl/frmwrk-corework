@@ -219,7 +219,7 @@ class Navigation
 				}
 				else
 				{
-					if (\Corework\String::endsWith($file, '.php'))
+					if (\Corework\MyString::endsWith($file, '.php'))
 					{
 						$this->files[] = $dir . '/' . $file;
 					}

@@ -246,7 +246,7 @@ abstract class UserManager extends Manager
 		}
 		else
 		{
-			$checkup = \Corework\String::bcryptCheckup($password, $model->getPassword());
+			$checkup = \Corework\MyString::bcryptCheckup($password, $model->getPassword());
 		}
 
 		return $checkup;
@@ -344,7 +344,7 @@ abstract class UserManager extends Manager
 		{
 			$birthday = $user->getBirthday() ? $user->getBirthday()->format('Ymd') : '00000000';
 
-			$generatedPwd = \Corework\String::bcryptEncode(
+			$generatedPwd = \Corework\MyString::bcryptEncode(
 				$password, md5($user->getId() . $birthday . $user->getGender() . $user->getCreated()->format("Ymd"))
 			);
 		}
