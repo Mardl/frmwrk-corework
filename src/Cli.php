@@ -85,6 +85,8 @@ class Cli
 		{
 			if ($key > 0)
 			{
+				$value = str_replace("\n", "", $value);
+				$value = str_replace("\r", "", $value);
 				$parsed = $this->parseParameter(trim($value, '--'));
 				$params[strtolower($parsed[0])] = $parsed[1];
 			}
