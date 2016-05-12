@@ -325,6 +325,15 @@ class FrontController
 					$um = new \App\Manager\UserManager();
 					$this->view->login = $um->getById(Registry::getInstance()->getSession()->get('user'));
 
+                    if (Registry::getInstance()->hasEventDispatcher())
+                    {
+                        $context = array(
+                            'loggedUserModel' => $this->view->login,
+                            'userManager' => $um,
+                        );
+                        Registry::getInstance()->getEventDispatcher()->triggerEvent('onStartFrontController', $context, array());
+                    }
+                    
 					Registry::getInstance()->login = $this->view->login;
 				} catch (\Exception $e)
 				{
