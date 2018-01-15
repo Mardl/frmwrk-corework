@@ -1,22 +1,17 @@
 {
-    "name": "frameworks/corework",
+    "name": "Mardl/frmwrk-corework",
     "type": "package",
     "description": "Basis-Framework für Projekte",
-    "homepage": "http://repo.dreiwerken.intern/frameworks/corework",
     "repositories": [
         {
             "type": "vcs",
-            "url": "git@repo.dreiwerken.intern:frameworks/corework.git"
-        },
-        {
-            "type": "vcs",
-            "url": "git@repo.dreiwerken.intern:frameworks/jamwork.git"
+            "url": "git@repo.dreiwerken.intern:Mardl/frmwrk-jamwork.git"
         }
 
     ],
     "require": {
         "php" : ">=5.3.0",
-        "frameworks/jamwork": "dev-master"
+        "Mardl/frmwrk-jamwork": "dev-master"
     },
     "autoload": {
         "classmap": ["src/"]
